@@ -1,0 +1,150 @@
+object DM: TDM
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  OldCreateOrder = False
+  Height = 491
+  HorizontalOffset = 634
+  VerticalOffset = 175
+  Width = 468
+  PPI = 96
+  object SQLConn: TSQLite3Connection
+    Connected = False
+    LoginPrompt = False
+    KeepConnection = True
+    Transaction = SQLTransaction1
+    CharSet = 'UTF-8'
+    left = 40
+    top = 16
+  end
+  object Riders: TSQLQuery
+    FieldDefs = <>
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      ''
+    )
+    Params = <>
+    left = 32
+    top = 88
+  end
+  object SQLTransaction1: TSQLTransaction
+    Active = False
+    Database = SQLConn
+    left = 110
+    top = 16
+  end
+  object DS_Riders: TDataSource
+    DataSet = Riders
+    left = 136
+    top = 88
+  end
+  object DS_Groups: TDataSource
+    AutoEdit = False
+    DataSet = Groups
+    left = 136
+    top = 384
+  end
+  object Groups: TSQLQuery
+    FieldDefs = <>
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    Params = <>
+    left = 32
+    top = 384
+  end
+  object Git: TSQLQuery
+    PacketRecords = -1
+    FieldDefs = <>
+    AfterInsert = GitAfterInsert
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit, sqoRefreshUsingSelect]
+    Params = <>
+    UpdateMode = upWhereChanged
+    left = 304
+    top = 232
+  end
+  object DS_Git: TDataSource
+    DataSet = Git
+    left = 360
+    top = 232
+  end
+  object Work: TSQLQuery
+    FieldDefs = <>
+    Filtered = True
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      ''
+    )
+    Params = <>
+    left = 304
+    top = 90
+  end
+  object DS_Work: TDataSource
+    DataSet = Work
+    left = 360
+    top = 90
+  end
+  object Horses: TSQLQuery
+    FieldDefs = <>
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      ''
+    )
+    Params = <>
+    left = 32
+    top = 152
+  end
+  object DS_Horses: TDataSource
+    DataSet = Horses
+    left = 136
+    top = 152
+  end
+  object Tournaments: TSQLQuery
+    FieldDefs = <>
+    AutoCalcFields = False
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    Params = <>
+    left = 32
+    top = 224
+  end
+  object DS_Tournaments: TDataSource
+    AutoEdit = False
+    DataSet = Tournaments
+    left = 136
+    top = 224
+  end
+  object Routes: TSQLQuery
+    FieldDefs = <>
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    Params = <>
+    left = 32
+    top = 304
+  end
+  object DS_Routes: TDataSource
+    DataSet = Routes
+    left = 136
+    top = 304
+  end
+  object Work2: TSQLQuery
+    FieldDefs = <>
+    Filtered = True
+    Database = SQLConn
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      ''
+    )
+    Params = <>
+    left = 304
+    top = 152
+  end
+  object DS2_Work: TDataSource
+    DataSet = Work2
+    left = 360
+    top = 152
+  end
+end

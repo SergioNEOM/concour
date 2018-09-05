@@ -1,0 +1,174 @@
+object RiderFrm: TRiderFrm
+  Left = 282
+  Height = 440
+  Top = 128
+  Width = 330
+  Caption = 'Информация о всаднике'
+  ClientHeight = 440
+  ClientWidth = 330
+  Constraints.MinHeight = 440
+  Constraints.MinWidth = 330
+  LCLVersion = '1.8.4.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 390
+    Width = 330
+    Align = alBottom
+    BevelInner = bvRaised
+    BorderStyle = bsSingle
+    ClientHeight = 46
+    ClientWidth = 326
+    TabOrder = 0
+    object BitBtn1: TBitBtn
+      Left = 228
+      Height = 30
+      Top = 8
+      Width = 89
+      Anchors = [akTop, akRight]
+      Cancel = True
+      DefaultCaption = True
+      Kind = bkCancel
+      ModalResult = 2
+      TabOrder = 0
+    end
+    object BitBtn2: TBitBtn
+      Left = 132
+      Height = 30
+      Top = 8
+      Width = 89
+      Anchors = [akTop, akRight]
+      Default = True
+      DefaultCaption = True
+      Kind = bkOK
+      ModalResult = 1
+      TabOrder = 1
+    end
+  end
+  object LastnameEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 24
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = LastnameEdit
+    EditLabel.AnchorSideRight.Control = LastnameEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = LastnameEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 8
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Фамилия'
+    EditLabel.ParentColor = False
+    TabOrder = 1
+  end
+  object FirstnameEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 72
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = FirstnameEdit
+    EditLabel.AnchorSideRight.Control = FirstnameEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = FirstnameEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 56
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Имя'
+    EditLabel.ParentColor = False
+    TabOrder = 2
+  end
+  object BirthdayEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 120
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = BirthdayEdit
+    EditLabel.AnchorSideRight.Control = BirthdayEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = BirthdayEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 104
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Год рождения'
+    EditLabel.ParentColor = False
+    TabOrder = 3
+  end
+  object RegnumEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 177
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = RegnumEdit
+    EditLabel.AnchorSideRight.Control = RegnumEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = RegnumEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 161
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Рег.№'
+    EditLabel.ParentColor = False
+    TabOrder = 4
+  end
+  object CategoryEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 234
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = CategoryEdit
+    EditLabel.AnchorSideRight.Control = CategoryEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = CategoryEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 218
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Категория'
+    EditLabel.ParentColor = False
+    TabOrder = 5
+  end
+  object TrainerEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 294
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = TrainerEdit
+    EditLabel.AnchorSideRight.Control = TrainerEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = TrainerEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 278
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Тренер'
+    EditLabel.ParentColor = False
+    TabOrder = 6
+  end
+  object RegionEdit: TLabeledEdit
+    Left = 16
+    Height = 21
+    Top = 352
+    Width = 299
+    Anchors = [akTop, akLeft, akRight]
+    EditLabel.AnchorSideLeft.Control = RegionEdit
+    EditLabel.AnchorSideRight.Control = RegionEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = RegionEdit
+    EditLabel.Left = 16
+    EditLabel.Height = 13
+    EditLabel.Top = 336
+    EditLabel.Width = 299
+    EditLabel.Caption = 'Регион'
+    EditLabel.ParentColor = False
+    TabOrder = 7
+  end
+end

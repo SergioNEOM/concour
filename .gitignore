@@ -1,0 +1,12 @@
+backup/
+lib/
+sqlite3x64/
+sqlite3/
+source_data/
+*.exe
+*.~*
+concour
+concour.cfg
+concour.dof
+
+

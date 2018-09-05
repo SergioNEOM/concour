@@ -1,0 +1,8 @@
+object MatchForm: TMatchForm
+  Left = 362
+  Height = 240
+  Top = 158
+  Width = 320
+  Caption = 'MatchForm'
+  LCLVersion = '1.8.2.0'
+end

@@ -1,0 +1,203 @@
+object HorsesFrm: THorsesFrm
+  Left = 282
+  Height = 500
+  Top = 128
+  Width = 380
+  Caption = 'HorsesFrm'
+  ClientHeight = 500
+  ClientWidth = 380
+  Constraints.MinHeight = 500
+  Constraints.MinWidth = 380
+  LCLVersion = '1.8.4.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 450
+    Width = 380
+    Align = alBottom
+    BevelInner = bvRaised
+    BorderStyle = bsSingle
+    ClientHeight = 46
+    ClientWidth = 376
+    TabOrder = 0
+    object BitBtn1: TBitBtn
+      Left = 266
+      Height = 30
+      Top = 8
+      Width = 100
+      Anchors = [akTop, akRight]
+      Cancel = True
+      DefaultCaption = True
+      Kind = bkCancel
+      ModalResult = 2
+      TabOrder = 0
+    end
+    object BitBtn2: TBitBtn
+      Left = 162
+      Height = 30
+      Top = 8
+      Width = 100
+      Anchors = [akTop, akRight]
+      Default = True
+      DefaultCaption = True
+      Kind = bkOK
+      ModalResult = 1
+      TabOrder = 1
+    end
+  end
+  object NicknameEdit: TLabeledEdit
+    Left = 8
+    Height = 21
+    Top = 24
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = NicknameEdit
+    EditLabel.AnchorSideRight.Control = NicknameEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = NicknameEdit
+    EditLabel.Left = 8
+    EditLabel.Height = 13
+    EditLabel.Top = 8
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Кличка лошади'
+    EditLabel.ParentColor = False
+    TabOrder = 1
+    TextHint = 'Кличка лошади'
+  end
+  object BirthdateEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 72
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = BirthdateEdit
+    EditLabel.AnchorSideRight.Control = BirthdateEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = BirthdateEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 56
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Год рождения'
+    EditLabel.ParentColor = False
+    TabOrder = 2
+    TextHint = '4 цифры'
+  end
+  object ColorEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 120
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = ColorEdit
+    EditLabel.AnchorSideRight.Control = ColorEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = ColorEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 104
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Масть'
+    EditLabel.ParentColor = False
+    TabOrder = 3
+  end
+  object SexEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 168
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = SexEdit
+    EditLabel.AnchorSideRight.Control = SexEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = SexEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 152
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Пол'
+    EditLabel.ParentColor = False
+    TabOrder = 4
+  end
+  object BreedEdit: TLabeledEdit
+    Left = 8
+    Height = 21
+    Top = 216
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = BreedEdit
+    EditLabel.AnchorSideRight.Control = BreedEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = BreedEdit
+    EditLabel.Left = 8
+    EditLabel.Height = 13
+    EditLabel.Top = 200
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Порода'
+    EditLabel.ParentColor = False
+    TabOrder = 5
+  end
+  object ParentEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 264
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = ParentEdit
+    EditLabel.AnchorSideRight.Control = ParentEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = ParentEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 248
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Родитель'
+    EditLabel.ParentColor = False
+    TabOrder = 6
+  end
+  object BirthplaceEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 312
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = BirthplaceEdit
+    EditLabel.AnchorSideRight.Control = BirthplaceEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = BirthplaceEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 296
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Место рождения'
+    EditLabel.ParentColor = False
+    TabOrder = 7
+  end
+  object RegisterEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 360
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = RegisterEdit
+    EditLabel.AnchorSideRight.Control = RegisterEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = RegisterEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 344
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Рег.№'
+    EditLabel.ParentColor = False
+    TabOrder = 8
+  end
+  object OwnerEdit: TLabeledEdit
+    Left = 9
+    Height = 21
+    Top = 408
+    Width = 360
+    EditLabel.AnchorSideLeft.Control = OwnerEdit
+    EditLabel.AnchorSideRight.Control = OwnerEdit
+    EditLabel.AnchorSideRight.Side = asrBottom
+    EditLabel.AnchorSideBottom.Control = OwnerEdit
+    EditLabel.Left = 9
+    EditLabel.Height = 13
+    EditLabel.Top = 392
+    EditLabel.Width = 360
+    EditLabel.Caption = 'Владелец'
+    EditLabel.ParentColor = False
+    TabOrder = 9
+  end
+end
