@@ -24,7 +24,7 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <TopLine Value="701"/>
-        <CursorPos X="3" Y="703"/>
+        <CursorPos X="26" Y="724"/>
         <UsageCount Value="203"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -135,7 +135,7 @@
         <EditorIndex Value="9"/>
         <TopLine Value="262"/>
         <CursorPos X="52" Y="274"/>
-        <UsageCount Value="58"/>
+        <UsageCount Value="59"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit10>
@@ -255,7 +255,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="146"/>
         <CursorPos X="23" Y="102"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit25>
       <Unit26>
         <Filename Value="../../lazarus/fpc/3.0.4/source/rtl/objpas/sysutils/finah.inc"/>
