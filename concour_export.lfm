@@ -9,7 +9,7 @@ object ExpFrm: TExpFrm
   Constraints.MinHeight = 280
   Constraints.MinWidth = 360
   OnActivate = FormActivate
-  LCLVersion = '1.8.4.0'
+  LCLVersion = '1.8.2.0'
   object ProgressBar1: TProgressBar
     Left = 8
     Height = 20

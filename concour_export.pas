@@ -74,7 +74,9 @@ uses LazUTF8, LCLType, db, concour_main, concour_DM,
 
 procedure TExpFrm.StartSpeedButtonClick(Sender: TObject);
 begin
+  {$IFDEF WINDOWS}
   MakeXLS(rty_Start,True);
+  {$ENDIF};
 end;
 
 procedure TExpFrm.FormActivate(Sender: TObject);
@@ -88,17 +90,23 @@ end;
 
 procedure TExpFrm.RefereeSpeedButtonClick(Sender: TObject);
 begin
+  {$IFDEF WINDOWS}
   MakeXLS(rty_Referee,True);
+  {$ENDIF};
 end;
 
 procedure TExpFrm.FinalSpeedButtonClick(Sender: TObject);
 begin
+  {$IFDEF WINDOWS}
   MakeXLS(rty_Single,True);
+  {$ENDIF};
 end;
 
 procedure TExpFrm.TotalSpeedButtonClick(Sender: TObject);
 begin
+  {$IFDEF WINDOWS}
   MakeXLS(rty_Total);
+  {$ENDIF};
 end;
 
 //*--------------
