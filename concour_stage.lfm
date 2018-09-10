@@ -36,8 +36,8 @@ object StageFrm: TStageFrm
     Width = 208
     ItemHeight = 13
     OnChange = RouteTypeCBChange
+    Style = csDropDownList
     TabOrder = 0
-    Text = 'КЛАССИКА'
   end
   object Label3: TLabel
     Left = 23

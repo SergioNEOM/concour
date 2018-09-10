@@ -778,12 +778,15 @@ var
   x,y: Integer;
 begin
   TempRoute:=ShowBasesDialog('Routes',DM.CurrentRoute);
-  if (TempRoute>0) and (DM.CurrentRoute<>TempRoute) then
+  if (TempRoute>0) {and (DM.CurrentRoute<>TempRoute)} then
   begin
     // маршрут выбран - заполним поля
+
+    { в OpenRoutes всё это делаем
     DM.CurrentRoute:=TempRoute;
     DM.CurrRouteType:=DM.Routes.FieldByName('route_type').AsInteger;
     DM.CurrRouteName:=DM.Routes.FieldByName('routename').AsString;
+    }
     //
     OverlapCB.Visible:=(DM.CurrRouteType=1) and (OverList<>'');
     //
@@ -791,7 +794,7 @@ begin
     RouteNameLabel.Caption := DM.CurrRouteName; // заполнить строкой названия
     if (DM.CurrRouteType>=0) and (DM.CurrRouteType<RouteTypeSL.Count-1) then
                        StatusBar1.Panels[1].Text:= RouteTypeSL[DM.CurrRouteType];
-    DM.OpenRoutes(DM.CurrentRoute);
+    // в диалоге выбора уже открыли: DM.OpenRoutes(DM.CurrentRoute);
     VelocityCB1.ItemIndex := DM.Routes.FieldByName('velocity1').AsInteger;
     VelocityCB2.ItemIndex := DM.Routes.FieldByName('velocity2').AsInteger;
     DistanceEdit1.Text := DM.Routes.FieldByName('distance1').AsString;

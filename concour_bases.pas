@@ -27,9 +27,9 @@ type
     procedure BasesDBGridKeyPress(Sender: TObject; var Key: char);
     procedure AddBitBtnClick(Sender: TObject);
     procedure BasesDBGridUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
+    procedure BitBtn2Click(Sender: TObject);
     procedure EditBitBtnClick(Sender: TObject);
     procedure DelBitBtnClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
 
@@ -69,7 +69,8 @@ begin
          Caption:='Выбор всадника';
          SeekField:='lastname';
          BasesDBGrid.DataSource := nil;
-         DM.OpenRiders(CurrID);
+         if not DM.Riders.Active then DM.OpenRiders(CurrID)
+         else DM.Riders.Locate('id',CurrID,[]);
          BasesDBGrid.DataSource := DM.DS_Riders;
        end;
     'horses':
@@ -77,7 +78,8 @@ begin
          Caption:='Выбор лошади';
          SeekField:='nickname';
          BasesDBGrid.DataSource := nil;
-         DM.OpenHorses(CurrID);
+         if not DM.Horses.Active then DM.OpenHorses(CurrID)
+         else DM.Horses.Locate('id',CurrID,[]);
          BasesDBGrid.DataSource := DM.DS_Horses;
        end;
     'groups':
@@ -85,7 +87,8 @@ begin
          Caption:='Выбор зачёта';
          SeekField:='groupname';
          BasesDBGrid.DataSource := nil;
-         DM.OpenGroups(CurrID);
+         if not DM.Groups.Active then DM.OpenGroups(CurrID)
+         else DM.Groups.Locate('id',CurrID,[]);
          BasesDBGrid.DataSource := DM.DS_Groups;
        end;
     'routes':
@@ -93,7 +96,8 @@ begin
          Caption:='Выбор маршрута';
          SeekField:='routename';
          BasesDBGrid.DataSource := nil;
-         DM.OpenRoutes(CurrID);
+         if not DM.Routes.Active then DM.OpenRoutes(CurrID)
+         else DM.Routes.Locate('id',CurrID,[]);
          BasesDBGrid.DataSource := DM.DS_Routes;
        end;
     'tournaments':
@@ -101,18 +105,12 @@ begin
          Caption:='Выбор соревнования';
          SeekField:='';
          BasesDBGrid.DataSource := nil;
-         DM.OpenTournaments(CurrID);
+         if not DM.Tournaments.Active then DM.OpenTournaments(CurrID)
+         else DM.Tournaments.Locate('id',CurrID,[]);
          BasesDBGrid.DataSource := DM.DS_Tournaments;
        end;
   end;
   BasesDBGrid.Refresh;
-end;
-
-
-
-procedure TBasesFrm.Button1Click(Sender: TObject);
-begin
-  ModalResult := mrOK;
 end;
 
 procedure TBasesFrm.BasesDBGridKeyDown(Sender: TObject; var Key: Word;
@@ -162,6 +160,21 @@ begin
 
   if (Length(SeekLabel.Caption)>0) and (SeekField<>'') then
     TDBGrid(Sender).DataSource.DataSet.Locate(SeekField,SeekLabel.Caption,[loCaseInsensitive,loPartialKey]);
+end;
+
+procedure TBasesFrm.BitBtn2Click(Sender: TObject);
+begin
+  case LowerCase(Tablename) of
+    'routes':
+       begin
+         if DM.Routes.Active then DM.SetCurrRoute;
+       end;
+    'tournaments':
+       begin
+         if DM.Tournaments.Active then DM.SetCurrTournament;
+       end;
+  end;
+  ModalResult:=mrOk;
 end;
 
 function TBasesFrm.EditBase(RecId:Integer=-1): Boolean;
@@ -287,7 +300,7 @@ begin
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit1.Text),VelocityCB2.ItemIndex,
                    StrToInt(BarriersEdit2.Text),TypeCB.ItemIndex,RouteNameEdit.Text);
-             DM.OpenRoutes(CurrID);
+             //DM.OpenRoutes(CurrID); в AddRoute уже вызывается !
            end;
          finally
            Free;

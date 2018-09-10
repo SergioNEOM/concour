@@ -13,6 +13,9 @@ uses
 
 {$R *.res}
 
+var
+  x : String;
+
 begin
   Application.Scaled:=True;
   RequireDerivedFormResource:=True;
@@ -24,10 +27,14 @@ begin
     cfg.LoadGeneralParams;
   end
   else
-    cfg.GetDefaults;      //concour_params.InitDefaults;
-    Application.CreateForm(TMainFrm, MainFrm);
-    Application.CreateForm(TDM, DM);
-{  if not DM.SQLConn.Connected then
+  begin
+    x := ChangeFileExt(Application.ExeName,'.ini');
+    if FileExists(x)then cfg.SetFile(x)  //если есть ini, то берём его
+    else  cfg.GetDefaults;               // нет, значит настройки по-умолчанию
+  end;
+  Application.CreateForm(TMainFrm, MainFrm);
+  Application.CreateForm(TDM, DM);
+  {  if not DM.SQLConn.Connected then
   begin
     Application.MessageBox(PChar('Не удалось открыть базу ('+concour_params.DataBaseFileName+')'),'Ошибка',0);
     ExitCode := 100;

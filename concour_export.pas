@@ -147,6 +147,7 @@ begin
   //
   DM.FillRepParams;   // Получить параметры отчетов из ini в TStringList
   //
+  // сформировать полный абсолютный путь к файлу шаблонов
   if ((ExtractFileDrive(cfg.XLSTempFileName)='') and
      (LeftStr(ExtractFilePath(cfg.XLSTempFileName),1)<>PathDelim)) then
     cfg.XLSTempFileName:= ExtractFilePath(Application.ExeName) + cfg.XLSTempFileName;

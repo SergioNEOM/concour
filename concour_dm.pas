@@ -129,6 +129,7 @@ type
          Distance2, Velocity2, Barriers2, PenaltyType: Integer; RouteName: string):Boolean;
     function DelRoute(RouteId: Integer):Boolean;
     function GetRouteName(RouteId: Integer):String;
+    procedure SetCurrRoute;
     // Tournaments
     procedure OpenTournaments(CurrentID: Integer);
     function AddTournament(TournamentDate, TournamentName, TournamentPlace,
@@ -136,6 +137,7 @@ type
     function EditTournament(TournamentId: Integer; TournamentDate, TournamentName,
          TournamentPlace, TournamentReferee, TournamentAssistant: String):Boolean;
     function DelTournament(TournamentId: Integer):Boolean;
+    procedure SetCurrTournament;
     // Git
     procedure OpenGit(CurrID, CurrTournament, CurrRoute:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
     procedure DelGit(DelID: Integer);
@@ -501,13 +503,8 @@ begin
   //'SELECT id, routename, route_type, barriers1, barriers2, result_type FROM v_routes;';
   try
     Routes.Open;
-    if (not Routes.IsEmpty)  then
-    begin
-      if (CurrentID>0) then Routes.Locate('id',CurrentID,[]);
-      CurrentRoute:=CurrentID;
-      CurrRouteType:=Routes.FieldByName('route_type').AsInteger;
-      CurrRouteName:=Routes.FieldByName('routename').AsString;
-    end;
+    if (not Routes.IsEmpty)  and (CurrentID>0) then Routes.Locate('id',CurrentID,[]);
+    // SetCurrRoute; устанавливать только когда требуется
   except
     raise Exception.Create('Ошибка открытия списка маршрутов');
   end;
@@ -629,6 +626,24 @@ begin
   if Routes.Locate('id',RouteId,[]) then Result := Routes.FieldByName('routename').AsString;
   // вернуть на исходную запись...
   if r<>RouteId then Routes.Locate('id',r,[]);
+end;
+
+procedure TDM.SetCurrRoute;
+begin
+  if not Routes.Active then Exit; // открывать не надо, чтобы не зациклить
+  if Routes.IsEmpty then
+  begin
+    CurrentRoute:=-1;
+    CurrRouteName:='<не выбран>';
+    CurrRouteType:=-1;
+    Exit;
+  end
+  else
+  begin
+    CurrentRoute :=Routes.FieldByName('id').AsInteger;
+    CurrRouteType:=Routes.FieldByName('route_type').AsInteger;
+    CurrRouteName:=Routes.FieldByName('routename').AsString;
+  end;
 end;
 
 //*******
@@ -966,6 +981,14 @@ begin
   end;
   if Result then OpenTournaments(-1);
 end;
+
+procedure TDM.SetCurrTournament;
+begin
+  if not Tournaments.Active then Exit; // открывать не надо, чтобы не зациклить
+  if Tournaments.IsEmpty then CurrentTournament:=-1
+  else    CurrentTournament := Tournaments.FieldByName('id').AsInteger;
+end;
+
 
 end.
 

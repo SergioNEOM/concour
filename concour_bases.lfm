@@ -58,7 +58,7 @@ object BasesFrm: TBasesFrm
       Default = True
       DefaultCaption = True
       Kind = bkOK
-      ModalResult = 1
+      OnClick = BitBtn2Click
       TabOrder = 1
     end
     object AddBitBtn: TBitBtn
