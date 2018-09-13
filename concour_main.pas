@@ -235,8 +235,8 @@ begin
   DistanceEdit1.Text:='300';
   DistanceEdit2.Text:='300';
   if DM.CurrentTournament<0 then DM.CurrentTournament:=ShowBasesDialog('tournaments',-1);
-  //если не выбран турнир или маршрут, то выйти... но как тогда убрать уточняющее сообщение?
-  // пока остаётся только так:
+  //если не выбран турнир или маршрут, то выйти...
+  //
   if (DM.CurrentTournament<0) then
   begin
     Application.MessageBox('Вы не выбрали соревнование из списка!'+#13#10+
@@ -492,6 +492,7 @@ procedure TMainFrm.GitDBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
   DataCol: Integer; Column: TColumn; State: TGridDrawState);
 var
   Col: TColor;
+  fname : String;
 begin
   Col := GitDBGrid.Canvas.Brush.Color;
   // стиль активного поля не меняем
@@ -517,7 +518,9 @@ begin
       TDBGrid(Sender).Canvas.Font.Style :=  [];
     //
     // выделение снятых участников
-    if TDBGrid(Sender).DataSource.DataSet.FieldByName('place').AsInteger>FIRED_RIDER then
+    if OverlapCB.Checked then fname:='place2'
+    else fname:='place';
+    if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>FIRED_RIDER then
            TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(50,150,150);
 
     //почему-то без ручной закраски не хочет менять цвет фона...
@@ -573,15 +576,26 @@ begin
 end;
 
 procedure TMainFrm.GitFireActionExecute(Sender: TObject);
+var
+  fi : String;
+  val : Integer;
 begin
+  // снятие с гита
+  //todo: !!!!! Меняется в НД, но не записывется в БД!!!
+  //Надо писать, иначе в перепрыжке пропадает после пересчета мест!!!
+  //
+  if OverlapCB.Checked then fi := 'place2'
+  else fi := 'place';
   GitDBGrid.DataSource.DataSet.Edit;
-  if GitDBGrid.DataSource.DataSet.FieldByName('place').AsInteger > FIRED_RIDER then
-    GitDBGrid.DataSource.DataSet.FieldByName('place').AsInteger :=
-     GitDBGrid.DataSource.DataSet.FieldByName('place').AsInteger - FIRED_RIDER
+  if GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger > FIRED_RIDER then
+    val := GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger - FIRED_RIDER
   else
-    GitDBGrid.DataSource.DataSet.FieldByName('place').AsInteger :=  FIRED_RIDER +
-       GitDBGrid.DataSource.DataSet.FieldByName('queue').AsInteger;
+    val :=  FIRED_RIDER +
+       GitDBGrid.DataSource.DataSet.FieldByName('queue').AsInteger; //чтобы отличались
+  GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger := val;
   GitDBGrid.DataSource.DataSet.Post;
+  // DM.SetFire(id,value,fieldname);
+  DM.SetFire(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,fi);
 end;
 
 
@@ -973,7 +987,7 @@ end;
 
 procedure TMainFrm.CalcPlaces;
 var
-  i,g : Integer;
+  i,g, ocounter : Integer;
   s : Currency;
   over : TStringList;
 begin
@@ -1057,6 +1071,8 @@ begin
                i := 0;
                s := -1;
                g := -1;
+               ocounter:=0; // счетчик участников перепрыжки для каждого зачёта
+               // чтобы НЕ первые места смещались после перепрыжчиков
                //
                while not DM.Work2.EOF do
                begin
@@ -1069,6 +1085,7 @@ begin
                       else OverList:=over.CommaText;
                    //--- теперь запоминаем параметры нового зачёта ---
                    i := 0;
+                   ocounter:=0;
                    g := DM.Work2.FieldByName('group').AsInteger;
                    s := DM.Work2.FieldByName('totalfouls1').AsCurrency;
                    over.Clear;
@@ -1083,11 +1100,19 @@ begin
                       (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
                    begin // будут участвовать в перепрыжке
                      over.add(IntToStr(DM.Work2.FieldByName('id').AsInteger));
+                     Inc(ocounter);
                      // i - остаётся =1
                    end
                    else
+                   begin
                      // совпадения закончились, или место не первое - дальше номера мест увеличим
+                     if ocounter>0 then
+                     begin
+                       i:=i+ocounter;
+                       ocounter:=0;
+                     end;
                      Inc(i);
+                   end;
                    s:= DM.Work2.FieldByName('totalfouls1').AsCurrency;
                    DM.Work.ParamByName('par1').AsInteger:=i;
                    DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
@@ -1129,16 +1154,24 @@ begin
   try
     // список уже д.б. ранжирован по place и выбраны только участники перепрыжки
     GitDBGrid.BeginUpdate;
+    //
+    // перед началом подведеня итогов надо обнулить предыдущие результаты
+    // т.к. непустое значение поля place2 будет мешать правильной расстановке мест
+    // (кроме снятых с гита)
+    DM.Work.Close;
+    DM.Work.Params.Clear;
+    DM.Work.SQL.Text := 'update git set place2=0 where place2<:par1 and "_rowid_" in ('+OverList+');';
+    DM.Work.ParamByName('par1').AsInteger := FIRED_RIDER;
+    DM.Work.ExecSQL;
+    //
     DM.Work2.Close;
     DM.Work2.Params.Clear;
     DM.Work2.SQL.Text := 'select id,"group",place,place2,totalfouls2,gittime2 from v_git '+
-      ' where tournament=:par1 and route=:par2 and id in ('+OverList+') order by "group",place,totalfouls2,gittime2,queue;';
-    DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
-    DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
+      ' where id in ('+OverList+') order by "group",place2,totalfouls2,gittime2,queue;';
     //----
     DM.Work.Close;
     DM.Work.Params.Clear;
-    DM.Work.SQL.Text := 'update git set place2=:par1 where _rowid_=:par2;';
+    DM.Work.SQL.Text := 'update git set place=:par1,place2=:par2 where _rowid_=:par3;';
     //--
     try
       DM.Work2.Open;
@@ -1149,8 +1182,14 @@ begin
         g := DM.Work2.FieldByName('group').AsInteger;
         while not DM.Work2.EOF do
         begin
+          //в place кладём № места перепрыжки
+          // а в place2 - место, если не был снят с гита
           DM.Work.ParamByName('par1').AsInteger:=i;
-          DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
+          if  DM.Work2.FieldByName('place2').ASInteger<FIRED_RIDER then
+            DM.Work.ParamByName('par2').AsInteger:=i
+          else
+            DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('place2').ASInteger;
+          DM.Work.ParamByName('par3').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
           DM.Work.ExecSQL;
           //***
           Inc(i);

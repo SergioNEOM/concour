@@ -143,6 +143,7 @@ type
     procedure DelGit(DelID: Integer);
     function AppendGit : Integer;
     function ClearResults: Boolean;
+    procedure SetFire(FireId,Value: Integer; FieldName:String);
   end;
 
 var
@@ -989,6 +990,19 @@ begin
   else    CurrentTournament := Tournaments.FieldByName('id').AsInteger;
 end;
 
+procedure TDM.SetFire(FireId,Value: Integer; FieldName:String);
+begin
+  try
+    Work2.Close;
+    Work2.Params.Clear;
+    Work2.SQL.Text:='UPDATE git SET '+FieldName+'=:par1 WHERE "_rowid_"=:par2;';
+    Work2.ParamByName('par1').Value:=Value;
+    Work2.ParamByName('par2').Value:=FireId;
+    Work2.ExecSQL;
+  finally
+    Work2.Close;
+  end;
+end;
 
 end.
 
