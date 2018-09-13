@@ -528,16 +528,15 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       {10}
-      if DM.Work.FieldByName('place').AsInteger >= FIRED_RIDER then
-        MakeCell(srow,scol+9,U2V('СНЯТ'))
+      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('sumfouls1').AsString))
       else
-        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('sumfouls1').AsString));
+        MakeCell(srow,scol+9,U2V('СНЯТ'));
       MakeBorder(srow,scol+9);
       {11}
-      if DM.Work.FieldByName('place').AsInteger >= FIRED_RIDER then
-        MakeCell(srow,scol+10,U2V('СНЯТ'))
-      else
+      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
         MakeCell(srow,scol+10,U2V(DM.Work.FieldByName('gittime1').AsString));
+      // else - MakeCell(srow,scol+10,U2V('СНЯТ'))
       MakeBorder(srow,scol+10);
       //
       MakeBorder(srow,scol+11); //вып. норм.
@@ -648,28 +647,26 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       {10}
-      if DM.Work.FieldByName('place').AsInteger >= FIRED_RIDER then
-        MakeCell(srow,scol+9,U2V('СНЯТ'))
+      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('sumfouls1').AsString))
       else
-        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('sumfouls1').AsString));
+        MakeCell(srow,scol+9,U2V('СНЯТ'));
       MakeBorder(srow,scol+9);
       {11}
-      if DM.Work.FieldByName('place').AsInteger >= FIRED_RIDER then
-        MakeCell(srow,scol+10,U2V('СНЯТ'))
-      else
+      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
         MakeCell(srow,scol+10,U2V(DM.Work.FieldByName('gittime1').AsString));
+      //else -  MakeCell(srow,scol+10,U2V('СНЯТ'));
       MakeBorder(srow,scol+10);
       {12}
-      if DM.Work.FieldByName('place').AsInteger >= FIRED_RIDER then
-        MakeCell(srow,scol+11,U2V('СНЯТ'))
+      if DM.Work.FieldByName('place2').AsInteger < FIRED_RIDER then
+        MakeCell(srow,scol+11,U2V(DM.Work.FieldByName('sumfouls2').AsString))
       else
-        MakeCell(srow,scol+11,U2V(DM.Work.FieldByName('sumfouls2').AsString));
+        MakeCell(srow,scol+11,U2V('СНЯТ'));
       MakeBorder(srow,scol+11);
       {13}
-      if DM.Work.FieldByName('place').AsInteger >= FIRED_RIDER then
-        MakeCell(srow,scol+12,U2V('СНЯТ'))
-      else
+      if DM.Work.FieldByName('place2').AsInteger < FIRED_RIDER then
         MakeCell(srow,scol+12,U2V(DM.Work.FieldByName('gittime2').AsString));
+      // else  - MakeCell(srow,scol+12,U2V('СНЯТ'));
       MakeBorder(srow,scol+12);
       //
       MakeBorder(srow,scol+13); //вып.норм.

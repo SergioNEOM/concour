@@ -1057,9 +1057,12 @@ begin
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
+         //!!! затираются данные о снятии с гита в перепрыжке!!! (place2=0)
+         //DM.Work.SQL.Text := 'update git set place=:par1, place2=0 where _rowid_=:par2;';
+         // 2018-09-13 перенес обнуление place2 с учётом FIRE_RIDER в проц. CalcPlacesOver
          DM.Work.Close;
          DM.Work.Params.Clear;
-         DM.Work.SQL.Text := 'update git set place=:par1, place2=0 where _rowid_=:par2;';
+         DM.Work.SQL.Text := 'update git set place=:par1 where _rowid_=:par2;';
          //--
          try
            over := TStringList.Create;   //список претендентов на перепрыжку
