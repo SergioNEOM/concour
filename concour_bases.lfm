@@ -23,6 +23,7 @@ object BasesFrm: TBasesFrm
     ReadOnly = True
     Scrollbars = ssAutoBoth
     TabOrder = 0
+    OnDblClick = BasesDBGridDblClick
     OnKeyDown = BasesDBGridKeyDown
     OnKeyPress = BasesDBGridKeyPress
     OnUTF8KeyPress = BasesDBGridUTF8KeyPress

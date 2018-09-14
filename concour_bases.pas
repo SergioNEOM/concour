@@ -22,6 +22,7 @@ type
     SeekLabel: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
+    procedure BasesDBGridDblClick(Sender: TObject);
     procedure BasesDBGridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure BasesDBGridKeyPress(Sender: TObject; var Key: char);
@@ -41,6 +42,7 @@ type
     //todo:  need Seek field name in params ...
     constructor Create(AOwner: TComponent; Base: String; CurrentID: Integer);overload;
     function EditBase(RecId:Integer=-1): Boolean;
+    procedure DoIt;
   end;
 
 var
@@ -110,6 +112,7 @@ begin
          BasesDBGrid.DataSource := DM.DS_Tournaments;
        end;
   end;
+  if BasesDBGrid.DataSource.DataSet.Active then BasesDBGrid.DataSource.DataSet.First;
   BasesDBGrid.Refresh;
 end;
 
@@ -129,6 +132,11 @@ begin
      if (TDBGrid(Sender).DataSource.DataSet.State in [dsInsert,dsEdit])
      then TDBGrid(Sender).DataSource.DataSet.Post
      else TDBGrid(Sender).DataSource.DataSet.Edit;
+end;
+
+procedure TBasesFrm.BasesDBGridDblClick(Sender: TObject);
+begin
+  DoIt;
 end;
 
 
@@ -164,17 +172,7 @@ end;
 
 procedure TBasesFrm.BitBtn2Click(Sender: TObject);
 begin
-  case LowerCase(Tablename) of
-    'routes':
-       begin
-         if DM.Routes.Active then DM.SetCurrRoute;
-       end;
-    'tournaments':
-       begin
-         if DM.Tournaments.Active then DM.SetCurrTournament;
-       end;
-  end;
-  ModalResult:=mrOk;
+  DoIt;
 end;
 
 function TBasesFrm.EditBase(RecId:Integer=-1): Boolean;
@@ -367,6 +365,21 @@ begin
   if not res then
     Application.MessageBox(PAnsiChar('Невозможно удалить выбранную запись('+IntToStr(CommonId)+').'+#13#10+
      'Возможно, она используется в основной таблице'),'Ошибка удаления',MB_OK+MB_ICONHAND);
+end;
+
+procedure TBasesFrm.DoIt;
+begin
+  case LowerCase(Tablename) of
+    'routes':
+       begin
+         if DM.Routes.Active then DM.SetCurrRoute;
+       end;
+    'tournaments':
+       begin
+         if DM.Tournaments.Active then DM.SetCurrTournament;
+       end;
+  end;
+  ModalResult:=mrOk;
 end;
 
 end.
