@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Buttons, ComCtrls;
+  StdCtrls, Buttons, ComCtrls, EditBtn;
 
 const
   // Office enum (from VBA help)
@@ -27,12 +27,15 @@ type
 
   TExpFrm = class(TForm)
     BitBtn1: TBitBtn;
+    DirectoryEdit1: TDirectoryEdit;
+    Label1: TLabel;
     ProgressBar1: TProgressBar;
     StartSpeedButton: TSpeedButton;
     RefereeSpeedButton: TSpeedButton;
     FinalSpeedButton: TSpeedButton;
     TotalSpeedButton: TSpeedButton;
     procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure StartSpeedButtonClick(Sender: TObject);
     procedure RefereeSpeedButtonClick(Sender: TObject);
     procedure FinalSpeedButtonClick(Sender: TObject);
@@ -67,8 +70,8 @@ var
 implementation
 
 {$R *.lfm}
-uses LazUTF8, LCLType, db, concour_main, concour_DM,
-     concour_params {$IFDEF WINDOWS}, ComObj{$ENDIF};
+uses LazUTF8, LCLType, db, concour_main, concour_DM, lclintf,
+     concour_params {$IFDEF WINDOWS},Windows, ComObj{$ENDIF};
 
 { TExpFrm }
 
@@ -86,6 +89,11 @@ begin
     FinalSpeedButton.Enabled:=False;
     TotalSpeedButton.Enabled:=False;
   end;
+end;
+
+procedure TExpFrm.FormCreate(Sender: TObject);
+begin
+  DirectoryEdit1.Directory:=cfg.RepPath;
 end;
 
 procedure TExpFrm.RefereeSpeedButtonClick(Sender: TObject);
@@ -149,7 +157,10 @@ var
   RepName : String;
 begin
   if Assigned(InitProc) then TProcedure(InitProc); // рекомендация wiki FPC
-  ForceDirectories(cfg.RepPath); //на случай, если нет такого каталога
+  if Trim(DirectoryEdit1.Directory)='' then DirectoryEdit1.Directory:= cfg.RepPath;
+  if RightStr(DirectoryEdit1.Directory,1)<>PathDelim then
+    DirectoryEdit1.Directory:=DirectoryEdit1.Directory + PathDelim;
+  ForceDirectories(DirectoryEdit1.Directory); //на случай, если нет такого каталога
   //
   DM.FillRepParams;   // Получить параметры отчетов из ini в TStringList
   //
@@ -211,10 +222,10 @@ begin
       else  SelectRep(DM.CurrentRoute, DM.CurrRouteType); //одиночный отчет
     end;
     //**---------------------
-    RepName := cfg.RepPath + 'concour_report_' + DM.RepParams.Values['REP_DATE'] +
+    RepName := DirectoryEdit1.Directory + 'concour_report_' + DM.RepParams.Values['REP_DATE'] +
                  '_' + FormatDateTime('yymmddhhnnss',now)+ '.xlsx';
     if FileExists(RepName) then
-      if not DeleteFile(RepName) then
+      if not SysUtils.DeleteFile(RepName) then
       begin
         ShowMessage('Ошибка сохранения отчета!');
         Exit;
@@ -229,7 +240,9 @@ begin
       end;
     //    else
     xlApp.ActiveWorkbook.SaveAs(U2V(RepName)); //'c:\Develop\rep.xlsx');   // если без пути, то пишет в Мои документы
-    ShowMessage('Отчет сохранен в '+RepName);
+    xlApp.ActiveWorkbook.Close;
+    Application.MessageBox(PAnsiChar('Отчет сохранен в '+RepName),
+         'Сохранение',MB_OK);
   finally
     //todo: закрывать - по требованию?
     xlApp.Quit;
