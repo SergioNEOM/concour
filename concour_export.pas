@@ -192,9 +192,10 @@ begin
         DM.Work2.Close;
         DM.Work2.Params.Clear;
         DM.Work2.SQL.Text := 'select DISTINCT g.route,r.route_type,r.routename '+
-             ' from v_git g, routes r where g.route=r."_rowid_" and g.tournament=1 '+
+             ' from v_git g, routes r where g.route=r."_rowid_" and g.tournament=:par1 '+
              ' order by g.route;';
         try
+          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
           DM.Work2.Open;
           if DM.Work2.IsEmpty then Exit;
           DM.Work2.First;

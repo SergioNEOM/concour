@@ -500,7 +500,7 @@ begin
   begin
     // выделение полей со штрафными очками розовым цветом
     if (LeftStr(LowerCase(Column.FieldName),4)='foul')  then
-      if TDBGrid(Sender).DataSource.DataSet.FieldByName(Column.FieldName).AsInteger>0 then
+      if TDBGrid(Sender).DataSource.DataSet.FieldByName(Column.FieldName).AsCurrency>0.0 then
            TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(250,150,150)
       else
            TDBGrid(Sender).Canvas.Brush.Color := Col;

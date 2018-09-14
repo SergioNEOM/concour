@@ -55,7 +55,7 @@ object MainFrm: TMainFrm
           Title.Alignment = taCenter
           Title.MultiLine = True
           Title.Caption = '№'#13#10'п/п'
-          Width = 60
+          Width = 40
           FieldName = 'queue'
           DisplayFormat = '#0'
         end      
@@ -64,7 +64,7 @@ object MainFrm: TMainFrm
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Зачёт'
-          Width = 80
+          Width = 100
           FieldName = 'groupname'
         end      
         item
