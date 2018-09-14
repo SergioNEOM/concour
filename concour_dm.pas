@@ -124,9 +124,9 @@ type
     // Routes
     procedure OpenRoutes(CurrentID: Integer);
     function AddRoute(RouteType, Distance1, Velocity1, Barriers1, Distance2,
-             Velocity2, Barriers2, PenaltyType: Integer; RouteName: string):Integer;
+             Velocity2, Barriers2: Integer; RouteName: string):Integer;
     function EditRoute(RouteID, RouteType, Distance1, Velocity1, Barriers1,
-         Distance2, Velocity2, Barriers2, PenaltyType: Integer; RouteName: string):Boolean;
+         Distance2, Velocity2, Barriers2: Integer; RouteName: string):Boolean;
     function DelRoute(RouteId: Integer):Boolean;
     function GetRouteName(RouteId: Integer):String;
     procedure SetCurrRoute;
@@ -513,13 +513,13 @@ end;
 
 
 function TDM.AddRoute(RouteType, Distance1, Velocity1, Barriers1, Distance2,
-     Velocity2, Barriers2, PenaltyType: Integer; RouteName: string):Integer;
+     Velocity2, Barriers2: Integer; RouteName: string):Integer;
 begin
   Result := -1;
   Work.Close;
   Work.Params.Clear;
-  Work.SQL.Text:='INSERT INTO "routes"("routename","route_type",barriers1,distance1,velocity1,barriers2,distance2,velocity2,"result_type") '+
-          ' VALUES(:p1,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9);';
+  Work.SQL.Text:='INSERT INTO "routes"("routename","route_type",barriers1,distance1,velocity1,barriers2,distance2,velocity2) '+
+          ' VALUES(:p1,:p2,:p3,:p4,:p5,:p6,:p7,:p8);';
   Work.ParamByName('p1').Value:=RouteName;
   Work.ParamByName('p2').Value:=RouteType;
   Work.ParamByName('p3').Value:=Barriers1;
@@ -528,7 +528,6 @@ begin
   Work.ParamByName('p6').Value:=Barriers2;
   Work.ParamByName('p7').Value:=Distance2;
   Work.ParamByName('p8').Value:=Velocity2;
-  Work.ParamByName('p9').Value:=PenaltyType;
   try
     try
       if SQLTransaction1.Active
@@ -555,15 +554,15 @@ begin
 end;
 
 function TDM.EditRoute(RouteID, RouteType, Distance1, Velocity1, Barriers1,
-         Distance2, Velocity2, Barriers2, PenaltyType: Integer;RouteName: string):Boolean;
+         Distance2, Velocity2, Barriers2: Integer;RouteName: string):Boolean;
 begin
   Result := False;
   Work.Close;
   Work.Params.Clear;
   Work.SQL.Text:='UPDATE "routes" SET "routename"=:par1,"route_type"=:par2,'+
        'barriers1=:par3,distance1=:par4,velocity1=:par5,barriers2=:par6,'+
-       'distance2=:par7,velocity2=:par8,"result_type"=:par9 '+
-          ' WHERE _rowid_=:par10;';
+       'distance2=:par7,velocity2=:par8 '+
+          ' WHERE _rowid_=:par9;';
   Work.ParamByName('par1').Value:=RouteName;
   Work.ParamByName('par2').Value:=RouteType;
   Work.ParamByName('par3').Value:=Barriers1;
@@ -572,8 +571,7 @@ begin
   Work.ParamByName('par6').Value:=Barriers2;
   Work.ParamByName('par7').Value:=Distance2;
   Work.ParamByName('par8').Value:=Velocity2;
-  Work.ParamByName('par9').Value:=PenaltyType;
-  Work.ParamByName('par10').Value:=RouteID;
+  Work.ParamByName('par9').Value:=RouteID;
   try
     try
       if SQLTransaction1.Active

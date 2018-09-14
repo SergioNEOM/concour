@@ -23,7 +23,6 @@ type
     Label8: TLabel;
     Label9: TLabel;
     RouteNameEdit: TEdit;
-    Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
     RouteTypeCB: TComboBox;
@@ -33,7 +32,6 @@ type
     Label3: TLabel;
     Panel1: TPanel;
     VelocityCB1: TComboBox;
-    TypeCB: TComboBox;
     VelocityCB2: TComboBox;
     procedure BitBtn2Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);

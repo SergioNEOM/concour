@@ -282,7 +282,6 @@ begin
                BarriersEdit2.Text:=DM.Routes.FieldByName('barriers2').AsString;
                DistEdit2.Text:=DM.Routes.FieldByName('distance2').AsString;
                VelocityCB2.ItemIndex:=DM.Routes.FieldByName('velocity2').AsInteger;
-               TypeCB.ItemIndex:=DM.Routes.FieldByName('result_type').AsInteger;
                GroupBox1.Visible := RouteTypeCB.ItemIndex=1;
              end;
            if ShowModal=mrOK then
@@ -293,13 +292,13 @@ begin
                DM.EditRoute(CurrID,RouteTypeCB.ItemIndex,StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit2.Text),VelocityCB2.ItemIndex,
-                   StrToInt(BarriersEdit2.Text),TypeCB.ItemIndex,RouteNameEdit.Text)
+                   StrToInt(BarriersEdit2.Text),RouteNameEdit.Text)
              end
              else
                CurrID:=DM.AddRoute(RouteTypeCB.ItemIndex,StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit1.Text),VelocityCB2.ItemIndex,
-                   StrToInt(BarriersEdit2.Text),TypeCB.ItemIndex,RouteNameEdit.Text);
+                   StrToInt(BarriersEdit2.Text),RouteNameEdit.Text);
              //DM.OpenRoutes(CurrID); в AddRoute уже вызывается !
            end;
          finally

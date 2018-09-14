@@ -133,8 +133,6 @@ begin
 end;
 
 procedure TExpFrm.SelectRep(Route, RouteType: Integer);
-var
-  ss : String;
 begin
   DM.RepParams.Add('REP_SUBTITLE='+DM.GetRouteName(Route));
   case RouteType of

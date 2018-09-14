@@ -1,12 +1,12 @@
 object StageFrm: TStageFrm
   Left = 182
-  Height = 480
+  Height = 424
   Top = 84
   Width = 600
   Caption = 'StageFrm'
-  ClientHeight = 480
+  ClientHeight = 424
   ClientWidth = 600
-  Constraints.MinHeight = 480
+  Constraints.MinHeight = 424
   Constraints.MinWidth = 600
   OnActivate = FormActivate
   OnCreate = FormCreate
@@ -59,13 +59,13 @@ object StageFrm: TStageFrm
   object Panel1: TPanel
     Left = 0
     Height = 50
-    Top = 430
+    Top = 374
     Width = 600
     Align = alBottom
     BevelInner = bvRaised
     ClientHeight = 50
     ClientWidth = 600
-    TabOrder = 3
+    TabOrder = 2
     object BitBtn1: TBitBtn
       Left = 489
       Height = 30
@@ -91,27 +91,6 @@ object StageFrm: TStageFrm
       TabOrder = 0
     end
   end
-  object TypeCB: TComboBox
-    Left = 257
-    Height = 21
-    Top = 240
-    Width = 208
-    ItemHeight = 13
-    Items.Strings = (
-      'Штрафные очки за ошибки'
-      'Штраф за превышение времени'
-    )
-    TabOrder = 2
-  end
-  object Label4: TLabel
-    Left = 24
-    Height = 17
-    Top = 245
-    Width = 200
-    AutoSize = False
-    Caption = 'Тип штрафов'
-    ParentColor = False
-  end
   object Label5: TLabel
     Left = 24
     Height = 17
@@ -126,7 +105,7 @@ object StageFrm: TStageFrm
     Height = 21
     Top = 152
     Width = 80
-    TabOrder = 4
+    TabOrder = 3
     Text = '300'
   end
   object Label6: TLabel
@@ -152,7 +131,7 @@ object StageFrm: TStageFrm
       '375'
       '400'
     )
-    TabOrder = 5
+    TabOrder = 4
     Text = '300'
   end
   object RouteNameEdit: TEdit
@@ -161,19 +140,19 @@ object StageFrm: TStageFrm
     Hint = 'Введите название маршрута'
     Top = 67
     Width = 287
-    TabOrder = 6
+    TabOrder = 5
     Text = 'Маршрут'
     TextHint = 'Введите название маршрута'
   end
   object GroupBox1: TGroupBox
     Left = 24
     Height = 144
-    Top = 280
+    Top = 232
     Width = 568
     Caption = 'Перепрыжка'
     ClientHeight = 126
     ClientWidth = 564
-    TabOrder = 7
+    TabOrder = 6
     Visible = False
     object Label7: TLabel
       Left = 32
