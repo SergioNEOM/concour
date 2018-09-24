@@ -541,7 +541,7 @@ begin
       MakeBorder(srow,scol+8);
       {10}
       if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
-        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('sumfouls1').AsString))
+        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('totalfouls1').AsString))
       else
         MakeCell(srow,scol+9,U2V('СНЯТ'));
       MakeBorder(srow,scol+9);
@@ -660,7 +660,7 @@ begin
       MakeBorder(srow,scol+8);
       {10}
       if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
-        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('sumfouls1').AsString))
+        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('totalfouls1').AsString))
       else
         MakeCell(srow,scol+9,U2V('СНЯТ'));
       MakeBorder(srow,scol+9);
@@ -670,18 +670,23 @@ begin
       //else -  MakeCell(srow,scol+10,U2V('СНЯТ'));
       MakeBorder(srow,scol+10);
       {12}
-      if DM.Work.FieldByName('place2').AsInteger < FIRED_RIDER then
-        MakeCell(srow,scol+11,U2V(DM.Work.FieldByName('sumfouls2').AsString))
-      else
-        MakeCell(srow,scol+11,U2V('СНЯТ'));
-      MakeBorder(srow,scol+11);
       {13}
-      if DM.Work.FieldByName('place2').AsInteger < FIRED_RIDER then
-        MakeCell(srow,scol+12,U2V(DM.Work.FieldByName('gittime2').AsString));
-      // else  - MakeCell(srow,scol+12,U2V('СНЯТ'));
-      MakeBorder(srow,scol+12);
+      // поля итогов перепрыжки. Если оба значения нулевые, то выводятся пробелы
+      //(не участвовал в перепрыжке)
+      if DM.Work.FieldByName('place2').AsInteger >= FIRED_RIDER then
+        MakeCell(srow,scol+11,U2V('СНЯТ'))
+      else
+        if (DM.Work.FieldByName('totalfouls2').AsCurrency>0.0) or
+           (DM.Work.FieldByName('gittime2').AsCurrency>0.0)    then
+        begin
+          MakeCell(srow,scol+11,U2V(DM.Work.FieldByName('totalfouls2').AsString));
+          MakeCell(srow,scol+12,U2V(DM.Work.FieldByName('gittime2').AsString));
+        end;
       //
-      MakeBorder(srow,scol+13); //вып.норм.
+      MakeBorder(srow,scol+11);
+      MakeBorder(srow,scol+12);
+      {14 -  вып.норм.}
+      MakeBorder(srow,scol+13);
       //-- подогнать высоту строки:
       // Rows("15:15").EntireRow.AutoFit
       xlApp.Rows(U2V(Trim(IntToStr(srow))+':'+Trim(IntToStr(srow)))).EntireRow.AutoFit;
