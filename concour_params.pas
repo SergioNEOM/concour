@@ -97,7 +97,8 @@ end;
 procedure TParams.GetDefaults;
 begin
   DataBaseFileName:=ChangeFileExt(ParamStr(0),'.db');
-  XLSTempFileName:=AppPath+'templates'+PathDelim+'temp.xlsx';
+  //было    XLSTempFileName:=AppPath+'templates'+PathDelim+'temp.xlsx';
+  XLSTempFileName:=ChangeFileExt(ParamStr(0),'.temp');
 end;
 
 procedure TParams.LoadGeneralParams;

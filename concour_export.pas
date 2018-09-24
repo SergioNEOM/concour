@@ -179,7 +179,7 @@ begin
     try
       xlApp.Workbooks.Open(U2V(cfg.XLSTempFileName));  //открыть шаблон   //'c:\Develop\concour\templates\temp.xls');
     except
-      ShowMessage('Не удалось открыть файл шаблона отчетов');
+      ShowMessage('Не удалось открыть файл шаблона отчетов: '+cfg.XLSTempFileName);
       Exit;
     end;
     xlApp.Workbooks.Add;      //создать рабочий отчет
@@ -276,7 +276,7 @@ begin
     // !!! имя не более 31 знака, но для верности ограничим 25-ю
     xlApp.Sheets(1).Name := U2V(UTF8LeftStr(NewName,25));
   except
-    raise Exception.Create('Ошибка в имени листа отчета! Проверьте параметр в конфигурационном файле.');
+    raise Exception.Create('Ошибка в имени листа отчета! ('+NewName+') Проверьте параметр в конфигурационном файле.');
   end;
   Result := 1;
 end;
