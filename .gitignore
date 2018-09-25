@@ -5,8 +5,10 @@ sqlite3/
 source_data/
 *.exe
 *.~*
+*.lps
 concour
 concour.cfg
 concour.dof
+sqlite3.dl*
 
 

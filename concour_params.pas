@@ -59,8 +59,8 @@ end;
 
 procedure TParams.LoadGeneralParams;
 begin
-  DataBaseFileName:= ExpandUNCFileName(ParamByName('General','DBName',''));
-  XLSTempFileName:=ExpandUNCFileName(ParamByName('General','XLSTemp',''));
+  DataBaseFileName:= ExpandFileName(ParamByName('General','DBName',''));
+  XLSTempFileName:=ExpandFileName(ParamByName('General','XLSTemp',''));
   RepPath:=ExpandFileName(ParamByName('General','ReportsDir',''));
   if RightStr(RepPath,1)<>PathDelim then RepPath:=RepPath+PathDelim;
 end;
