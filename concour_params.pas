@@ -24,12 +24,7 @@ type
 
 var
    cfg : TParams;
-{   DataBaseFileName : String;
-   XLSTempFileName  : String;
-   procedure InitDefaults;
-   function LoadGeneralParams(ConfigFileName : String):Boolean;
-   function LoadSectionParams(SectionName : String; var ParamList: TStrings):Boolean;
-}
+
 implementation
 
 uses SysUtils;
@@ -39,46 +34,6 @@ uses SysUtils;
 *  Вместо юнита сделать форму с возможностью изменения параметров?
 *
 *
-}
-
-
-{procedure InitDefaults;
-begin
-  DataBaseFileName:=ChangeFileExt(ParamStr(0),'.db');
-  XLSTempFileName:=ExtractFilePath(ParamStr(0))+'templates'+PathDelim+'temp.xlsx';
-end;
-
-function LoadGeneralParams(ConfigFileName : String):Boolean;
-var
-   cf : TIniFile;
-begin
-  Result := False;
-  if not FileExists(ConfigFileName) then Exit;
-  cf := TIniFile.Create(ConfigFileName);
-  try
-    DataBaseFileName:=cf.ReadString('General','DBName','');
-    XLSTempFileName:=cf.ReadString('General','XLSTemp','');
-    Result := True;
-  finally
-    cf.Free;
-  end;
-end;
-
-function LoadSectionParams(SectionName : String; var ParamList: TStrings):Boolean;
-var
-   cf : TIniFile;
-begin
-  Result := False;
-  if not FileExists(ConfigFileName) then Exit;
-  cf := TIniFile.Create(ConfigFileName);
-  try
-    DataBaseFileName:=cf.ReadString('General','DBName','');
-    XLSTempFileName:=cf.ReadString('General','XLSTemp','');
-    Result := True;
-  finally
-    cf.Free;
-  end;
-end;
 }
 
 constructor TParams.Create;
@@ -99,6 +54,7 @@ begin
   DataBaseFileName:=ChangeFileExt(ParamStr(0),'.db');
   //было    XLSTempFileName:=AppPath+'templates'+PathDelim+'temp.xlsx';
   XLSTempFileName:=ChangeFileExt(ParamStr(0),'.temp');
+  RepPath:=ExtractFilePath(ParamStr(0))+'reports\';
 end;
 
 procedure TParams.LoadGeneralParams;

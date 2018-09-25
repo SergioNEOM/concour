@@ -265,6 +265,7 @@ end;
 //*******************
 function TExpFrm.CopySheet(Num:Integer;NewName:String):Integer;
 begin
+  if NewName='' then NewName:='--Concour-report--';
   // копируем указанный лист из книги шаблонов(1) - в новую книгу(2)
   if Num>0 then xlApp.Workbooks(1).Sheets(Num).Copy(xlApp.Workbooks(2).Sheets(1))
   else xlApp.Workbooks(2).Sheets.Add(xlApp.Workbooks(2).Sheets(1));
