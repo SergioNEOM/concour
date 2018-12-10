@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="13">
+    <Units Count="14">
       <Unit0>
         <Filename Value="concour.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -12,9 +12,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="12"/>
         <CursorPos X="20" Y="37"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -23,7 +22,9 @@
         <ComponentName Value="MainFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UsageCount Value="24"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="144" Y="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -34,8 +35,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="4"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -46,18 +46,19 @@
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="concour_DM"/>
         <EditorIndex Value="8"/>
-        <TopLine Value="288"/>
-        <CursorPos X="39" Y="301"/>
-        <UsageCount Value="24"/>
+        <TopLine Value="259"/>
+        <CursorPos X="103" Y="274"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="concour_params.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="43"/>
-        <CursorPos X="51" Y="57"/>
-        <UsageCount Value="24"/>
+        <CursorPos X="77" Y="74"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -67,14 +68,14 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="concour_rep.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit6>
       <Unit7>
@@ -84,7 +85,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="5"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
@@ -94,7 +95,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
@@ -104,7 +105,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="10"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit9>
       <Unit10>
@@ -113,12 +114,12 @@
         <ComponentName Value="ExpFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="172"/>
+        <TopLine Value="255"/>
         <CursorPos X="5" Y="190"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit10>
       <Unit11>
         <Filename Value="C:\lazarus\lcl\lclmessageglue.pas"/>
@@ -135,127 +136,134 @@
         <CursorPos X="3" Y="712"/>
         <UsageCount Value="10"/>
       </Unit12>
+      <Unit13>
+        <Filename Value="BugFixHistory.txt"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="64" Y="24"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit13>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="201" TopLine="179"/>
+        <Caret Line="202" TopLine="180"/>
       </Position1>
       <Position2>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="202" TopLine="180"/>
+        <Caret Line="203" TopLine="181"/>
       </Position2>
       <Position3>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="203" TopLine="181"/>
+        <Caret Line="205" TopLine="183"/>
       </Position3>
       <Position4>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="205" TopLine="183"/>
+        <Caret Line="206" TopLine="184"/>
       </Position4>
       <Position5>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="206" TopLine="184"/>
+        <Caret Line="207" TopLine="185"/>
       </Position5>
       <Position6>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="207" TopLine="185"/>
+        <Caret Line="208" TopLine="186"/>
       </Position6>
       <Position7>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="208" TopLine="186"/>
+        <Caret Line="209" TopLine="187"/>
       </Position7>
       <Position8>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="209" TopLine="187"/>
+        <Caret Line="210" TopLine="188"/>
       </Position8>
       <Position9>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="210" TopLine="188"/>
+        <Caret Line="211" TopLine="189"/>
       </Position9>
       <Position10>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="211" TopLine="189"/>
+        <Caret Line="213" TopLine="191"/>
       </Position10>
       <Position11>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="213" TopLine="191"/>
+        <Caret Line="215" TopLine="193"/>
       </Position11>
       <Position12>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="215" TopLine="193"/>
+        <Caret Line="219" TopLine="197"/>
       </Position12>
       <Position13>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="219" TopLine="197"/>
+        <Caret Line="248" TopLine="229"/>
       </Position13>
       <Position14>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="248" TopLine="229"/>
+        <Caret Line="250" TopLine="229"/>
       </Position14>
       <Position15>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="250" TopLine="229"/>
+        <Caret Line="189" TopLine="166"/>
       </Position15>
       <Position16>
-        <Filename Value="concour_export.pas"/>
-        <Caret Line="189" TopLine="166"/>
+        <Filename Value="concour.lpr"/>
+        <Caret Line="34" Column="18" TopLine="12"/>
       </Position16>
       <Position17>
         <Filename Value="concour.lpr"/>
-        <Caret Line="34" Column="18" TopLine="12"/>
+        <Caret Line="24" TopLine="12"/>
       </Position17>
       <Position18>
         <Filename Value="concour.lpr"/>
-        <Caret Line="24" TopLine="12"/>
+        <Caret Line="25" TopLine="12"/>
       </Position18>
       <Position19>
         <Filename Value="concour.lpr"/>
-        <Caret Line="25" TopLine="12"/>
+        <Caret Line="26" TopLine="12"/>
       </Position19>
       <Position20>
         <Filename Value="concour.lpr"/>
-        <Caret Line="26" TopLine="12"/>
+        <Caret Line="33" Column="3" TopLine="12"/>
       </Position20>
       <Position21>
         <Filename Value="concour.lpr"/>
-        <Caret Line="33" Column="3" TopLine="12"/>
+        <Caret Line="24" TopLine="12"/>
       </Position21>
       <Position22>
         <Filename Value="concour.lpr"/>
-        <Caret Line="24" TopLine="12"/>
+        <Caret Line="25" TopLine="12"/>
       </Position22>
       <Position23>
         <Filename Value="concour.lpr"/>
-        <Caret Line="25" TopLine="12"/>
+        <Caret Line="26" TopLine="12"/>
       </Position23>
       <Position24>
         <Filename Value="concour.lpr"/>
-        <Caret Line="26" TopLine="12"/>
+        <Caret Line="22" TopLine="13"/>
       </Position24>
       <Position25>
         <Filename Value="concour.lpr"/>
-        <Caret Line="22" TopLine="13"/>
+        <Caret Line="23" TopLine="13"/>
       </Position25>
       <Position26>
         <Filename Value="concour.lpr"/>
-        <Caret Line="23" TopLine="13"/>
+        <Caret Line="24" TopLine="13"/>
       </Position26>
       <Position27>
         <Filename Value="concour.lpr"/>
-        <Caret Line="24" TopLine="13"/>
+        <Caret Line="26" Column="12" TopLine="13"/>
       </Position27>
       <Position28>
-        <Filename Value="concour.lpr"/>
-        <Caret Line="26" Column="12" TopLine="13"/>
+        <Filename Value="concour_export.pas"/>
+        <Caret Line="222" Column="20" TopLine="214"/>
       </Position28>
       <Position29>
         <Filename Value="concour_export.pas"/>
-        <Caret Line="222" Column="20" TopLine="214"/>
+        <Caret Line="53" Column="24" TopLine="40"/>
       </Position29>
       <Position30>
-        <Filename Value="concour_export.pas"/>
-        <Caret Line="53" Column="24" TopLine="40"/>
+        <Filename Value="concour_dm.pas"/>
+        <Caret Line="276" Column="98" TopLine="254"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

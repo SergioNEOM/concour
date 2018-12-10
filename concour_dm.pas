@@ -28,7 +28,7 @@ const
     'SELECT git._rowid_ as id, git.tournament, git.route, '+
          'git."queue" as queue, git."rider" as rider, git.place, '+
          'git.place2, git."group", groups.groupname, '+
-         'cast(riders."lastname" as char(30)) as lastname, cast(riders."regnum" as char(10)) as regnum, '+
+         'cast(riders."lastname" as char(30))||" "||cast(riders."firstname" as char(25)) as lastname, cast(riders."regnum" as char(10)) as regnum, '+
          'cast(riders."category" as char(10)) as category, git.horse as horse, '+
          'cast(horses."nickname" as CHAR(25)) as nickname, cast(horses."register" as CHAR(25)) as register, '+
          'cast(horses."owner" as CHAR(25)) as owner, cast(riders."region" as char(50)) as region,'+
