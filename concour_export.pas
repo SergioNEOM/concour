@@ -17,8 +17,9 @@ const
   xlEdgeTop    = 8;
   xlEdgeBottom = 9;
   xlEdgeRight  =10;
-  rty_Start    =-2;   // стартовый протокол
-  rty_Referee  =-1;   // судейский протокол
+  rty_RefReJump=-3;   // судейский протокол с перепрыжкой
+  rty_Referee  =-2;   // судейский протокол (обычный)
+  rty_Start    =-1;   // стартовый протокол
   rty_Single   = 0;   // одиночный итоговый протокол
   rty_Total    =99;  // все маршруты в одном файле (итоговые протоколы)
 
@@ -58,7 +59,7 @@ type
     function MakeBorder(crow,ccol: Integer):Boolean;
     function MakeBold(crow,ccol,beginchar,len:Integer):Boolean;
     procedure MakeRepHeader;
-    procedure MakeStartXLS(ShowPenalties:Boolean);
+    procedure MakeStartXLS(RepType: Integer);
     procedure MakeXLS_0(Route: Integer);
     procedure MakeXLS_1(Route: Integer);
     {$ENDIF}
@@ -99,7 +100,9 @@ end;
 procedure TExpFrm.RefereeSpeedButtonClick(Sender: TObject);
 begin
   {$IFDEF WINDOWS}
-  MakeXLS(rty_Referee,True);
+  if DM.CurrRouteType=1 // с перепрыжкой
+  then  MakeXLS(rty_RefReJump,True)
+  else  MakeXLS(rty_Referee,True);
   {$ENDIF};
 end;
 
@@ -191,7 +194,7 @@ begin
     //**---------------------
     if RepType<0 then //стартовый и судейский - только для текущего маршрута
     begin
-      MakeStartXLS( Boolean(RepType=rty_Referee) );
+      MakeStartXLS(RepType);
     end
     else
     begin
@@ -307,6 +310,7 @@ end;
 //*******************
 
 procedure TExpFrm.MakeRepHeader;
+var ss: String;
 begin
   // Section уже определена для каждого отчета
   s := UpperCase(cfg.ParamByName(Section,'HeaderCell',''));
@@ -330,14 +334,17 @@ begin
   s := UpperCase(cfg.ParamByName(Section,'DateCell',''));
   if s<>'' then //номер ячейки с датой проведения
   begin
-    xlApp.Range[U2V(s)].Value := U2V(DM.RepParams.Values['REP_DATE']);
+    ss := DM.RepParams.Values['REP_DATE'];
+    if ss <> DM.RepParams.Values['REP_DATE2'] then
+          ss := ss+#10+DM.RepParams.Values['REP_DATE2'];
+    xlApp.Range[U2V(s)].Value := U2V(ss);
   end;
 end;
 
 //*******************
 //**
 //**
-procedure TExpFrm.MakeStartXLS(ShowPenalties:Boolean);
+procedure TExpFrm.MakeStartXLS(RepType:Integer);
 var
   i : Integer;
 begin
@@ -350,8 +357,9 @@ begin
   //с этого момента xlApp.Workbooks(2).Activate;
   GetStartPos;
   //
-  if ShowPenalties then DM.RepParams.Values['REP_SUBTITLE']:='Судейский протокол'
-  else DM.RepParams.Values['REP_SUBTITLE']:='Стартовый протокол';
+  if RepType=rty_Start
+  then DM.RepParams.Values['REP_SUBTITLE']:='Стартовый протокол'
+  else DM.RepParams.Values['REP_SUBTITLE']:='Судейский протокол';
   MakeRepHeader;
   //
   DM.Work.Close;
@@ -418,7 +426,8 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       //--
-      if ShowPenalties then  //судейский - с колонками для штрафов
+      if ((RepType=rty_Referee) or (RepType=rty_RefReJump))  then
+      //судейский - с колонками для штрафов
         for i:=1 to 16 do
           MakeBorder(srow,scol+8+i);
       //
@@ -427,6 +436,15 @@ begin
       xlApp.Rows(U2V(Trim(IntToStr(srow))+':'+Trim(IntToStr(srow)))).EntireRow.AutoFit;
       //*** следующая строка
       Inc(srow);
+      if RepType=rty_RefReJump then
+      begin
+        //судейский протокол для маршрута с перепрыжкой - доп.строка;
+        //MakeCell(srow,scol+8,U2V('Ш.о. '+#10+'перепрыжки'));
+        MakeCell(srow,scol+8,U2V('||  '+#10+'=>'));
+        for i:=1 to 16 do
+          MakeBorder(srow,scol+8+i);
+        Inc(srow);
+      end;
       DM.Work.Next;
       ProgressBar1.Position := ProgressBar1.Position + 1;
     end;
@@ -447,7 +465,7 @@ begin
   // судейский $A$1:$Y$<srow>
   srow:=srow+2;
   s := '$A$1:$';
-  if ShowPenalties  then
+  if ((RepType=rty_Referee) or (RepType=rty_RefReJump))  then
   begin
     s := s + 'Y$';
     i := xlLandscape;

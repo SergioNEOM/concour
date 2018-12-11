@@ -132,10 +132,10 @@ type
     procedure SetCurrRoute;
     // Tournaments
     procedure OpenTournaments(CurrentID: Integer);
-    function AddTournament(TournamentDate, TournamentName, TournamentPlace,
+    function AddTournament(TournamentDate, TournamentDate2, TournamentName, TournamentPlace,
          TournamentReferee, TournamentAssistant: String):Integer;
-    function EditTournament(TournamentId: Integer; TournamentDate, TournamentName,
-         TournamentPlace, TournamentReferee, TournamentAssistant: String):Boolean;
+    function EditTournament(TournamentId: Integer; TournamentDate, TournamentDate2,
+         TournamentName, TournamentPlace, TournamentReferee, TournamentAssistant: String):Boolean;
     function DelTournament(TournamentId: Integer):Boolean;
     procedure SetCurrTournament;
     // Git
@@ -212,6 +212,7 @@ begin
     RepParams.Add('REP_TITLE='+DM.Tournaments.FieldByName('tourname').AsString);
     RepParams.Add('REP_PLACE='+DM.Tournaments.FieldByName('tourplace').AsString);
     RepParams.Add('REP_DATE='+DM.Tournaments.FieldByName('Дата соревнования').AsString);
+    RepParams.Add('REP_DATE2='+DM.Tournaments.FieldByName('Дата2').AsString);
     RepParams.Add('REP_REFEREE='+DM.Tournaments.FieldByName('referee').AsString);
     RepParams.Add('REP_ASSISTANT='+DM.Tournaments.FieldByName('assistant').AsString);
   end
@@ -220,6 +221,7 @@ begin
     RepParams.Add('REP_TITLE=Кубок');
     RepParams.Add('REP_PLACE=г.Тамбов');
     RepParams.Add('REP_DATE='+FormatDateTime('dd-mm-yyyy',now));
+    RepParams.Add('REP_DATE2='+FormatDateTime('dd-mm-yyyy',now));
   end;
 end;
 
@@ -887,19 +889,20 @@ begin
   end;
 end;
 
-function TDM.AddTournament(TournamentDate, TournamentName, TournamentPlace,
+function TDM.AddTournament(TournamentDate, TournamentDate2, TournamentName, TournamentPlace,
          TournamentReferee, TournamentAssistant: String):Integer;
 begin
   Result := -1;
   Work.Close;
   Work.Params.Clear;
-  Work.SQL.Text:='INSERT INTO tournaments(tourdate, tourname,tourplace,referee,assistant) '+
-          ' VALUES(:p1,:p2,:p3,:p4,:p5);';
+  Work.SQL.Text:='INSERT INTO tournaments(tourdate,tourdate2,tourname,tourplace,referee,assistant) '+
+          ' VALUES(:p1,:p2,:p3,:p4,:p5,:p6);';
   Work.ParamByName('p1').Value:=TournamentDate;
-  Work.ParamByName('p2').Value:=TournamentName;
-  Work.ParamByName('p3').Value:=TournamentPlace;
-  Work.ParamByName('p4').Value:=TournamentReferee;
-  Work.ParamByName('p5').Value:=TournamentAssistant;
+  Work.ParamByName('p2').Value:=TournamentDate2;
+  Work.ParamByName('p3').Value:=TournamentName;
+  Work.ParamByName('p4').Value:=TournamentPlace;
+  Work.ParamByName('p5').Value:=TournamentReferee;
+  Work.ParamByName('p6').Value:=TournamentAssistant;
   try
     try
       if SQLTransaction1.Active
@@ -925,21 +928,22 @@ begin
   end;
 end;
 
-function TDM.EditTournament(TournamentId: Integer; TournamentDate, TournamentName,
-         TournamentPlace, TournamentReferee, TournamentAssistant: String):Boolean;
+function TDM.EditTournament(TournamentId: Integer; TournamentDate,TournamentDate2,
+         TournamentName,TournamentPlace,TournamentReferee,TournamentAssistant: String):Boolean;
 begin
   Result := False;
   Work.Close;
   Work.Params.Clear;
-  Work.SQL.Text:='UPDATE tournaments SET tourdate=:par1,tourname=:par2,'+
-       ' tourplace=:par3,referee=:par4,assistant=:par5 '+
-       ' WHERE _rowid_=:par6;';
+  Work.SQL.Text:='UPDATE tournaments SET tourdate=:par1,tourdate2=:par2,'+
+       ' tourname=:par3,tourplace=:par4,referee=:par5,assistant=:par6 '+
+       ' WHERE _rowid_=:par7;';
   Work.ParamByName('par1').Value:=TournamentDate;
-  Work.ParamByName('par2').Value:=TournamentName;
-  Work.ParamByName('par3').Value:=TournamentPlace;
-  Work.ParamByName('par4').Value:=TournamentReferee;
-  Work.ParamByName('par5').Value:=TournamentAssistant;
-  Work.ParamByName('par6').Value:=TournamentId;
+  Work.ParamByName('par2').Value:=TournamentDate2;
+  Work.ParamByName('par3').Value:=TournamentName;
+  Work.ParamByName('par4').Value:=TournamentPlace;
+  Work.ParamByName('par5').Value:=TournamentReferee;
+  Work.ParamByName('par6').Value:=TournamentAssistant;
+  Work.ParamByName('par7').Value:=TournamentId;
   try
     try
       if SQLTransaction1.Active

@@ -144,4 +144,36 @@ object TournamentFrm: TTournamentFrm
     TabOrder = 5
     Text = 'AssistantEdit'
   end
+  object TourDate2: TDateTimePicker
+    Left = 160
+    Height = 21
+    Top = 32
+    Width = 111
+    CenturyFrom = 1941
+    MaxDate = 2958465
+    MinDate = 36526
+    AutoSize = False
+    TabOrder = 6
+    TrailingSeparator = False
+    TextForNullDate = '---'
+    LeadingZeros = True
+    Kind = dtkDate
+    TimeFormat = tf24
+    TimeDisplay = tdHMS
+    DateMode = dmComboBox
+    Date = 43305
+    Time = 0.386992893516435
+    UseDefaultSeparators = True
+    HideDateTimeParts = []
+    MonthNames = 'Long'
+  end
+  object Label6: TLabel
+    Left = 130
+    Height = 13
+    Top = 38
+    Width = 24
+    AutoSize = False
+    Caption = 'по'
+    ParentColor = False
+  end
 end

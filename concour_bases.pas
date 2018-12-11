@@ -311,6 +311,7 @@ begin
              if DM.Tournaments.Locate('id',RecId,[]) then
              begin
                TourDate.Date := StrToDate(DM.Tournaments.FieldByName('Дата соревнования').AsString,'-');
+               TourDate2.Date := StrToDate(DM.Tournaments.FieldByName('Дата2').AsString,'-');
                TourNameEdit.Text:= DM.Tournaments.FieldByName('tourname').AsString;
                TourPlaceEdit.Text:= DM.Tournaments.FieldByName('tourplace').AsString;
                RefereeEdit.Text:= DM.Tournaments.FieldByName('referee').AsString;
@@ -322,12 +323,14 @@ begin
              if RecId>0 then
              begin
                CurrID:=RecId;
-               DM.EditTournament(CurrID,FormatDateTime('yyyy-mm-dd',TourDate.Date),TourNameEdit.Text,
+               DM.EditTournament(CurrID,FormatDateTime('yyyy-mm-dd',TourDate.Date),
+                   FormatDateTime('yyyy-mm-dd',TourDate2.Date),TourNameEdit.Text,
                    TourPlaceEdit.Text, RefereeEdit.Text, AssistantEdit.Text);
                //todo: обработать результат ?
              end
              else
-               CurrID:=DM.AddTournament(FormatDateTime('yyyy-mm-dd',TourDate.Date),TourNameEdit.Text,
+               CurrID:=DM.AddTournament(FormatDateTime('yyyy-mm-dd',TourDate.Date),
+                   FormatDateTime('yyyy-mm-dd',TourDate2.Date),TourNameEdit.Text,
                    TourPlaceEdit.Text, RefereeEdit.Text, AssistantEdit.Text);
              DM.OpenTournaments(CurrID);
            end;

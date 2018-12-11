@@ -13,7 +13,9 @@ type
   TTournamentFrm = class(TForm)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    Label6: TLabel;
     TourDate: TDateTimePicker;
+    TourDate2: TDateTimePicker;
     TourNameEdit: TEdit;
     TourPlaceEdit: TEdit;
     RefereeEdit: TEdit;
@@ -44,6 +46,12 @@ constructor TTournamentFrm.Create(AOwner: TComponent; CurrentID: Integer);overlo
 begin
   Inherited Create(AOwner);
   CurrTour:= CurrentID;
+  TourDate.Date:= Now;
+  TourDate2.Date:= Now;
+  TourNameEdit.Text:='';
+  TourPlaceEdit.Text:= '';
+  RefereeEdit.Text:= '';
+  AssistantEdit.Text:= '';
 end;
 
 end.
