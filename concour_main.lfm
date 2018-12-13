@@ -4,18 +4,18 @@ object MainFrm: TMainFrm
   Top = 108
   Width = 1124
   Caption = 'MainFrm'
-  ClientHeight = 543
+  ClientHeight = 546
   ClientWidth = 1124
   Menu = MainMenu1
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.8.2.0'
+  LCLVersion = '1.8.4.0'
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 21
-    Top = 522
+    Height = 23
+    Top = 523
     Width = 1124
     Panels = <    
       item
@@ -33,16 +33,16 @@ object MainFrm: TMainFrm
   end
   object Panel3: TPanel
     Left = 0
-    Height = 468
+    Height = 469
     Top = 54
     Width = 1124
     Align = alClient
-    ClientHeight = 468
+    ClientHeight = 469
     ClientWidth = 1124
     TabOrder = 1
     object GitDBGrid: TDBGrid
       Left = 1
-      Height = 356
+      Height = 357
       Top = 111
       Width = 1122
       Align = alClient
@@ -337,6 +337,7 @@ object MainFrm: TMainFrm
       OnEditingDone = GitDBGridEditingDone
       OnEndDrag = GitDBGridEndDrag
       OnMouseUp = GitDBGridMouseUp
+      OnTitleClick = GitDBGridTitleClick
     end
     object PageControl1: TPageControl
       Left = 1
@@ -352,8 +353,8 @@ object MainFrm: TMainFrm
       Options = [nboDoChangeOnSetIndex]
       object TabSheet1: TTabSheet
         Caption = 'TabSheet1'
-        ClientHeight = 106
-        ClientWidth = 1118
+        ClientHeight = 102
+        ClientWidth = 1114
         object Label12: TLabel
           Left = 8
           Height = 37
@@ -373,10 +374,10 @@ object MainFrm: TMainFrm
         end
         object TimePenaltyCB: TComboBox
           Left = 984
-          Height = 29
+          Height = 21
           Top = 24
           Width = 72
-          ItemHeight = 0
+          ItemHeight = 13
           ItemIndex = 0
           Items.Strings = (
             '1'
@@ -396,7 +397,7 @@ object MainFrm: TMainFrm
         end
         object MaxTimeEdit: TEdit
           Left = 752
-          Height = 27
+          Height = 21
           Top = 26
           Width = 80
           Alignment = taRightJustify
@@ -416,10 +417,10 @@ object MainFrm: TMainFrm
         end
         object VelocityCB1: TComboBox
           Left = 552
-          Height = 29
+          Height = 21
           Top = 24
           Width = 75
-          ItemHeight = 0
+          ItemHeight = 13
           ItemIndex = 0
           Items.Strings = (
             '300'
@@ -463,7 +464,7 @@ object MainFrm: TMainFrm
         end
         object Barriers1SpinEdit: TSpinEdit
           Left = 232
-          Height = 27
+          Height = 21
           Top = 26
           Width = 58
           MaxValue = 15
@@ -479,7 +480,7 @@ object MainFrm: TMainFrm
           Top = 6
           Width = 129
           AutoSize = False
-          Caption = 'К-во препятствий'
+          Caption = 'К-во прыжков'
           ParentColor = False
         end
         object BitBtn1: TBitBtn
@@ -1188,8 +1189,8 @@ object MainFrm: TMainFrm
       end
       object TabSheet2: TTabSheet
         Caption = 'TabSheet2'
-        ClientHeight = 106
-        ClientWidth = 1118
+        ClientHeight = 102
+        ClientWidth = 1114
         object Panel1: TPanel
           Left = 0
           Height = 102
@@ -1224,7 +1225,7 @@ object MainFrm: TMainFrm
             Top = 8
             Width = 144
             AutoSize = False
-            Caption = 'К-во препятствий'
+            Caption = 'К-во прыжков'
             ParentColor = False
           end
           object Barriers2SpinEdit: TSpinEdit
@@ -1271,10 +1272,10 @@ object MainFrm: TMainFrm
           end
           object VelocityCB2: TComboBox
             Left = 440
-            Height = 23
+            Height = 21
             Top = 26
             Width = 80
-            ItemHeight = 0
+            ItemHeight = 13
             ItemIndex = 0
             Items.Strings = (
               '300'
@@ -1318,10 +1319,10 @@ object MainFrm: TMainFrm
           end
           object Time2PenaltyCB: TComboBox
             Left = 760
-            Height = 23
+            Height = 21
             Top = 26
             Width = 80
-            ItemHeight = 0
+            ItemHeight = 13
             ItemIndex = 1
             Items.Strings = (
               '1'

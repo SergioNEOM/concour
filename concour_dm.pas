@@ -101,8 +101,8 @@ type
     CurrentTournament,
      CurrentRoute,
      CurrRouteType : Integer;
-    CurrRouteName     : String;
-    RepParams : TStringList;
+    CurrRouteName  : String;
+    RepParams      : TStringList;
     //--
     function TableExists(TableName: string): Boolean;
     function CreateTable: Boolean;
@@ -130,6 +130,7 @@ type
     function DelRoute(RouteId: Integer):Boolean;
     function GetRouteName(RouteId: Integer):String;
     procedure SetCurrRoute;
+    function UpdateColNames(cn:String):Boolean;
     // Tournaments
     procedure OpenTournaments(CurrentID: Integer);
     function AddTournament(TournamentDate, TournamentDate2, TournamentName, TournamentPlace,
@@ -506,8 +507,10 @@ begin
   //'SELECT id, routename, route_type, barriers1, barriers2, result_type FROM v_routes;';
   try
     Routes.Open;
-    if (not Routes.IsEmpty)  and (CurrentID>0) then Routes.Locate('id',CurrentID,[]);
-    // SetCurrRoute; устанавливать только когда требуется
+    if (not Routes.IsEmpty)  and (CurrentID>0) and (Routes.Locate('id',CurrentID,[])) then
+        //Если есть запись - меняем заголовки столбцов в гриде
+        MainFrm.SetColNames(Routes.FieldByName('colnames').AsString);
+    //SetCurrRoute; устанавливать только когда требуется
   except
     raise Exception.Create('Ошибка открытия списка маршрутов');
   end;
@@ -646,6 +649,32 @@ begin
     CurrRouteName:=Routes.FieldByName('routename').AsString;
   end;
 end;
+
+function TDM.UpdateColNames(cn:String):Boolean;
+begin
+  Result := False;
+  Work.Close;
+  Work.Params.Clear;
+  Work.SQL.Text:='UPDATE "routes" SET colnames=:par1 WHERE _rowid_=:par2;';
+  Work.ParamByName('par1').Value:=cn;
+  Work.ParamByName('par2').Value:=CurrentRoute;
+  try
+    try
+      if SQLTransaction1.Active
+       then SQLTransaction1.CommitRetaining
+       else SQLTransaction1.StartTransaction;
+      Work.ExecSQL;
+      SQLTransaction1.CommitRetaining;
+      Result := True;
+      OpenRoutes(CurrentRoute);
+    except
+      SQLTransaction1.Rollback;
+    end;
+  finally
+    Work.Close;
+  end;
+end;
+
 
 //*******
 

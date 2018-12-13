@@ -114,6 +114,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure CalcOverlapBitBtnClick(Sender: TObject);
     procedure CalcPlacesBitBtnClick(Sender: TObject);
+    procedure GitDBGridTitleClick(Column: TColumn);
     procedure GitResultsActionExecute(Sender: TObject);
     procedure GitShuffleActionExecute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
@@ -164,7 +165,8 @@ type
     RangedView : Boolean;
     SumPenalty: Currency;
     OverList:   String;
-    RouteTypeSL: TStringList;
+    RouteTypeSL,
+     ColNames: TStringList;
     procedure GitGridRefreshVisibility;
     function ShowBasesDialog(BaseName: string; CurrentID: Integer): Integer;
     procedure CalcMaxTime;
@@ -172,6 +174,7 @@ type
     procedure CalcPenalties;
     procedure CalcPlaces;
     procedure CalcPlacesOver;
+    procedure SetColNames(cn : String);
   end;
 
 var
@@ -219,6 +222,8 @@ begin
   //----
   OverList:='';
   RangedView:=False;
+  //--
+  ColNames := TStringList.Create;
 end;
 
 
@@ -329,7 +334,9 @@ end;
 
 procedure TMainFrm.FormDestroy(Sender: TObject);
 begin
-  RouteTypeSL.Free;
+  if Assigned(RouteTypeSL) then RouteTypeSL.Free;
+  if Assigned(ColNames) then ColNames.Free;
+
 end;
 
 
@@ -342,6 +349,22 @@ end;
 procedure TMainFrm.CalcPlacesBitBtnClick(Sender: TObject);
 begin
   GitResultsActionExecute(Sender);
+end;
+
+procedure TMainFrm.GitDBGridTitleClick(Column: TColumn);
+var
+  s : String;
+begin
+  if LowerCase(LeftStr(Column.FieldName,4))='foul' then
+  begin
+    s:=InputBox('Заголовок','Вводите наименование',Column.Title.Caption);
+    if s<>'' then
+    begin
+      Column.Title.Caption:=s;
+      ColNames.Values[Column.FieldName]:=s;
+      if not DM.UpdateColNames(ColNames.DelimitedText) then ShowMessage('Изменение не записалось в БД!');
+    end;
+  end;
 end;
 
 procedure TMainFrm.GitResultsActionExecute(Sender: TObject);
@@ -1214,6 +1237,19 @@ begin
   end;
 end;
 
+procedure TMainFrm.SetColNames(cn:String);
+var
+  i: Integer;
+  s : String;
+begin
+  ColNames.DelimitedText:=cn;
+  for i:=0 to GitDBGrid.Columns.Count-1 do
+    if LowerCase(LeftStr(GitDBGrid.Columns[i].FieldName,5)) = 'foul1' then
+    begin
+      s := ColNames.Values[GitDBGrid.Columns[i].FieldName];
+      if s<>'' then GitDBGrid.Columns[i].Title.Caption:=s;
+    end;
+end;
 
 //*****************************************************************************8
 //
