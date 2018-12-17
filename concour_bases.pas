@@ -17,6 +17,7 @@ type
     BitBtn2: TBitBtn;
     BasesDBGrid: TDBGrid;
     AddBitBtn: TBitBtn;
+    Button1: TButton;
     EditBitBtn: TBitBtn;
     DelBitBtn: TBitBtn;
     SeekLabel: TLabel;
@@ -29,6 +30,7 @@ type
     procedure AddBitBtnClick(Sender: TObject);
     procedure BasesDBGridUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
     procedure BitBtn2Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
     procedure EditBitBtnClick(Sender: TObject);
     procedure DelBitBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -98,9 +100,9 @@ begin
          Caption:='Выбор маршрута';
          SeekField:='routename';
          BasesDBGrid.DataSource := nil;
-         if not DM.Routes.Active then DM.OpenRoutes(CurrID)
-         else DM.Routes.Locate('id',CurrID,[]);
          BasesDBGrid.DataSource := DM.DS_Routes;
+         if not BasesDBGrid.DataSource.DataSet.Active then DM.OpenRoutes(CurrID)
+         else BasesDBGrid.DataSource.DataSet.Locate('id',CurrID,[]);
        end;
     'tournaments':
        begin
@@ -112,7 +114,8 @@ begin
          BasesDBGrid.DataSource := DM.DS_Tournaments;
        end;
   end;
-  if BasesDBGrid.DataSource.DataSet.Active then BasesDBGrid.DataSource.DataSet.First;
+  if BasesDBGrid.DataSource.DataSet.Active and (CurrID<1)
+    then BasesDBGrid.DataSource.DataSet.First;  //Перестраховка на случай BOF или EOF
   BasesDBGrid.Refresh;
 end;
 
@@ -173,6 +176,11 @@ end;
 procedure TBasesFrm.BitBtn2Click(Sender: TObject);
 begin
   DoIt;
+end;
+
+procedure TBasesFrm.Button1Click(Sender: TObject);
+begin
+  DM.Routes.Locate('id',3,[]);
 end;
 
 function TBasesFrm.EditBase(RecId:Integer=-1): Boolean;
@@ -375,7 +383,7 @@ begin
   case LowerCase(Tablename) of
     'routes':
        begin
-         if DM.Routes.Active then DM.SetCurrRoute;
+         if DM.Routes.Active then  DM.SetCurrRoute;
        end;
     'tournaments':
        begin

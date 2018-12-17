@@ -1,7 +1,7 @@
 object BasesFrm: TBasesFrm
-  Left = 254
+  Left = 255
   Height = 525
-  Top = 82
+  Top = 113
   Width = 740
   Caption = 'BasesFrm'
   ClientHeight = 525
@@ -514,6 +514,15 @@ object BasesFrm: TBasesFrm
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
+    end
+    object Button1: TButton
+      Left = 179
+      Height = 25
+      Top = 14
+      Width = 75
+      Caption = 'Button1'
+      OnClick = Button1Click
+      TabOrder = 0
     end
   end
 end

@@ -165,8 +165,7 @@ type
     RangedView : Boolean;
     SumPenalty: Currency;
     OverList:   String;
-    RouteTypeSL,
-     ColNames: TStringList;
+    RouteTypeSL: TStringList;
     procedure GitGridRefreshVisibility;
     function ShowBasesDialog(BaseName: string; CurrentID: Integer): Integer;
     procedure CalcMaxTime;
@@ -174,7 +173,7 @@ type
     procedure CalcPenalties;
     procedure CalcPlaces;
     procedure CalcPlacesOver;
-    procedure SetColNames(cn : String);
+    procedure SetColNames;
   end;
 
 var
@@ -223,7 +222,6 @@ begin
   OverList:='';
   RangedView:=False;
   //--
-  ColNames := TStringList.Create;
 end;
 
 
@@ -335,8 +333,6 @@ end;
 procedure TMainFrm.FormDestroy(Sender: TObject);
 begin
   if Assigned(RouteTypeSL) then RouteTypeSL.Free;
-  if Assigned(ColNames) then ColNames.Free;
-
 end;
 
 
@@ -355,14 +351,15 @@ procedure TMainFrm.GitDBGridTitleClick(Column: TColumn);
 var
   s : String;
 begin
-  if LowerCase(LeftStr(Column.FieldName,4))='foul' then
+  if (LowerCase(LeftStr(Column.FieldName,7)) = 'foul1_b') or
+     (LowerCase(LeftStr(Column.FieldName,7)) = 'foul2_b') then
   begin
     s:=InputBox('Заголовок','Вводите наименование',Column.Title.Caption);
     if s<>'' then
     begin
       Column.Title.Caption:=s;
-      ColNames.Values[Column.FieldName]:=s;
-      if not DM.UpdateColNames(ColNames.DelimitedText) then ShowMessage('Изменение не записалось в БД!');
+      DM.SetColName(Column.FieldName,s);
+      if not DM.UpdateColNames then ShowMessage('Изменение не записалось в БД!');
     end;
   end;
 end;
@@ -824,6 +821,7 @@ begin
     DM.CurrRouteType:=DM.Routes.FieldByName('route_type').AsInteger;
     DM.CurrRouteName:=DM.Routes.FieldByName('routename').AsString;
     }
+    SetColNames;
     //
     OverlapCB.Visible:=(DM.CurrRouteType=1) and (OverList<>'');
     //
@@ -846,6 +844,7 @@ begin
     //
     DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute);
     GitDBGrid.Enabled:=not DM.Git.IsEmpty;
+    OverlapCB.Checked:=False; //если были на перепрыжке, то вернуть основной вид
     RangedView:=False;
     GitGridRefreshVisibility;
   end;
@@ -1237,18 +1236,32 @@ begin
   end;
 end;
 
-procedure TMainFrm.SetColNames(cn:String);
+procedure TMainFrm.SetColNames;
 var
-  i: Integer;
+  i,k1,k2: Integer;
   s : String;
 begin
-  ColNames.DelimitedText:=cn;
+  k1 := 1;
+  k2 := 1;
   for i:=0 to GitDBGrid.Columns.Count-1 do
-    if LowerCase(LeftStr(GitDBGrid.Columns[i].FieldName,5)) = 'foul1' then
+  begin
+    if (LowerCase(LeftStr(GitDBGrid.Columns[i].FieldName,7)) = 'foul1_b') then
     begin
-      s := ColNames.Values[GitDBGrid.Columns[i].FieldName];
-      if s<>'' then GitDBGrid.Columns[i].Title.Caption:=s;
+      s := DM.ColNames.Values[GitDBGrid.Columns[i].FieldName];
+      if s<>'' then GitDBGrid.Columns[i].Title.Caption:=s
+      else GitDBGrid.Columns[i].Title.Caption:=Trim(IntToStr(k1));
+      Inc(k1);
     end;
+  //todo: пока продублировал для перепрыжки... но потом оптимизировать
+  // чтобы перепрыжечные препятствия нумеровались с 1
+    if (LowerCase(LeftStr(GitDBGrid.Columns[i].FieldName,7)) = 'foul2_b') then
+    begin
+      s := DM.ColNames.Values[GitDBGrid.Columns[i].FieldName];
+      if s<>'' then GitDBGrid.Columns[i].Title.Caption:=s
+      else GitDBGrid.Columns[i].Title.Caption:=Trim(IntToStr(k2));
+      Inc(k2);
+    end;
+  end;
 end;
 
 //*****************************************************************************8

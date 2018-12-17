@@ -102,11 +102,13 @@ type
      CurrentRoute,
      CurrRouteType : Integer;
     CurrRouteName  : String;
-    RepParams      : TStringList;
+    RepParams,
+     ColNames: TStringList;
     //--
     function TableExists(TableName: string): Boolean;
     function CreateTable: Boolean;
     procedure FillRepParams;
+    procedure SetColName(FieldName,FieldTitle: String);
     // Riders
     procedure OpenRiders(CurrentID: Integer);
     function AddRider(Birthdate:Integer; Lastname,Firstname,RegNum,Category,Trainer,Region:String):Integer;
@@ -130,7 +132,7 @@ type
     function DelRoute(RouteId: Integer):Boolean;
     function GetRouteName(RouteId: Integer):String;
     procedure SetCurrRoute;
-    function UpdateColNames(cn:String):Boolean;
+    function UpdateColNames:Boolean;
     // Tournaments
     procedure OpenTournaments(CurrentID: Integer);
     function AddTournament(TournamentDate, TournamentDate2, TournamentName, TournamentPlace,
@@ -177,6 +179,7 @@ begin
   CurrRouteType:= 0;
   CurrRouteName:='';
   RepParams := TStringList.Create;
+  ColNames := TStringList.Create;
   SQLConn.DatabaseName := cfg.DataBaseFileName;
   try
     SQLConn.Connected:=True;
@@ -195,6 +198,7 @@ begin
   except
   end;
   if Assigned(RepParams) then RepParams.Free;
+  if Assigned(ColNames) then ColNames.Free;
   Git.Close;
   Groups.Close;
   Horses.Close;
@@ -224,6 +228,12 @@ begin
     RepParams.Add('REP_DATE='+FormatDateTime('dd-mm-yyyy',now));
     RepParams.Add('REP_DATE2='+FormatDateTime('dd-mm-yyyy',now));
   end;
+end;
+//**
+
+procedure TDM.SetColName(FieldName,FieldTitle: String);
+begin
+  ColNames.Values[FieldName]:=FieldTitle;
 end;
 
 //**
@@ -501,15 +511,16 @@ end;
 //***************
 
 procedure TDM.OpenRoutes(CurrentID:Integer);
+var
+  b: boolean;
 begin
   Routes.Close;
   Routes.SQL.Text:='SELECT * FROM v_routes;';
   //'SELECT id, routename, route_type, barriers1, barriers2, result_type FROM v_routes;';
   try
     Routes.Open;
-    if (not Routes.IsEmpty)  and (CurrentID>0) and (Routes.Locate('id',CurrentID,[])) then
-        //Если есть запись - меняем заголовки столбцов в гриде
-        MainFrm.SetColNames(Routes.FieldByName('colnames').AsString);
+    if (not Routes.IsEmpty) and (CurrentID>0)
+    then b:=Routes.Locate('id',CurrentID,[]);
     //SetCurrRoute; устанавливать только когда требуется
   except
     raise Exception.Create('Ошибка открытия списка маршрутов');
@@ -635,6 +646,7 @@ end;
 procedure TDM.SetCurrRoute;
 begin
   if not Routes.Active then Exit; // открывать не надо, чтобы не зациклить
+  ColNames.Clear;
   if Routes.IsEmpty then
   begin
     CurrentRoute:=-1;
@@ -647,16 +659,17 @@ begin
     CurrentRoute :=Routes.FieldByName('id').AsInteger;
     CurrRouteType:=Routes.FieldByName('route_type').AsInteger;
     CurrRouteName:=Routes.FieldByName('routename').AsString;
+    ColNames.DelimitedText:=Routes.FieldByName('colnames').AsString;
   end;
 end;
 
-function TDM.UpdateColNames(cn:String):Boolean;
+function TDM.UpdateColNames:Boolean;
 begin
   Result := False;
   Work.Close;
   Work.Params.Clear;
   Work.SQL.Text:='UPDATE "routes" SET colnames=:par1 WHERE _rowid_=:par2;';
-  Work.ParamByName('par1').Value:=cn;
+  Work.ParamByName('par1').Value:=ColNames.DelimitedText;
   Work.ParamByName('par2').Value:=CurrentRoute;
   try
     try
