@@ -515,14 +515,5 @@ object BasesFrm: TBasesFrm
       ParentColor = False
       ParentFont = False
     end
-    object Button1: TButton
-      Left = 179
-      Height = 25
-      Top = 14
-      Width = 75
-      Caption = 'Button1'
-      OnClick = Button1Click
-      TabOrder = 0
-    end
   end
 end

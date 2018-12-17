@@ -17,7 +17,6 @@ type
     BitBtn2: TBitBtn;
     BasesDBGrid: TDBGrid;
     AddBitBtn: TBitBtn;
-    Button1: TButton;
     EditBitBtn: TBitBtn;
     DelBitBtn: TBitBtn;
     SeekLabel: TLabel;
