@@ -515,7 +515,8 @@ var
   b: boolean;
 begin
   Routes.Close;
-  Routes.SQL.Text:='SELECT * FROM v_routes;';
+  Routes.SQL.Text:='SELECT * FROM v_routes where tournament=:p1;';
+  Routes.ParamByName('p1').AsInteger:=CurrentTournament;
   //'SELECT id, routename, route_type, barriers1, barriers2, result_type FROM v_routes;';
   try
     Routes.Open;
@@ -534,8 +535,8 @@ begin
   Result := -1;
   Work.Close;
   Work.Params.Clear;
-  Work.SQL.Text:='INSERT INTO "routes"("routename","route_type",barriers1,distance1,velocity1,barriers2,distance2,velocity2) '+
-          ' VALUES(:p1,:p2,:p3,:p4,:p5,:p6,:p7,:p8);';
+  Work.SQL.Text:='INSERT INTO "routes"("routename","route_type",barriers1,distance1,velocity1,barriers2,distance2,velocity2,tournament) '+
+          ' VALUES(:p1,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9);';
   Work.ParamByName('p1').Value:=RouteName;
   Work.ParamByName('p2').Value:=RouteType;
   Work.ParamByName('p3').Value:=Barriers1;
@@ -544,6 +545,7 @@ begin
   Work.ParamByName('p6').Value:=Barriers2;
   Work.ParamByName('p7').Value:=Distance2;
   Work.ParamByName('p8').Value:=Velocity2;
+  Work.ParamByName('p9').AsInteger:=CurrentTournament;
   try
     try
       if SQLTransaction1.Active
