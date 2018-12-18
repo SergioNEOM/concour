@@ -142,7 +142,8 @@ type
     function DelTournament(TournamentId: Integer):Boolean;
     procedure SetCurrTournament;
     // Git
-    procedure OpenGit(CurrID, CurrTournament, CurrRoute:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
+    procedure OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False;
+         FastReJump:Boolan=False);
     procedure DelGit(DelID: Integer);
     function AppendGit : Integer;
     function ClearResults: Boolean;
@@ -794,7 +795,7 @@ end;}
 
 //******
 
-procedure TDM.OpenGit(CurrID, CurrTournament, CurrRoute:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
+procedure TDM.OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
 var
   s : String;
 begin
@@ -809,8 +810,8 @@ begin
     Git.SQL.Text := Git.SQL.Text + GIT_ORD_RANK ;
   end;
   s := Git.SQL.Text;
-  Git.ParamByName('partour').AsInteger:=CurrTournament;
-  Git.ParamByName('parroute').AsInteger:=CurrRoute;
+  Git.ParamByName('partour').AsInteger:=CurrentTournament;
+  Git.ParamByName('parroute').AsInteger:=CurrentRoute;
   //
   Git.UpdateSQL.Text:= UPD_GIT;
   //
@@ -865,7 +866,7 @@ begin
     Work.SQL.Text:='DELETE FROM "git" WHERE "_rowid_"=:par1;';
     Work.ParamByName('par1').AsInteger:=DelID;
     Work.ExecSQL;
-    OpenGit(-1,CurrentTournament,CurrentRoute);
+    OpenGit(-1);
   finally
     Work.Close;
   end;
@@ -895,7 +896,7 @@ begin
     Work.ParamByName('par2').AsInteger:=Result;
     Work.ExecSQL; //Чтобы новая строка показывалась в конце сортированного списка,
     //в queue пишется №записи, а при жеребьёвке пересчитается  (или можно записать max(queue)+1 ? )
-    OpenGit(Result,CurrentTournament,CurrentRoute);
+    OpenGit(Result);
   finally
     Work.Close;
   end;

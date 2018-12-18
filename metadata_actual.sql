@@ -28,6 +28,7 @@ CREATE VIEW IF NOT EXISTS "v_tournaments" AS
 */
 CREATE TABLE IF NOT EXISTS "routes" ( 
  routename VARCHAR(30), 
+ tournament INTEGER,
  route_type INTEGER, 
  barriers1 INTEGER DEFAULT 1,
  distance1 INTEGER,
@@ -43,6 +44,7 @@ CREATE TABLE IF NOT EXISTS "routes" (
 CREATE VIEW IF NOT EXISTS "v_routes" AS  
   SELECT _rowid_ as id, 
  cast(routename as char(30)) as routename,
+ tournament,
  route_type, 
  barriers1, 
  distance1,  
@@ -51,7 +53,7 @@ CREATE VIEW IF NOT EXISTS "v_routes" AS
  distance2, 
  velocity2, 
  result_type,
- cast(colnames as char(360)) as colnames 
+ cast(colnames as char(360)) as colnames
  FROM "routes";
 
 /*------------------*/

@@ -1,7 +1,7 @@
 object ExpFrm: TExpFrm
-  Left = 256
+  Left = 284
   Height = 335
-  Top = 130
+  Top = 154
   Width = 425
   Caption = 'Экспорт в Excel'
   ClientHeight = 335

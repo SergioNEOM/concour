@@ -1,7 +1,7 @@
 object MainFrm: TMainFrm
-  Left = 231
+  Left = 148
   Height = 566
-  Top = 108
+  Top = 128
   Width = 1124
   Caption = 'MainFrm'
   ClientHeight = 546
@@ -1671,6 +1671,15 @@ object MainFrm: TMainFrm
       ShowCaption = False
       ShowHint = True
       ParentShowHint = False
+    end
+    object FastReJumpCB: TCheckBox
+      Left = 840
+      Height = 17
+      Top = 15
+      Width = 77
+      Caption = 'FastReJump'
+      OnChange = FastReJumpCBChange
+      TabOrder = 1
     end
   end
   object MainMenu1: TMainMenu

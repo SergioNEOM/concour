@@ -9,8 +9,8 @@ DROP VIEW "v_routes";
 /*-*/
 CREATE VIEW "v_routes" AS  
   SELECT _rowid_ as id, 
- tournament,
  cast(routename as char(30)) as routename,
+ tournament,
  route_type, 
  barriers1, 
  distance1,  

@@ -28,6 +28,7 @@ type
   { TMainFrm }
 
   TMainFrm = class(TForm)
+    FastReJumpCB: TCheckBox;
     GitResultsAction: TAction;
     GitShuffleAction: TAction;
     FilePrintAction: TAction;
@@ -110,6 +111,7 @@ type
     procedure Barriers1SpinEditEditingDone(Sender: TObject);
     procedure Barriers2SpinEditEditingDone(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure FastReJumpCBChange(Sender: TObject);
     procedure FilePrintActionExecute(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CalcOverlapBitBtnClick(Sender: TObject);
@@ -126,7 +128,6 @@ type
     procedure RepSpeedButton1Click(Sender: TObject);
     procedure RepSpeedButtonClick(Sender: TObject);
     procedure ShuffleBitBtnClick(Sender: TObject);
-    procedure BitBtn5Click(Sender: TObject);
     procedure DistanceEdit2Change(Sender: TObject);
     procedure DistanceEdit1Change(Sender: TObject);
     procedure DistanceEdit1Exit(Sender: TObject);
@@ -262,7 +263,7 @@ begin
   //---
   GitGridRefreshVisibility;
   //
-  DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute);
+  DM.OpenGit(-1);
   GitDBGrid.Enabled:=not DM.Git.IsEmpty;
 end;
 
@@ -310,6 +311,17 @@ begin
   GitDBGrid.Enabled:=not DM.Git.IsEmpty;
 end;
 
+procedure TMainFrm.FastReJumpCBChange(Sender: TObject);
+begin
+  //"Быстрая перепрыжка": когда отмечен, то перекл. в режим прерпр.
+  // только для текущего участника
+  // не выбран - возврат к норм. виду
+  if FastReJumpCB.Checked then PageControl1.ActivePageIndex:=1 //панель перепрыжки
+  else PageControl1.ActivePageIndex:=0; // основной маршрут
+  DM.OpenGit(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger);  //todo: здесь надо учесть режим
+  GitGridRefreshVisibility;
+end;
+
 procedure TMainFrm.FilePrintActionExecute(Sender: TObject);
 begin
     {$IFDEF WINDOWS}
@@ -339,7 +351,7 @@ end;
 procedure TMainFrm.CalcOverlapBitBtnClick(Sender: TObject);
 begin
   CalcPlacesOver;
-  DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute,True,True);
+  DM.OpenGit(-1,True,True);
 end;
 
 procedure TMainFrm.CalcPlacesBitBtnClick(Sender: TObject);
@@ -367,7 +379,7 @@ end;
 procedure TMainFrm.GitResultsActionExecute(Sender: TObject);
 begin
   CalcPlaces;
-  DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute,True);
+  DM.OpenGit(-1,True);
 end;
 
 procedure TMainFrm.GitShuffleActionExecute(Sender: TObject);
@@ -396,7 +408,7 @@ begin
       DM.Git.Next;
     end;
     sl.Sort;
-    DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute);
+    DM.OpenGit(-1);
     //GitDBGrid.Enabled:=not DM.Git.IsEmpty;
   finally
     GitDBGrid.EndUpdate;
@@ -465,7 +477,7 @@ procedure TMainFrm.OverlapCBChange(Sender: TObject);
 begin
   if OverlapCB.Checked then PageControl1.ActivePageIndex:=1 //панель перепрыжки
   else PageControl1.ActivePageIndex:=0; // основной маршрут
-  DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute,RangedView,OverlapCB.Checked and (OverList<>''));
+  DM.OpenGit(-1,RangedView,OverlapCB.Checked and (OverList<>''));
   GitGridRefreshVisibility;
 end;
 
@@ -486,11 +498,6 @@ begin
   GitShuffleActionExecute(Sender);
 end;
 
-
-procedure TMainFrm.BitBtn5Click(Sender: TObject);
-begin
-  CalcPlaces;
-end;
 
 procedure TMainFrm.DistanceEdit2Change(Sender: TObject);
 begin
@@ -588,7 +595,7 @@ begin
     DM.Work.ParamByName('par1').AsInteger:=q1;
     DM.Work.ParamByName('par2').AsInteger:=row2;
     DM.Work.ExecSQL;
-    DM.OpenGit(row2,DM.CurrentTournament,DM.CurrentRoute);
+    DM.OpenGit(row2);
     //ShowMessage('row1='+inttostr(row1)+', row2='+inttostr(row2));
     //TDBGrid(Sender).SelectedField.AsString);
     //TDBGrid(Target).DataSource.DataSet. SelectedIndex := TDBGrid(Target).SelectedIndex + off;
@@ -663,7 +670,7 @@ begin
     TDBGrid(Sender).DataSource.DataSet.Edit;
     TDBGrid(Sender).DataSource.DataSet.FieldByName(ChField).Value := i;
     TDBGrid(Sender).DataSource.DataSet.Post;
-    DM.OpenGit(id, DM.CurrentTournament, DM.CurrentRoute);
+    DM.OpenGit(id);
   end;
 end;
 
@@ -842,7 +849,7 @@ begin
     Barriers1SpinEdit.Value:= x; //DM.Routes.FieldByName('barriers1').AsInteger;
     Barriers2SpinEdit.Value:= y; //DM.Routes.FieldByName('barriers2').AsInteger;
     //
-    DM.OpenGit(-1,DM.CurrentTournament,DM.CurrentRoute);
+    DM.OpenGit(-1);
     GitDBGrid.Enabled:=not DM.Git.IsEmpty;
     OverlapCB.Checked:=False; //если были на перепрыжке, то вернуть основной вид
     RangedView:=False;
@@ -1075,7 +1082,8 @@ begin
        begin
          DM.Work2.Close;
          DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place from v_git where tournament=:par1 and route=:par2 order by "group",totalfouls1,queue;';
+         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place from v_git where '+
+                       'tournament=:par1 and route=:par2 order by "group",totalfouls1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----

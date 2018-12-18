@@ -1,7 +1,7 @@
 object BasesFrm: TBasesFrm
-  Left = 255
+  Left = 283
   Height = 525
-  Top = 113
+  Top = 134
   Width = 740
   Caption = 'BasesFrm'
   ClientHeight = 525

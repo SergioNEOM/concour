@@ -1,7 +1,7 @@
 object TournamentFrm: TTournamentFrm
-  Left = 429
+  Left = 477
   Height = 348
-  Top = 192
+  Top = 228
   Width = 405
   Caption = 'Параметры соревнования'
   ClientHeight = 348

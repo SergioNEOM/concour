@@ -3,8 +3,8 @@ object DM: TDM
   OnDestroy = DataModuleDestroy
   OldCreateOrder = False
   Height = 491
-  HorizontalOffset = 634
-  VerticalOffset = 175
+  HorizontalOffset = 704
+  VerticalOffset = 207
   Width = 468
   PPI = 96
   object SQLConn: TSQLite3Connection
