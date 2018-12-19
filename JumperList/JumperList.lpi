@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="10"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="JumperList"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <Icon Value="0"/>
+    </General>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="Default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <WorkingDirectory Value="C:\Develop\concour"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="3">
+      <Item1>
+        <PackageName Value="DateTimeCtrls"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
+    </RequiredPackages>
+    <Units Count="7">
+      <Unit0>
+        <Filename Value="JumperList.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="jl_main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainFrm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JL_main"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="jl_dm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DM"/>
+        <ResourceBaseClass Value="DataModule"/>
+        <UnitName Value="JL_DM"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="jl_bases.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BasesFrm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JL_bases"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="jl_rider.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RiderFrm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JL_Rider"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="jl_horses.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="HorsesFrm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JL_Horses"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="jl_tournament.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TournamentFrm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JL_Tournament"/>
+      </Unit6>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="JumperList"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

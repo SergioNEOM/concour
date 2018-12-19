@@ -1,0 +1,185 @@
+object TournamentFrm: TTournamentFrm
+  Left = 256
+  Height = 330
+  Top = 130
+  Width = 350
+  Caption = 'TournamentFrm'
+  ClientHeight = 330
+  ClientWidth = 350
+  Constraints.MinHeight = 330
+  Constraints.MinWidth = 350
+  LCLVersion = '1.8.4.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 42
+    Top = 288
+    Width = 350
+    Align = alBottom
+    BorderStyle = bsSingle
+    ClientHeight = 38
+    ClientWidth = 346
+    TabOrder = 0
+    object BitBtn1: TBitBtn
+      Left = 256
+      Height = 30
+      Top = 4
+      Width = 85
+      Cancel = True
+      DefaultCaption = True
+      Kind = bkCancel
+      ModalResult = 2
+      TabOrder = 0
+    end
+    object BitBtn2: TBitBtn
+      Left = 160
+      Height = 30
+      Top = 4
+      Width = 85
+      Default = True
+      DefaultCaption = True
+      Kind = bkOK
+      ModalResult = 1
+      TabOrder = 1
+    end
+  end
+  object Label1: TLabel
+    Left = 8
+    Height = 13
+    Top = 11
+    Width = 192
+    AutoSize = False
+    Caption = 'Дата соревнования'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 8
+    Height = 13
+    Top = 72
+    Width = 165
+    AutoSize = False
+    Caption = 'Название соревнования'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 9
+    Height = 13
+    Top = 120
+    Width = 167
+    AutoSize = False
+    Caption = 'Место проведения'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 9
+    Height = 13
+    Top = 172
+    Width = 199
+    AutoSize = False
+    Caption = 'Главный судья'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 9
+    Height = 13
+    Top = 228
+    Width = 231
+    AutoSize = False
+    Caption = 'Секретарь судейской бригады'
+    ParentColor = False
+  end
+  object TourDate: TDateTimePicker
+    Left = 9
+    Height = 21
+    Top = 32
+    Width = 111
+    CenturyFrom = 1941
+    MaxDate = 2958465
+    MinDate = 36526
+    AutoSize = False
+    TabOrder = 1
+    TrailingSeparator = False
+    TextForNullDate = '---'
+    LeadingZeros = True
+    Kind = dtkDate
+    TimeFormat = tf24
+    TimeDisplay = tdHMS
+    DateMode = dmComboBox
+    Date = 43305
+    Time = 0.386992893516435
+    UseDefaultSeparators = True
+    HideDateTimeParts = []
+    MonthNames = 'Long'
+  end
+  object TourNameEdit: TEdit
+    Left = 8
+    Height = 21
+    Top = 88
+    Width = 335
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    TabOrder = 2
+    Text = 'TourNameEdit'
+  end
+  object TourPlaceEdit: TEdit
+    Left = 8
+    Height = 21
+    Top = 136
+    Width = 335
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    TabOrder = 3
+    Text = 'TourPlaceEdit'
+  end
+  object RefereeEdit: TEdit
+    Left = 9
+    Height = 21
+    Top = 191
+    Width = 334
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    TabOrder = 4
+    Text = 'RefereeEdit'
+  end
+  object AssistantEdit: TEdit
+    Left = 8
+    Height = 21
+    Top = 248
+    Width = 335
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    TabOrder = 5
+    Text = 'AssistantEdit'
+  end
+  object TourDate2: TDateTimePicker
+    Left = 160
+    Height = 21
+    Top = 32
+    Width = 111
+    CenturyFrom = 1941
+    MaxDate = 2958465
+    MinDate = 36526
+    AutoSize = False
+    TabOrder = 6
+    TrailingSeparator = False
+    TextForNullDate = '---'
+    LeadingZeros = True
+    Kind = dtkDate
+    TimeFormat = tf24
+    TimeDisplay = tdHMS
+    DateMode = dmComboBox
+    Date = 43305
+    Time = 0.386992893516435
+    UseDefaultSeparators = True
+    HideDateTimeParts = []
+    MonthNames = 'Long'
+  end
+  object Label6: TLabel
+    Left = 130
+    Height = 13
+    Top = 38
+    Width = 24
+    AutoSize = False
+    Caption = 'по'
+    ParentColor = False
+  end
+end

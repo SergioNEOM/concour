@@ -1,0 +1,75 @@
+object MainFrm: TMainFrm
+  Left = 256
+  Height = 240
+  Top = 130
+  Width = 470
+  Caption = 'MainFrm'
+  ClientHeight = 240
+  ClientWidth = 470
+  LCLVersion = '1.8.4.0'
+  object Label1: TLabel
+    Left = 22
+    Height = 13
+    Top = 19
+    Width = 186
+    AutoSize = False
+    Caption = 'Расположение БД:'
+    ParentColor = False
+  end
+  object FileNameLabel: TLabel
+    Left = 24
+    Height = 24
+    Top = 40
+    Width = 402
+    AutoSize = False
+    Color = 14277043
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -16
+    Font.Name = 'Arial'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object SpeedButton1: TSpeedButton
+    Left = 427
+    Height = 22
+    Top = 41
+    Width = 23
+    Caption = '...'
+    OnClick = SpeedButton1Click
+  end
+  object BitBtn1: TBitBtn
+    Left = 24
+    Height = 30
+    Top = 96
+    Width = 120
+    Caption = 'Всадники'
+    OnClick = BitBtn1Click
+    TabOrder = 0
+  end
+  object BitBtn2: TBitBtn
+    Left = 216
+    Height = 30
+    Top = 96
+    Width = 120
+    Caption = 'Лошади'
+    OnClick = BitBtn2Click
+    TabOrder = 1
+  end
+  object BitBtn3: TBitBtn
+    Left = 120
+    Height = 30
+    Top = 136
+    Width = 120
+    Caption = 'Соревнования'
+    OnClick = BitBtn3Click
+    TabOrder = 2
+  end
+  object OpenDialog1: TOpenDialog
+    left = 376
+    top = 8
+  end
+end

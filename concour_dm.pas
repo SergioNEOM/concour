@@ -142,8 +142,7 @@ type
     function DelTournament(TournamentId: Integer):Boolean;
     procedure SetCurrTournament;
     // Git
-    procedure OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False;
-         FastReJump:Boolan=False);
+    procedure OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
     procedure DelGit(DelID: Integer);
     function AppendGit : Integer;
     function ClearResults: Boolean;

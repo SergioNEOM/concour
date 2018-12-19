@@ -1079,11 +1079,13 @@ begin
        // результат пишется в place.
        // Если на первых местах одинаковые ш.о., то перепрыжка (этап 2)
        // на втором этапе места присваивать как в классике (case 0), + доп.результат в place2
+       //
+       // 2018-12-19 добавил условие отбора в перепрыжку: (время 1 гита >0)
        begin
          DM.Work2.Close;
          DM.Work2.Params.Clear;
          DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place from v_git where '+
-                       'tournament=:par1 and route=:par2 order by "group",totalfouls1,queue;';
+                       'tournament=:par1 and route=:par2 and gittime1>0 order by "group",totalfouls1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
@@ -1123,7 +1125,7 @@ begin
                    s := DM.Work2.FieldByName('totalfouls1').AsCurrency;
                    over.Clear;
                    // начальное значение... Без этого - первая строка не попадает
-                   over.add(IntToStr(DM.Work2.FieldByName('id').AsInteger));
+                   over.add(DM.Work2.FieldByName('id').AsString);
                  end;
                  //--- проигнорировать снятых с гита, остальных обработать
                  if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
@@ -1132,7 +1134,7 @@ begin
                    if (i = 1) and
                       (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
                    begin // будут участвовать в перепрыжке
-                     over.add(IntToStr(DM.Work2.FieldByName('id').AsInteger));
+                     over.add(DM.Work2.FieldByName('id').AsString);
                      Inc(ocounter);
                      // i - остаётся =1
                    end
