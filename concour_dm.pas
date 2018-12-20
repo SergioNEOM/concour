@@ -129,6 +129,7 @@ type
              Velocity2, Barriers2: Integer; RouteName: string):Integer;
     function EditRoute(RouteID, RouteType, Distance1, Velocity1, Barriers1,
          Distance2, Velocity2, Barriers2: Integer; RouteName: string):Boolean;
+    function RouteSetField(RouteID,FieldValue:Integer;FieldName: String):Boolean;
     function DelRoute(RouteId: Integer):Boolean;
     function GetRouteName(RouteId: Integer):String;
     procedure SetCurrRoute;
@@ -599,6 +600,33 @@ begin
       SQLTransaction1.CommitRetaining;
       Result := True;
       OpenRoutes(RouteID);
+    except
+      SQLTransaction1.Rollback;
+    end;
+  finally
+    Work.Close;
+  end;
+end;
+
+function TDM.RouteSetField(RouteID,FieldValue:Integer;FieldName: String):Boolean;
+begin
+  Result := False;
+  if Trim(FieldName)='' then Exit;
+  if RouteID<0 then RouteID:=CurrentRoute;
+  Work.Close;
+  Work.Params.Clear;
+  Work.SQL.Text:='UPDATE "routes" SET '+FieldName+'=:par1 WHERE _rowid_=:par2;';
+  Work.ParamByName('par1').Value:=FieldValue;
+  Work.ParamByName('par2').Value:=RouteID;
+  try
+    try
+      if SQLTransaction1.Active
+        then SQLTransaction1.CommitRetaining
+        else SQLTransaction1.StartTransaction;
+      Work.ExecSQL;
+      SQLTransaction1.CommitRetaining;
+      Result := True;
+      //OpenRoutes(RouteID);
     except
       SQLTransaction1.Rollback;
     end;

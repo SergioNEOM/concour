@@ -1,7 +1,7 @@
 object MainFrm: TMainFrm
   Left = 148
   Height = 566
-  Top = 128
+  Top = 139
   Width = 1124
   Caption = 'MainFrm'
   ClientHeight = 546
@@ -416,7 +416,7 @@ object MainFrm: TMainFrm
           ParentColor = False
         end
         object VelocityCB1: TComboBox
-          Left = 552
+          Left = 544
           Height = 21
           Top = 24
           Width = 75
@@ -430,6 +430,7 @@ object MainFrm: TMainFrm
             '400'
           )
           OnChange = VelocityCB1Change
+          OnEditingDone = VelocityCB1EditingDone
           TabOrder = 2
           Text = '300'
         end
@@ -450,6 +451,7 @@ object MainFrm: TMainFrm
           Alignment = taRightJustify
           AutoSize = False
           OnChange = DistanceEdit1Change
+          OnEditingDone = DistanceEdit1EditingDone
           OnExit = DistanceEdit1Exit
           TabOrder = 1
         end
@@ -1258,6 +1260,7 @@ object MainFrm: TMainFrm
             Alignment = taRightJustify
             AutoSize = False
             OnChange = DistanceEdit2Change
+            OnEditingDone = DistanceEdit2EditingDone
             TabStop = False
             TabOrder = 2
           end
@@ -1285,6 +1288,7 @@ object MainFrm: TMainFrm
               '400'
             )
             OnChange = VelocityCB2Change
+            OnEditingDone = VelocityCB2EditingDone
             TabOrder = 3
             TabStop = False
             Text = '300'

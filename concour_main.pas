@@ -111,6 +111,8 @@ type
     procedure Barriers1SpinEditEditingDone(Sender: TObject);
     procedure Barriers2SpinEditEditingDone(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure DistanceEdit1EditingDone(Sender: TObject);
+    procedure DistanceEdit2EditingDone(Sender: TObject);
     procedure FastReJumpCBChange(Sender: TObject);
     procedure FilePrintActionExecute(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -158,8 +160,10 @@ type
     procedure RouteAddActionExecute(Sender: TObject);
     procedure RouteDelActionExecute(Sender: TObject);
     procedure RouteSelectActionExecute(Sender: TObject);
+    procedure VelocityCB1EditingDone(Sender: TObject);
     procedure VelocityCB2Change(Sender: TObject);
     procedure VelocityCB1Change(Sender: TObject);
+    procedure VelocityCB2EditingDone(Sender: TObject);
   private
 
   public
@@ -309,6 +313,22 @@ begin
   if (DM.CurrentTournament<=0) or  (DM.CurrentRoute<=0) then Exit;
   DM.AppendGit;
   GitDBGrid.Enabled:=not DM.Git.IsEmpty;
+end;
+
+procedure TMainFrm.DistanceEdit1EditingDone(Sender: TObject);
+begin
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,StrToInt(TEdit(Sender).Text),'distance1') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
+end;
+
+procedure TMainFrm.DistanceEdit2EditingDone(Sender: TObject);
+begin
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,StrToInt(TEdit(Sender).Text),'distance2') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
 end;
 
 procedure TMainFrm.FastReJumpCBChange(Sender: TObject);
@@ -470,6 +490,10 @@ end;
 
 procedure TMainFrm.Barriers1SpinEditEditingDone(Sender: TObject);
 begin
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,TSpinEdit(Sender).Value,'barriers1') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
   GitGridRefreshVisibility;
 end;
 
@@ -800,6 +824,10 @@ end;
 procedure TMainFrm.Barriers2SpinEditChange(Sender: TObject);
 begin
   //todo: обнулять значения невидимых ячеек или пересчитывать сумму штрафов?
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,TSpinEdit(Sender).Value,'barriers2') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
   GitGridRefreshVisibility;
 end;
 
@@ -857,6 +885,14 @@ begin
   end;
 end;
 
+procedure TMainFrm.VelocityCB1EditingDone(Sender: TObject);
+begin
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,TComboBox(Sender).ItemIndex,'velocity1') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
+end;
+
 procedure TMainFrm.VelocityCB2Change(Sender: TObject);
 begin
   CalcMaxTimeOver;
@@ -865,6 +901,14 @@ end;
 procedure TMainFrm.VelocityCB1Change(Sender: TObject);
 begin
   CalcMaxTime;
+end;
+
+procedure TMainFrm.VelocityCB2EditingDone(Sender: TObject);
+begin
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,TComboBox(Sender).ItemIndex,'velocity2') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
 end;
 
 procedure TMainFrm.CalcPenalties;
