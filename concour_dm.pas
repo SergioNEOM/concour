@@ -832,7 +832,8 @@ begin
   if not Ordered then Git.SQL.Text := Git.SQL.Text + GIT_ORD_QUE
   else  // по местам
   begin
-    if Overlap then  // перепрыжка - выберем только первых
+    // перепрыжка - выберем только первых
+    if Overlap then //todo: 2018-12-26 поставить другое условие отбора (overlap=1)
       Git.SQL.Text := Git.SQL.Text + ' AND git."_rowid_" in ('+MainFrm.OverList+') ';
     Git.SQL.Text := Git.SQL.Text + GIT_ORD_RANK ;
   end;

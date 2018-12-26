@@ -364,8 +364,10 @@ begin
   //
   DM.Work.Close;
   DM.Work.Params.Clear;
+  //todo: 2018-12-26 другое условие отбора в перепрыжку
   if MainFrm.OverlapCB.Checked and (MainFrm.OverList <> '') then
     //перепрыжка
+    //todo: 2018-12-26 другое условие отбора в перепрыжку
     DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 '+
     ' and id in ('+MainFrm.OverList+') order by "group",place,queue;'
   else

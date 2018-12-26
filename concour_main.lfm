@@ -1532,7 +1532,6 @@ object MainFrm: TMainFrm
       OnChange = OverlapCBChange
       ParentFont = False
       TabOrder = 0
-      Visible = False
     end
     object RepSpeedButton1: TSpeedButton
       Left = 632

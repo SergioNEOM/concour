@@ -70,6 +70,15 @@ implementation
 
 uses  LazUTF8, LCLIntf, RegExpr, Dialogs, db, concour_main, concour_DM, concour_params;
 
+
+//
+//
+//todo: возможно, пора исключить модуль за ненадобностью?
+//
+//
+//
+
+
 function RepInitialize: Boolean;
 begin
   Result := True;

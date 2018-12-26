@@ -169,7 +169,6 @@ type
   public
     RangedView : Boolean;
     SumPenalty: Currency;
-    OverList:   String;
     RouteTypeSL: TStringList;
     procedure GitGridRefreshVisibility;
     function ShowBasesDialog(BaseName: string; CurrentID: Integer): Integer;
@@ -224,7 +223,6 @@ begin
   end;
   GitDBGrid.EndUpdate(true);
   //----
-  OverList:='';
   RangedView:=False;
   //--
 end;
@@ -333,7 +331,7 @@ end;
 
 procedure TMainFrm.FastReJumpCBChange(Sender: TObject);
 begin
-  //"Быстрая перепрыжка": когда отмечен, то перекл. в режим прерпр.
+  //todo: 2018-12-26 "Быстрая перепрыжка": когда отмечен, то перекл. в режим прерпр.
   // только для текущего участника
   // не выбран - возврат к норм. виду
   if FastReJumpCB.Checked then PageControl1.ActivePageIndex:=1 //панель перепрыжки
@@ -501,7 +499,7 @@ procedure TMainFrm.OverlapCBChange(Sender: TObject);
 begin
   if OverlapCB.Checked then PageControl1.ActivePageIndex:=1 //панель перепрыжки
   else PageControl1.ActivePageIndex:=0; // основной маршрут
-  DM.OpenGit(-1,RangedView,OverlapCB.Checked and (OverList<>''));
+  DM.OpenGit(-1,RangedView,OverlapCB.Checked);
   GitGridRefreshVisibility;
 end;
 
@@ -858,7 +856,7 @@ begin
     }
     SetColNames;
     //
-    OverlapCB.Visible:=(DM.CurrRouteType=1) and (OverList<>'');
+    OverlapCB.Visible:=(DM.CurrRouteType=1);
     //
     // обновить содержимое контролов, связанных с маршрутом
     RouteNameLabel.Caption := DM.CurrRouteName; // заполнить строкой названия
@@ -1065,8 +1063,6 @@ var
   over : TStringList;
 begin
   OverlapCB.Checked:=False;
-  OverList:='';
-  OverlapCB.Visible:=False;
   GitDBGrid.BeginUpdate;
   case DM.CurrRouteType of
     0: // classic - по каждому зачёту: ранжируются по итоговым штрафным очкам(totalfouls1),
@@ -1136,6 +1132,8 @@ begin
          //!!! затираются данные о снятии с гита в перепрыжке!!! (place2=0)
          //DM.Work.SQL.Text := 'update git set place=:par1, place2=0 where _rowid_=:par2;';
          // 2018-09-13 перенес обнуление place2 с учётом FIRE_RIDER в проц. CalcPlacesOver
+         //
+         // вынесено до цикла, а work.ExexSQL- внутри
          DM.Work.Close;
          DM.Work.Params.Clear;
          DM.Work.SQL.Text := 'update git set place=:par1 where _rowid_=:par2;';
@@ -1152,7 +1150,8 @@ begin
                g := -1;
                ocounter:=0; // счетчик участников перепрыжки для каждого зачёта
                // чтобы НЕ первые места смещались после перепрыжчиков
-               //
+               //todo: 2018-12-26 в версии с полем overlap вместо ocounter будет
+               // select count(*)... where overlap=1 (в DM сделать функцию)
                while not DM.Work2.EOF do
                begin
                  if g <> DM.Work2.FieldByName('group').AsInteger then
@@ -1160,7 +1159,8 @@ begin
                    // начало нового зачёта
                    // если список предыд.зачёта не пуст - будет перепрыжка, зафиксировать
                     if over.Count>1 then
-                      if OverList<>'' then OverList:=OverList+','+over.CommaText
+                      if OverList<>''   //todo: 2018-12-26 другое условие отбора в перепрыжку
+                      then OverList:=OverList+','+over.CommaText
                       else OverList:=over.CommaText;
                    //--- теперь запоминаем параметры нового зачёта ---
                    i := 0;
@@ -1170,6 +1170,9 @@ begin
                    over.Clear;
                    // начальное значение... Без этого - первая строка не попадает
                    over.add(DM.Work2.FieldByName('id').AsString);
+                   //todo: 2018-12-26 запоминать предыдущее значение ID не в StringList,
+                   // а в Integer, чтобы при условии отбора в перепрыжку не забыть
+                   // записать для него  тоже overlap=1...
                  end;
                  //--- проигнорировать снятых с гита, остальных обработать
                  if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
@@ -1179,6 +1182,8 @@ begin
                       (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
                    begin // будут участвовать в перепрыжке
                      over.add(DM.Work2.FieldByName('id').AsString);
+                     //todo: 2018-12-26 здесь записывать overlap=1 в БД
+                     //todo: не забыть стартовое значение id (!!??)
                      Inc(ocounter);
                      // i - остаётся =1
                    end
@@ -1203,6 +1208,8 @@ begin
                // список остался не пустой - будет перепрыжка, зафиксировать
                if over.Count>1 then
                begin
+                 //todo: 2018-12-26 условие отбора будет другое...
+                 // установить overlap=1 у предыдущего и текущего id (проц. в DM)
                  if OverList<>'' then OverList:=OverList+','+over.CommaText
                  else OverList:=over.CommaText;
                end;
@@ -1217,7 +1224,7 @@ begin
   end;
   RangedView:=True;
   GitDBGrid.EndUpdate;
-  if OverList<>'' then
+  if OverList<>'' then      //todo: 2018-12-26 ввести другую переменную для условия перепрыжки
   begin
     OverlapCB.Visible:=True;
     Application.MessageBox('ПЕРЕПРЫЖКА !!!!','Информация',MB_OK+MB_ICONINFORMATION);
@@ -1229,7 +1236,7 @@ procedure TMainFrm.CalcPlacesOver;
 var
   i,g : Integer;
 begin
-  if OverList='' then Exit;
+  if OverList='' then Exit;  //todo: другое условие...
   try
     // список уже д.б. ранжирован по place и выбраны только участники перепрыжки
     GitDBGrid.BeginUpdate;
@@ -1239,12 +1246,14 @@ begin
     // (кроме снятых с гита)
     DM.Work.Close;
     DM.Work.Params.Clear;
+    //todo: 2018-12-26 условие отбора в перепрыжку: overlap=1
     DM.Work.SQL.Text := 'update git set place2=0 where place2<:par1 and "_rowid_" in ('+OverList+');';
     DM.Work.ParamByName('par1').AsInteger := FIRED_RIDER;
     DM.Work.ExecSQL;
     //
     DM.Work2.Close;
     DM.Work2.Params.Clear;
+    //todo: 2018-12-26 условие отбора в перепрыжку: overlap=1
     DM.Work2.SQL.Text := 'select id,"group",place,place2,totalfouls2,gittime2 from v_git '+
       ' where id in ('+OverList+') order by "group",place2,totalfouls2,gittime2,queue;';
     //----
