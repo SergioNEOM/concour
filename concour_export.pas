@@ -85,7 +85,7 @@ end;
 
 procedure TExpFrm.FormActivate(Sender: TObject);
 begin
-  if MainFrm.OverlapCB.Checked and (MainFrm.OverList <> '') then    //перепрыжка
+  if MainFrm.OverlapCB.Checked  then    //перепрыжка
   begin
     FinalSpeedButton.Enabled:=False;
     TotalSpeedButton.Enabled:=False;
@@ -364,14 +364,14 @@ begin
   //
   DM.Work.Close;
   DM.Work.Params.Clear;
-  //todo: 2018-12-26 другое условие отбора в перепрыжку
-  if MainFrm.OverlapCB.Checked and (MainFrm.OverList <> '') then
-    //перепрыжка
-    //todo: 2018-12-26 другое условие отбора в перепрыжку
+  //с 2018-12-26 другое условие отбора в перепрыжку
+  if MainFrm.OverlapCB.Checked then
+    //перепрыжка: c 2018-12-26 другое условие отбора (overlap=1)
     DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 '+
-    ' and id in ('+MainFrm.OverList+') order by "group",place,queue;'
+    ' and overlap=1 order by "group",place,queue;'
   else
-    DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 order by queue;';
+    DM.Work.SQL.Text:='select * from v_git where tournament=:par1 '+
+       ' and route=:par2 and overlap=0 order by queue;';
   DM.Work.ParamByName('par1').AsInteger:=DM.CurrentTournament;
   DM.Work.ParamByName('par2').AsInteger:=DM.CurrentRoute;
   try

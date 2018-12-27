@@ -1818,20 +1818,4 @@ object MainFrm: TMainFrm
       Caption = '-'
     end
   end
-  object ReportsPopup: TPopupMenu
-    left = 712
-    top = 8
-    object MenuItem21: TMenuItem
-      Caption = 'Стартовый протокол'
-      OnClick = MenuItem21Click
-    end
-    object MenuItem22: TMenuItem
-      Caption = 'Судейский протокол'
-      OnClick = MenuItem22Click
-    end
-    object MenuItemTotal: TMenuItem
-      Caption = 'Итоговый отчет'
-      OnClick = MenuItemTotalClick
-    end
-  end
 end

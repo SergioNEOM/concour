@@ -39,7 +39,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="11">
+    <Units Count="10">
       <Unit0>
         <Filename Value="concour.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -81,37 +81,33 @@
         <ResourceBaseClass Value="Form"/>
       </Unit5>
       <Unit6>
-        <Filename Value="concour_rep.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit6>
-      <Unit7>
         <Filename Value="concour_tournament.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="TournamentFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit7>
-      <Unit8>
+      </Unit6>
+      <Unit7>
         <Filename Value="concour_rider.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="RiderFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit8>
-      <Unit9>
+      </Unit7>
+      <Unit8>
         <Filename Value="concour_horses.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="HorsesFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit9>
-      <Unit10>
+      </Unit8>
+      <Unit9>
         <Filename Value="concour_export.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ExpFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit10>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, datetimectrls, SysUtils, concour_main, concour_bases,
-  concour_DM, concour_params, concour_stage, concour_rep, concour_rider,
+  concour_DM, concour_params, concour_stage, concour_rider,
   concour_horses, concour_export;
 
 {$R *.res}

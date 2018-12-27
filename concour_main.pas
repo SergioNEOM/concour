@@ -57,9 +57,6 @@ type
     MaxTimeEdit: TEdit;
     MenuItem10: TMenuItem;
     MenuItem12: TMenuItem;
-    MenuItem21: TMenuItem;
-    MenuItem22: TMenuItem;
-    MenuItemTotal: TMenuItem;
     MenuItem9: TMenuItem;
     OverlapCB: TCheckBox;
     PageControl1: TPageControl;
@@ -67,7 +64,6 @@ type
     GitClearResAction: TAction;
     GitDelAction: TAction;
     GitFireAction: TAction;
-    ReportsPopup: TPopupMenu;
     RepSpeedButton1: TSpeedButton;
     RouteNameLabel: TLabel;
     RouteSelectSBut: TSpeedButton;
@@ -128,7 +124,6 @@ type
     procedure MenuItem7Click(Sender: TObject);
     procedure OverlapCBChange(Sender: TObject);
     procedure RepSpeedButton1Click(Sender: TObject);
-    procedure RepSpeedButtonClick(Sender: TObject);
     procedure ShuffleBitBtnClick(Sender: TObject);
     procedure DistanceEdit2Change(Sender: TObject);
     procedure DistanceEdit1Change(Sender: TObject);
@@ -186,7 +181,7 @@ var
 implementation
 
 {$R *.lfm}
-uses LCLType, db, math,  concour_DM,  concour_bases,  concour_rep,
+uses LCLType, db, math,  concour_DM,  concour_bases,
   concour_export;
 
 { TMainFrm }
@@ -443,26 +438,26 @@ end;
 procedure TMainFrm.MenuItem21Click(Sender: TObject);
 begin
   // стартовый протокол
-  RepInitialize;
+  {RepInitialize;
   RepWriteBody(1);
   RepDeploy;
-  RepView;
+  RepView;}
 end;
 
 procedure TMainFrm.MenuItem22Click(Sender: TObject);
 begin
   // судейский протокол (колонки для ш.о.)
-  RepInitialize;
+{  RepInitialize;
   RepWriteBody(2);
   RepDeploy;
-  RepView;
+  RepView;}
 end;
 
 procedure TMainFrm.MenuItemTotalClick(Sender: TObject);
 begin
   // Итоговый отчет
   // если в режиме перепрыжки - уходим (печатаем из основного реж)
-  if OverlapCB.Checked then
+  {if OverlapCB.Checked then
   begin
     ShowMessage('Для печати иогового протокола выйдите из режима перепрыжки');
     Exit;
@@ -472,7 +467,7 @@ begin
   RepWriteBody(0);
   //RepWriteData;
   RepDeploy;
-  RepView;
+  RepView;}
 end;
 
 procedure TMainFrm.MenuItem7Click(Sender: TObject);
@@ -506,12 +501,6 @@ end;
 procedure TMainFrm.RepSpeedButton1Click(Sender: TObject);
 begin
   FilePrintActionExecute(self);
-end;
-
-
-procedure TMainFrm.RepSpeedButtonClick(Sender: TObject);
-begin
-  ReportsPopup.PopUp;
 end;
 
 
@@ -633,8 +622,7 @@ begin
   //todo: !!!!! Меняется в НД, но не записывется в БД!!!
   //Надо писать, иначе в перепрыжке пропадает после пересчета мест!!!
   //
-  if OverlapCB.Checked then fi := 'place2'
-  else fi := 'place';
+  if OverlapCB.Checked  then fi := 'place2'  else fi := 'place';
   GitDBGrid.DataSource.DataSet.Edit;
   if GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger > FIRED_RIDER then
     val := GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger - FIRED_RIDER
@@ -643,8 +631,7 @@ begin
        GitDBGrid.DataSource.DataSet.FieldByName('queue').AsInteger; //чтобы отличались
   GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger := val;
   GitDBGrid.DataSource.DataSet.Post;
-  // DM.SetFire(id,value,fieldname);
-  DM.SetFire(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,fi);
+  DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,fi);
 end;
 
 
@@ -1058,9 +1045,9 @@ end;
 
 procedure TMainFrm.CalcPlaces;
 var
-  i,g, ocounter : Integer;
+  i,g, ocounter, prevId : Integer;
   s : Currency;
-  over : TStringList;
+  WasOver : Boolean;
 begin
   OverlapCB.Checked:=False;
   GitDBGrid.BeginUpdate;
@@ -1072,7 +1059,8 @@ begin
        begin
          DM.Work2.Close;
          DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place from v_git where tournament=:par1 and route=:par2 order by "group",totalfouls1,gittime1,queue;';
+         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place from v_git '+
+           'where tournament=:par1 and route=:par2 order by "group",totalfouls1,gittime1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
@@ -1112,7 +1100,7 @@ begin
            end;
          finally
          end;
-       end;
+       end; //end case 0
     1: // классика с перепрыжкой:
        // для каждого зачета
        // на первом этапе ранжируются по сумме ш.о. и штрафов за превышение времени (totalfouls1)
@@ -1122,6 +1110,7 @@ begin
        //
        // 2018-12-19 добавил условие отбора в перепрыжку: (время 1 гита >0)
        begin
+         WasOver:=False;
          DM.Work2.Close;
          DM.Work2.Params.Clear;
          DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place from v_git where '+
@@ -1133,111 +1122,96 @@ begin
          //DM.Work.SQL.Text := 'update git set place=:par1, place2=0 where _rowid_=:par2;';
          // 2018-09-13 перенес обнуление place2 с учётом FIRE_RIDER в проц. CalcPlacesOver
          //
-         // вынесено до цикла, а work.ExexSQL- внутри
+         // Work... вынесено до цикла, а work.ExexSQL- внутри
          DM.Work.Close;
          DM.Work.Params.Clear;
          DM.Work.SQL.Text := 'update git set place=:par1 where _rowid_=:par2;';
          //--
          try
-           over := TStringList.Create;   //список претендентов на перепрыжку
-           try
-             DM.Work2.Open;
-             if not DM.Work2.IsEmpty then
+           DM.Work2.Open;
+           if not DM.Work2.IsEmpty then
+           begin
+             DM.Work2.First;
+             i := 0;       // нумерация мест (для каждого зачёта - своя)
+             s := -1;      // сумма ш.о. предыдущего участника
+             g := -1;      // № текущего зачёта
+             prevId:=-1;
+             ocounter:=0; // счетчик участников перепрыжки для каждого зачёта
+                          // чтобы НЕ первые места сдвигались ниже перепрыжчиков
+             //todo: 2018-12-26 в версии с полем overlap вместо ocounter можно
+             //считать select count(*)... where overlap=1 (в DM сделать функцию)
+             // но с переменной - быстрее (нет обращений к БД)
+             while not DM.Work2.EOF do
              begin
-               DM.Work2.First;
-               i := 0;
-               s := -1;
-               g := -1;
-               ocounter:=0; // счетчик участников перепрыжки для каждого зачёта
-               // чтобы НЕ первые места смещались после перепрыжчиков
-               //todo: 2018-12-26 в версии с полем overlap вместо ocounter будет
-               // select count(*)... where overlap=1 (в DM сделать функцию)
-               while not DM.Work2.EOF do
+               if g <> DM.Work2.FieldByName('group').AsInteger then // начало нового зачёта
                begin
-                 if g <> DM.Work2.FieldByName('group').AsInteger then
-                 begin
-                   // начало нового зачёта
-                   // если список предыд.зачёта не пуст - будет перепрыжка, зафиксировать
-                    if over.Count>1 then
-                      if OverList<>''   //todo: 2018-12-26 другое условие отбора в перепрыжку
-                      then OverList:=OverList+','+over.CommaText
-                      else OverList:=over.CommaText;
-                   //--- теперь запоминаем параметры нового зачёта ---
-                   i := 0;
-                   ocounter:=0;
-                   g := DM.Work2.FieldByName('group').AsInteger;
-                   s := DM.Work2.FieldByName('totalfouls1').AsCurrency;
-                   over.Clear;
-                   // начальное значение... Без этого - первая строка не попадает
-                   over.add(DM.Work2.FieldByName('id').AsString);
-                   //todo: 2018-12-26 запоминать предыдущее значение ID не в StringList,
-                   // а в Integer, чтобы при условии отбора в перепрыжку не забыть
-                   // записать для него  тоже overlap=1...
-                 end;
-                 //--- проигнорировать снятых с гита, остальных обработать
-                 if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
-                 begin
-                  // -- перепрыжка для первых мест при совпадении общих ш.о. (totalfouls1)
-                   if (i = 1) and
-                      (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
-                   begin // будут участвовать в перепрыжке
-                     over.add(DM.Work2.FieldByName('id').AsString);
-                     //todo: 2018-12-26 здесь записывать overlap=1 в БД
-                     //todo: не забыть стартовое значение id (!!??)
-                     Inc(ocounter);
-                     // i - остаётся =1
-                   end
-                   else
+                 //если к началу нового зачёта predID не -1, значит не было повода
+                 // поставить признак перепрыжки (например, один участник в зачёте)
+                 // можно смело присваивать номер первой записи след.зачёта
+                 prevId:=DM.Work2.FieldByName('id').AsInteger;
+                 //--- теперь запоминаем параметры нового зачёта ---
+                 g := DM.Work2.FieldByName('group').AsInteger;
+                 s := DM.Work2.FieldByName('totalfouls1').AsCurrency;
+                 i := 0;
+                 ocounter:=0;
+               end;//endif -- смена зачёта
+               //--- проигнорировать снятых с гита, остальных обработать
+               if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
+               begin
+                // -- перепрыжка для первых мест при совпадении общих ш.о. (totalfouls1)
+                 if (i = 1) and
+                    (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
+                 begin // будут участвовать в перепрыжке
+                   // 2018-12-26
+                   WasOver:=True;
+                   DM.GitSetField(DM.Work2.FieldByName('id').AsInteger,1,'overlap');
+                   if prevId>0 then
                    begin
-                     // совпадения закончились, или место не первое - дальше номера мест увеличим
-                     if ocounter>0 then
-                     begin
-                       i:=i+ocounter;
-                       ocounter:=0;
-                     end;
-                     Inc(i);
+                     //не забыть изменить первую запись в зачёте, но только один раз!
+                     DM.GitSetField(prevId,1,'overlap');
+                     prevId:=-1; //исключить повторную запись (хоть и не существенно)
+                     //todo: а не надо ли увеличить ocounter ?
                    end;
-                   s:= DM.Work2.FieldByName('totalfouls1').AsCurrency;
-                   DM.Work.ParamByName('par1').AsInteger:=i;
-                   DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
-                   DM.Work.ExecSQL;
-                   //***
+                   Inc(ocounter);
+                   // i - не меняется, остаётся =1
+                 end
+                 else
+                 begin
+                   // совпадения закончились, или место не первое - дальше номера мест увеличим
+                   if ocounter>0 then
+                   begin
+                     i:=i+ocounter;
+                     ocounter:=0;
+                   end;
+                   Inc(i);
                  end;
-                 DM.Work2.Next;
-               end;
-               // список остался не пустой - будет перепрыжка, зафиксировать
-               if over.Count>1 then
-               begin
-                 //todo: 2018-12-26 условие отбора будет другое...
-                 // установить overlap=1 у предыдущего и текущего id (проц. в DM)
-                 if OverList<>'' then OverList:=OverList+','+over.CommaText
-                 else OverList:=over.CommaText;
-               end;
-             end;
-           except
-             Application.MessageBox('Не удалось нормально завершить процедуру','Ошибка',MB_OK+MB_ICONERROR);
-           end;
-         finally
-           over.Free;
+                 s:= DM.Work2.FieldByName('totalfouls1').AsCurrency;
+                 //записать место
+                 DM.GitSetField(DM.Work2.FieldByName('id').AsInteger,i,'place');
+                 //***
+               end;   //endif отбор без снятых с гита
+               DM.Work2.Next;
+             end;   // end while
+           end; //endif (not Work2.Empty)
+         except
+           Application.MessageBox('Не удалось нормально завершить процедуру','Ошибка',MB_OK+MB_ICONERROR);
          end;
-       end;
+         if WasOver then
+           Application.MessageBox('Расчетная ПЕРЕПРЫЖКА!','Информация',MB_OK+MB_ICONINFORMATION);
+       end; //end case 1
   end;
   RangedView:=True;
   GitDBGrid.EndUpdate;
-  if OverList<>'' then      //todo: 2018-12-26 ввести другую переменную для условия перепрыжки
-  begin
-    OverlapCB.Visible:=True;
-    Application.MessageBox('ПЕРЕПРЫЖКА !!!!','Информация',MB_OK+MB_ICONINFORMATION);
-  end
-  else  OverlapCB.Visible:=False;
 end;
 
 procedure TMainFrm.CalcPlacesOver;
 var
   i,g : Integer;
 begin
-  if OverList='' then Exit;  //todo: другое условие...
-  try
+  //todo: 2018-12-26 как отличить учасников перепрыжки: расчетных от "быстрых"?
+  // ведь при изменении их к-ва места должны пересчитыватья (и place, и place2)
+  //а в "быструю перепрыжку" могут попасть не 1-е места основного гита...
+{  try
     // список уже д.б. ранжирован по place и выбраны только участники перепрыжки
     GitDBGrid.BeginUpdate;
     //
@@ -1297,6 +1271,7 @@ begin
     DM.Work.Close;
     DM.Work2.Close;
   end;
+  }
 end;
 
 procedure TMainFrm.SetColNames;

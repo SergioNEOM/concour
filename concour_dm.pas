@@ -50,8 +50,9 @@ const
                    ' left join "horses" on git."horse"=horses._rowid_ '+
                    ' left join "groups" on git."group"=groups._rowid_ '+
          ' WHERE git.tournament=:partour and git.route=:parroute';
+GIT_OVERLAP = ' and git.overlap=1 ';
 GIT_ORD_QUE = ' ORDER BY git.queue, git._rowid_;';
-GIT_ORD_RANK = ' ORDER BY git."group", git.place, git.place2, git.queue ';
+GIT_ORD_RANK = ' ORDER BY git."group", git.place, git.place2, git.queue;';
  //
  UPD_GIT = 'UPDATE "git" SET "tournament"=:tournament, "route"=:route, "group"=:group, '+
          '"queue"=:queue, "rider"=:rider, "horse"=:horse, place=:place, '+
@@ -147,7 +148,7 @@ type
     procedure DelGit(DelID: Integer);
     function AppendGit : Integer;
     function ClearResults: Boolean;
-    procedure SetFire(FireId,Value: Integer; FieldName:String);
+    function GitSetField(GitId,FValue: Integer; FName:String):Boolean;
   end;
 
 var
@@ -823,21 +824,18 @@ end;}
 //******
 
 procedure TDM.OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
-var
-  s : String;
 begin
   Git.Close;
   Git.Params.Clear;
   Git.SQL.Text:= SEL_GIT;
-  if not Ordered then Git.SQL.Text := Git.SQL.Text + GIT_ORD_QUE
+  //c 2018-12-26 новое условие отбора (overlap=1) в перепрыжку
+  if Overlap then
+    Git.SQL.Text := Git.SQL.Text + GIT_OVERLAP;//было ' AND git."_rowid_" in ('+MainFrm.OverList+') ';
+  if not Ordered then //по протокольной очереди
+     Git.SQL.Text := Git.SQL.Text + GIT_ORD_QUE
   else  // по местам
-  begin
-    // перепрыжка - выберем только первых
-    if Overlap then //todo: 2018-12-26 поставить другое условие отбора (overlap=1)
-      Git.SQL.Text := Git.SQL.Text + ' AND git."_rowid_" in ('+MainFrm.OverList+') ';
     Git.SQL.Text := Git.SQL.Text + GIT_ORD_RANK ;
-  end;
-  s := Git.SQL.Text;
+  //
   Git.ParamByName('partour').AsInteger:=CurrentTournament;
   Git.ParamByName('parroute').AsInteger:=CurrentRoute;
   //
@@ -848,41 +846,6 @@ begin
   if not Git.IsEmpty then
     if CurrID>0 then Git.Locate('id',CurrID,[]);
 end;
-
-{
-if newFile then
-    begin
-      // Create the database and the tables
-      try
-        SQLite3Connection1.Open;
-        SQLTransaction1.Active := true;
-
-        // Here we're setting up a table named "DATA" in the new database
-        SQLite3Connection1.ExecuteDirect('CREATE TABLE "DATA"('+
-                    ' "id" Integer NOT NULL PRIMARY KEY AUTOINCREMENT,'+
-                    ' "Current_Time" DateTime NOT NULL,'+
-                    ' "User_Name" Char(128) NOT NULL,'+
-                    ' "Info" Char(128) NOT NULL);');
-
-        // Creating an index based upon id in the DATA Table
-        SQLite3Connection1.ExecuteDirect('CREATE UNIQUE INDEX "Data_id_idx" ON "DATA"( "id" );');
-
-        SQLTransaction1.Commit;
-
-        ShowMessage('Succesfully created database.');
-      except
-        ShowMessage('Unable to Create new Database');
-      end;
-    end;
-}
-{
-check if table exists:
-
-SELECT count(*) FROM sqlite_master WHERE type='table' AND name='table_name';
-
-if Result=0 - table not exist
-
-}
 
 
 procedure TDM.DelGit(DelID: Integer);
@@ -929,6 +892,22 @@ begin
     Work.Close;
   end;
 end;
+
+function TDM.GitSetField(GitId,FValue: Integer; FName:String):Boolean;
+begin
+  try
+    if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
+    SQLConn.ExecuteDirect('UPDATE git SET '+FName+'='+Trim(IntToStr(FValue))+
+         ' WHERE "_rowid_"='+Trim(IntToStr(GitId))+';');
+    Result := True;
+  except
+    if SQLTransaction1.Active then SQLTransaction1.RollbackRetaining;
+    Result := False;
+  end;
+end;
+
+
+//****
 
 function TDM.ClearResults: Boolean;
 var
@@ -1065,19 +1044,6 @@ begin
   else    CurrentTournament := Tournaments.FieldByName('id').AsInteger;
 end;
 
-procedure TDM.SetFire(FireId,Value: Integer; FieldName:String);
-begin
-  try
-    Work2.Close;
-    Work2.Params.Clear;
-    Work2.SQL.Text:='UPDATE git SET '+FieldName+'=:par1 WHERE "_rowid_"=:par2;';
-    Work2.ParamByName('par1').Value:=Value;
-    Work2.ParamByName('par2').Value:=FireId;
-    Work2.ExecSQL;
-  finally
-    Work2.Close;
-  end;
-end;
 
 end.
 
