@@ -21,13 +21,16 @@ const
                     '"owner"  VARCHAR(25));';
   CHECK_TABLE = 'SELECT count(*) as res FROM sqlite_master WHERE type='+chr(39)+'table'+chr(39)+' AND name=';
 
-
+ //---
+ GIT_ORDER_Q = 1;
+ GIT_ORDER_R = 2;
+ //---
 
  SEL_GIT =
  //поле с названием зачёта и left join ?
     'SELECT git._rowid_ as id, git.tournament, git.route, '+
          'git."queue" as queue, git."rider" as rider, git.place, '+
-         'git.place2, git."group", groups.groupname, '+
+         'git.place2, git."group", groups.groupname, git.overlap, '+
          'cast(riders."lastname" as char(30))||" "||cast(riders."firstname" as char(25)) as lastname, cast(riders."regnum" as char(10)) as regnum, '+
          'cast(riders."category" as char(10)) as category, git.horse as horse, '+
          'cast(horses."nickname" as CHAR(25)) as nickname, cast(horses."register" as CHAR(25)) as register, '+
@@ -50,7 +53,7 @@ const
                    ' left join "horses" on git."horse"=horses._rowid_ '+
                    ' left join "groups" on git."group"=groups._rowid_ '+
          ' WHERE git.tournament=:partour and git.route=:parroute';
-GIT_OVERLAP = ' and git.overlap=1 ';
+GIT_OVERLAP = ' and git.overlap>0 ';
 GIT_ORD_QUE = ' ORDER BY git.queue, git._rowid_;';
 GIT_ORD_RANK = ' ORDER BY git."group", git.place, git.place2, git.queue;';
  //
@@ -101,7 +104,8 @@ type
   public
     CurrentTournament,
      CurrentRoute,
-     CurrRouteType : Integer;
+     CurrRouteType,
+     CurrGitOrder  : Integer;
     CurrRouteName  : String;
     RepParams,
      ColNames: TStringList;
@@ -144,7 +148,7 @@ type
     function DelTournament(TournamentId: Integer):Boolean;
     procedure SetCurrTournament;
     // Git
-    procedure OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
+    procedure OpenGit(CurrID:Integer; Ordered:Integer=0; Overlap:Boolean=False);
     procedure DelGit(DelID: Integer);
     function AppendGit : Integer;
     function ClearResults: Boolean;
@@ -153,6 +157,7 @@ type
 
 var
   DM: TDM;
+
 
 implementation
 
@@ -180,6 +185,7 @@ begin
   CurrentRoute:=-1;
   CurrRouteType:= 0;
   CurrRouteName:='';
+  CurrGitOrder:=GIT_ORDER_Q;
   RepParams := TStringList.Create;
   ColNames := TStringList.Create;
   SQLConn.DatabaseName := cfg.DataBaseFileName;
@@ -823,18 +829,23 @@ end;}
 
 //******
 
-procedure TDM.OpenGit(CurrID:Integer; Ordered:Boolean=False; Overlap:Boolean=False);
+procedure TDM.OpenGit(CurrID:Integer; Ordered:Integer=0; Overlap:Boolean=False);
 begin
   Git.Close;
   Git.Params.Clear;
   Git.SQL.Text:= SEL_GIT;
-  //c 2018-12-26 новое условие отбора (overlap=1) в перепрыжку
+  //c 2018-12-26 новое условие отбора (overlap>0) в перепрыжку
   if Overlap then
     Git.SQL.Text := Git.SQL.Text + GIT_OVERLAP;//было ' AND git."_rowid_" in ('+MainFrm.OverList+') ';
-  if not Ordered then //по протокольной очереди
-     Git.SQL.Text := Git.SQL.Text + GIT_ORD_QUE
-  else  // по местам
-    Git.SQL.Text := Git.SQL.Text + GIT_ORD_RANK ;
+  // установить или оставить порядок сортировки Git
+  if Ordered<>0 then CurrGitOrder:=Ordered;
+  //
+  case CurrGitOrder of
+    GIT_ORDER_Q:  //по протокольной очереди
+         Git.SQL.Text := Git.SQL.Text + GIT_ORD_QUE;
+    GIT_ORDER_R:  // по местам
+         Git.SQL.Text := Git.SQL.Text + GIT_ORD_RANK ;
+  end;
   //
   Git.ParamByName('partour').AsInteger:=CurrentTournament;
   Git.ParamByName('parroute').AsInteger:=CurrentRoute;

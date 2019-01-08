@@ -366,9 +366,9 @@ begin
   DM.Work.Params.Clear;
   //с 2018-12-26 другое условие отбора в перепрыжку
   if MainFrm.OverlapCB.Checked then
-    //перепрыжка: c 2018-12-26 другое условие отбора (overlap=1)
+    //перепрыжка: c 2018-12-26 другое условие отбора (overlap>0)
     DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 '+
-    ' and overlap=1 order by "group",place,queue;'
+    ' and overlap>0 order by "group",place,queue;'
   else
     DM.Work.SQL.Text:='select * from v_git where tournament=:par1 '+
        ' and route=:par2 and overlap=0 order by queue;';

@@ -20,7 +20,9 @@ const
   ROUTE_2GIT     =  64;          // 2 ГИТА
   // ...
   ROUTE_ALL      = 255;          // 32767;
-
+  //----------------
+  OVER_CALC      = 1;            // расчетная перепрыжка
+  OVER_FAST      = 2;            // "Быстрая" перепрыжка
   //----------------
   FIRED_RIDER    = 9000;         // снятым участникам добавляется константа к полю place
 type
@@ -28,6 +30,7 @@ type
   { TMainFrm }
 
   TMainFrm = class(TForm)
+    GitFastOverAction: TAction;
     FastReJumpCB: TCheckBox;
     GitResultsAction: TAction;
     GitShuffleAction: TAction;
@@ -57,6 +60,8 @@ type
     MaxTimeEdit: TEdit;
     MenuItem10: TMenuItem;
     MenuItem12: TMenuItem;
+    MenuItem21: TMenuItem;
+    MenuItem22: TMenuItem;
     MenuItem9: TMenuItem;
     OverlapCB: TCheckBox;
     PageControl1: TPageControl;
@@ -115,6 +120,7 @@ type
     procedure CalcOverlapBitBtnClick(Sender: TObject);
     procedure CalcPlacesBitBtnClick(Sender: TObject);
     procedure GitDBGridTitleClick(Column: TColumn);
+    procedure GitFastOverActionExecute(Sender: TObject);
     procedure GitResultsActionExecute(Sender: TObject);
     procedure GitShuffleActionExecute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
@@ -162,7 +168,6 @@ type
   private
 
   public
-    RangedView : Boolean;
     SumPenalty: Currency;
     RouteTypeSL: TStringList;
     procedure GitGridRefreshVisibility;
@@ -218,8 +223,6 @@ begin
   end;
   GitDBGrid.EndUpdate(true);
   //----
-  RangedView:=False;
-  //--
 end;
 
 
@@ -364,7 +367,7 @@ end;
 procedure TMainFrm.CalcOverlapBitBtnClick(Sender: TObject);
 begin
   CalcPlacesOver;
-  DM.OpenGit(-1,True,True);
+  DM.OpenGit(-1,concour_DM.GIT_ORDER_R,True);
 end;
 
 procedure TMainFrm.CalcPlacesBitBtnClick(Sender: TObject);
@@ -389,10 +392,43 @@ begin
   end;
 end;
 
+procedure TMainFrm.GitFastOverActionExecute(Sender: TObject);
+var
+  val: Integer;
+begin
+  // Переключение в "Быструю" перепрыжку
+  if OverlapCB.Checked then
+  begin
+    if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>OVER_FAST then
+    begin
+      //todo: если не "быстрая" перепрыжка, то перезаписывать или нет ???????
+      // 2019-01-08 пока - нет
+      Application.MessageBox('Это не "быстрая" перепрыжка.','Ошибка',MB_OK+MB_ICONERROR);
+      Exit;
+    end;
+    val := 0          //перепрыжка? значит, убрать из списка (overlap=0)
+  end
+  else
+  begin
+    if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>0 then
+    begin
+      //todo: участник уже в перепрыжке: перезаписывать или нет ???????
+      // 2019-01-08   пока - нет
+      Application.MessageBox('Уже в перепрыжке!','Информация',MB_OK+MB_ICONINFORMATION);
+      Exit;
+    end;
+    val := OVER_FAST; //нет? значит, добавить в перепрыжку
+  end;
+  if DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,'overlap') then
+     Application.MessageBox('Выполнено.','Информация',MB_OK+MB_ICONINFORMATION);
+  //todo: обновить датасет
+  DM.OpenGit(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,0 {порядок не менять},OverlapCB.Checked);
+end;
+
 procedure TMainFrm.GitResultsActionExecute(Sender: TObject);
 begin
   CalcPlaces;
-  DM.OpenGit(-1,True);
+  DM.OpenGit(-1,concour_DM.GIT_ORDER_R);
 end;
 
 procedure TMainFrm.GitShuffleActionExecute(Sender: TObject);
@@ -494,7 +530,7 @@ procedure TMainFrm.OverlapCBChange(Sender: TObject);
 begin
   if OverlapCB.Checked then PageControl1.ActivePageIndex:=1 //панель перепрыжки
   else PageControl1.ActivePageIndex:=0; // основной маршрут
-  DM.OpenGit(-1,RangedView,OverlapCB.Checked);
+  DM.OpenGit(-1,0{порядок не менять},OverlapCB.Checked);
   GitGridRefreshVisibility;
 end;
 
@@ -536,13 +572,14 @@ begin
   // стиль активного поля не меняем
   if not (gdSelected in State) then
   begin
+    // быстрые перепрыжчики - жёлтые
+    if TDBGrid(Sender).DataSource.DataSet.FieldByName('overlap').AsInteger=OVER_FAST then
+      TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(255,255,210);
     // выделение полей со штрафными очками розовым цветом
     if (LeftStr(LowerCase(Column.FieldName),4)='foul')  then
       if TDBGrid(Sender).DataSource.DataSet.FieldByName(Column.FieldName).AsCurrency>0.0 then
-           TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(250,150,150)
-      else
-           TDBGrid(Sender).Canvas.Brush.Color := Col;
-
+          TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(250,150,150)
+      else   TDBGrid(Sender).Canvas.Brush.Color := Col;
      {if gdSelected in State then
          begin
             TDBGrid(Sender).Canvas.Brush.Color := clMenuHighlight;
@@ -865,7 +902,7 @@ begin
     DM.OpenGit(-1);
     GitDBGrid.Enabled:=not DM.Git.IsEmpty;
     OverlapCB.Checked:=False; //если были на перепрыжке, то вернуть основной вид
-    RangedView:=False;
+    DM.CurrGitOrder:=concour_DM.GIT_ORDER_Q;
     GitGridRefreshVisibility;
   end;
 end;
@@ -1164,11 +1201,11 @@ begin
                  begin // будут участвовать в перепрыжке
                    // 2018-12-26
                    WasOver:=True;
-                   DM.GitSetField(DM.Work2.FieldByName('id').AsInteger,1,'overlap');
+                   DM.GitSetField(DM.Work2.FieldByName('id').AsInteger,OVER_CALC,'overlap');
                    if prevId>0 then
                    begin
                      //не забыть изменить первую запись в зачёте, но только один раз!
-                     DM.GitSetField(prevId,1,'overlap');
+                     DM.GitSetField(prevId,OVER_CALC,'overlap');
                      prevId:=-1; //исключить повторную запись (хоть и не существенно)
                      //todo: а не надо ли увеличить ocounter ?
                    end;
@@ -1200,7 +1237,7 @@ begin
            Application.MessageBox('Расчетная ПЕРЕПРЫЖКА!','Информация',MB_OK+MB_ICONINFORMATION);
        end; //end case 1
   end;
-  RangedView:=True;
+  DM.CurrGitOrder:=concour_DM.GIT_ORDER_R;
   GitDBGrid.EndUpdate;
 end;
 
@@ -1220,14 +1257,15 @@ begin
     // (кроме снятых с гита)
     DM.Work.Close;
     DM.Work.Params.Clear;
-    //todo: 2018-12-26 условие отбора в перепрыжку: overlap=1
+    //todo: 2018-12-26 условие отбора в перепрыжку: overlap>0
     DM.Work.SQL.Text := 'update git set place2=0 where place2<:par1 and "_rowid_" in ('+OverList+');';
     DM.Work.ParamByName('par1').AsInteger := FIRED_RIDER;
     DM.Work.ExecSQL;
     //
     DM.Work2.Close;
     DM.Work2.Params.Clear;
-    //todo: 2018-12-26 условие отбора в перепрыжку: overlap=1
+    //todo: 2018-12-26 условие отбора в перепрыжку: overlap>0
+    // упорядочен по place2, чтобы после пересчета мест был сразу ранжирован...
     DM.Work2.SQL.Text := 'select id,"group",place,place2,totalfouls2,gittime2 from v_git '+
       ' where id in ('+OverList+') order by "group",place2,totalfouls2,gittime2,queue;';
     //----
