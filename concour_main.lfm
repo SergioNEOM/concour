@@ -1675,15 +1675,6 @@ object MainFrm: TMainFrm
       ShowHint = True
       ParentShowHint = False
     end
-    object FastReJumpCB: TCheckBox
-      Left = 840
-      Height = 19
-      Top = 15
-      Width = 83
-      Caption = 'FastReJump'
-      OnChange = FastReJumpCBChange
-      TabOrder = 1
-    end
   end
   object MainMenu1: TMainMenu
     left = 16
