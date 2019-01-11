@@ -153,6 +153,7 @@ type
     function AppendGit : Integer;
     function ClearResults: Boolean;
     function GitSetField(GitId,FValue: Integer; FName:String):Boolean;
+    function GitCheckTime(Overlap:Boolean=False):Boolean ;
   end;
 
 var
@@ -891,13 +892,9 @@ begin
       Work.First;
       Result:= Work.Fields[0].AsInteger;
     end;
-    Work.Close;
-    Work.Params.Clear;
-    Work.SQL.Text := 'UPDATE "git" SET "queue"=:par1 WHERE "_rowid_"=:par2;';
-    Work.ParamByName('par1').AsInteger:=Result;
-    Work.ParamByName('par2').AsInteger:=Result;
-    Work.ExecSQL; //Чтобы новая строка показывалась в конце сортированного списка,
+    //Чтобы новая строка показывалась в конце сортированного списка,
     //в queue пишется №записи, а при жеребьёвке пересчитается  (или можно записать max(queue)+1 ? )
+    GitSetField(Result,Result,'queue');
     OpenGit(Result);
   finally
     Work.Close;
@@ -908,7 +905,7 @@ function TDM.GitSetField(GitId,FValue: Integer; FName:String):Boolean;
 begin
   try
     if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
-    SQLConn.ExecuteDirect('UPDATE git SET '+FName+'='+Trim(IntToStr(FValue))+
+    SQLConn.ExecuteDirect('UPDATE OR ROLLBACK git SET '+FName+'='+Trim(IntToStr(FValue))+
          ' WHERE "_rowid_"='+Trim(IntToStr(GitId))+';');
     Result := True;
   except
@@ -917,6 +914,27 @@ begin
   end;
 end;
 
+function TDM.GitCheckTime(Overlap:Boolean=False):Boolean;
+begin
+  Result := False;
+  try
+    Work2.Close;
+    Work2.Params.Clear;
+    Work2.SQL.Text:='SELECT COUNT(*) as res1 FROM git WHERE tournament=:par1 and route=:par2 ';
+    if Overlap then Work2.SQL.Text:=Work2.SQL.Text+' and gittime2<0.1'
+    else Work2.SQL.Text:=Work2.SQL.Text+' and gittime1<0.1';
+    Work2.ParamByName('par1').AsInteger:=CurrentTournament;
+    Work2.ParamByName('par2').AsInteger:=CurrentRoute;
+    Work2.Open;
+    if not Work2.IsEmpty then
+    begin
+      Work2.First;
+      Result:= (Work2.FieldByName('res1').AsInteger=0); // true только когда 0
+    end;
+  finally
+    Work2.Close;
+  end;
+end;
 
 //****
 

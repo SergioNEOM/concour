@@ -353,6 +353,13 @@ end;
 
 procedure TMainFrm.CalcOverlapBitBtnClick(Sender: TObject);
 begin
+  // 2019-01-11 проверка на пустые значения gittime1
+  if not DM.GitCheckTime(True) then
+  begin
+    Application.MessageBox('Необходимо заполнить время гита для всех участников!',
+         'Ошибка',MB_OK+MB_ICONERROR);
+    Exit;
+  end;
   CalcPlacesOver;
   DM.OpenGit(-1,concour_DM.GIT_ORDER_R,True);
 end;
@@ -416,6 +423,13 @@ end;
 
 procedure TMainFrm.GitResultsActionExecute(Sender: TObject);
 begin
+  // 2019-01-11 проверка на пустые значения gittime1
+  if not DM.GitCheckTime() then
+  begin
+    Application.MessageBox('Необходимо заполнить время гита для всех участников!',
+         'Ошибка',MB_OK+MB_ICONERROR);
+    Exit;
+  end;
   CalcPlaces;
   DM.OpenGit(-1,concour_DM.GIT_ORDER_R);
 end;
@@ -1254,6 +1268,7 @@ begin
   //а в "быструю перепрыжку" могут попасть не 1-е места основного гита...
   //
   //todo: отслеживать gittime2>0.0 !!!
+
   try
     // в списке только участники перепрыжки
     GitDBGrid.BeginUpdate;
@@ -1351,146 +1366,6 @@ begin
   end;
 end;
 
-//*****************************************************************************8
-//
-//
-{  proc CalcPlaces  case 0:  (классика)
-       begin
-         DM.Work2.Close;
-         DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",sumfouls1,gittime1,place from v_git where tournament=:par1 and route=:par2 order by "group",sumfouls1,gittime1,queue;';
-         DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
-         DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
-         //----
-         DM.Work.Close;
-         DM.Work.Params.Clear;
-         DM.Work.SQL.Text := 'update git set place=:par1 where _rowid_=:par2;';
-         //--
-         try
-           try
-             DM.Work2.Open;
-             if not DM.Work2.IsEmpty then
-             begin
-               DM.Work2.First;
-               i := 1;
-               s := -1;
-               t := -1;
-               g := DM.Work2.FieldByName('group').AsInteger;
-               while not DM.Work2.EOF do
-               begin
-                 DM.Work.ParamByName('par1').AsInteger:=i;
-                 DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
-                 DM.Work.ExecSQL;
-                 //***
-                 if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
-                 begin
-                   if (s <> DM.Work2.FieldByName('sumfouls1').AsCurrency) or
-                      (t <> DM.Work2.FieldByName('gittime1').AsCurrency) then
-                   begin
-                     // если штрафы и время одинаковы, то № места тот же останется, иначе - увеличится
-                     s := DM.Work2.FieldByName('sumfouls1').AsCurrency;
-                     t := DM.Work2.FieldByName('gittime1').AsCurrency;
-                     Inc(i);
-                   end;
-                 end;
-                 DM.Work2.Next;
-                 if g <> DM.Work2.FieldByName('group').AsInteger then
-                 begin
-                   // начало нового зачёта
-                   g := DM.Work2.FieldByName('group').AsInteger;
-                   i := 1;
-                 end;
-               end;
-             end;
-           except
-             Application.MessageBox('Не удалось нормально завершить процедуру','Ошибка',MB_OK+MB_ICONERROR);
-           end;
-         finally
-         end;
-       end;
-}
-//*******************************************
-{ КЛАССИКА С ПРЕПРЫЖКОЙ (ЭТАП 1)
-CalcPlaces case 1:
-
-begin
-         DM.Work2.Close;
-         DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",gittime1,totalfouls1,place from v_git where tournament=:par1 and route=:par2 order by "group",totalfouls1,gittime1,queue;';
-         DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
-         DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
-         //----
-         DM.Work.Close;
-         DM.Work.Params.Clear;
-         DM.Work.SQL.Text := 'update git set place=:par1, place2=0 where _rowid_=:par2;';
-         //--
-         try
-           over := TStringList.Create;   //список претендентов на перепрыжку
-           try
-             DM.Work2.Open;
-             if not DM.Work2.IsEmpty then
-             begin
-               DM.Work2.First;
-               i := 0;
-               s := -1;
-               g := -1;
-               //
-               while not DM.Work2.EOF do
-               begin
-                 if g <> DM.Work2.FieldByName('group').AsInteger then
-                 begin
-                   // начало нового зачёта
-                   // если список предыд.зачёта не пуст - будет перепрыжка, зафиксировать
-                    if over.Count>1 then
-                      if OverList<>'' then OverList:=OverList+','+over.CommaText
-                      else OverList:=over.CommaText;
-                   //--- теперь запоминаем параметры нового зачёта ---
-                   i := 0;
-                   g := DM.Work2.FieldByName('group').AsInteger;
-                   s := DM.Work2.FieldByName('totalfouls1').AsCurrency;
-                   t := DM.Work2.FieldByName('gittime1').AsCurrency;
-                   over.Clear;
-                   // начальное значение... Без этого - первая строка не попадает
-                   over.add(IntToStr(DM.Work2.FieldByName('id').AsInteger));
-                 end;
-                 //--- проигнорировать снятых с гита, остальных обработать
-                 if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
-                 begin
-                  // -- перепрыжка для первых мест при совпадении общих ш.о. (totalfouls1)
-                   if (i = 1) and
-                      (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) and
-                      (t = DM.Work2.FieldByName('gittime1').AsCurrency) then
-                   begin // будут участвовать в перепрыжке
-                     over.add(IntToStr(DM.Work2.FieldByName('id').AsInteger));
-                     // i - остаётся =1
-                   end
-                   else
-                     // совпадения закончились, или место не первое - дальше номера мест увеличим
-                     Inc(i);
-                   s:= DM.Work2.FieldByName('totalfouls1').AsCurrency;
-                   t := DM.Work2.FieldByName('gittime1').AsCurrency;
-                   DM.Work.ParamByName('par1').AsInteger:=i;
-                   DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
-                   DM.Work.ExecSQL;
-                   //***
-                 end;
-                 DM.Work2.Next;
-               end;
-               // список остался не пустой - будет перепрыжка, зафиксировать
-               if over.Count>1 then
-               begin
-                 if OverList<>'' then OverList:=OverList+','+over.CommaText
-                 else OverList:=over.CommaText;
-               end;
-             end;
-           except
-             Application.MessageBox('Не удалось нормально завершить процедуру','Ошибка',MB_OK+MB_ICONERROR);
-           end;
-         finally
-           over.Free;
-         end;
-       end;
-}
 
 end.
 
