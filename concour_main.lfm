@@ -1,7 +1,7 @@
 object MainFrm: TMainFrm
-  Left = 148
+  Left = 120
   Height = 566
-  Top = 139
+  Top = 132
   Width = 1124
   Caption = 'MainFrm'
   ClientHeight = 546
@@ -344,10 +344,10 @@ object MainFrm: TMainFrm
       Height = 110
       Top = 1
       Width = 1122
-      ActivePage = TabSheet2
+      ActivePage = TabSheet1
       Align = alTop
       ShowTabs = False
-      TabIndex = 1
+      TabIndex = 0
       TabOrder = 1
       TabPosition = tpBottom
       Options = [nboDoChangeOnSetIndex]
@@ -1674,6 +1674,32 @@ object MainFrm: TMainFrm
       ShowCaption = False
       ShowHint = True
       ParentShowHint = False
+    end
+    object Label13: TLabel
+      Left = 688
+      Height = 16
+      Top = 2
+      Width = 264
+      AutoSize = False
+      Caption = 'Лидер на маршруте:'
+      ParentColor = False
+    end
+    object LeaderLabel: TLabel
+      Left = 688
+      Height = 17
+      Top = 24
+      Width = 424
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = False
+      Font.CharSet = RUSSIAN_CHARSET
+      Font.Color = clNavy
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
     end
   end
   object MainMenu1: TMainMenu

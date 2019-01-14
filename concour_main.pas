@@ -47,6 +47,8 @@ type
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
+    Label13: TLabel;
+    LeaderLabel: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -1066,6 +1068,8 @@ begin
   GitDBGrid.DataSource.DataSet.FieldByName('totalfouls2').AsCurrency:= jj+it2;
   GitDBGrid.DataSource.DataSet.FieldByName('sumfouls').AsCurrency:=ii+jj+it1+it2;
   GitDBGrid.DataSource.DataSet.Post;
+    //--
+  LeaderLabel.Caption := DM.GetLeader(OverlapCB.Checked);
 end;
 
 

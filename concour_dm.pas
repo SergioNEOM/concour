@@ -31,7 +31,8 @@ const
     'SELECT git._rowid_ as id, git.tournament, git.route, '+
          'git."queue" as queue, git."rider" as rider, git.place, '+
          'git.place2, git."group", groups.groupname, git.overlap, '+
-         'cast(riders."lastname" as char(30))||" "||cast(riders."firstname" as char(25)) as lastname, cast(riders."regnum" as char(10)) as regnum, '+
+         'cast(riders."lastname" as char(30))||" "||cast(riders."firstname" as char(25)) as lastname, '+
+         'cast(riders."regnum" as char(10)) as regnum, '+
          'cast(riders."category" as char(10)) as category, git.horse as horse, '+
          'cast(horses."nickname" as CHAR(25)) as nickname, cast(horses."register" as CHAR(25)) as register, '+
          'cast(horses."owner" as CHAR(25)) as owner, cast(riders."region" as char(50)) as region,'+
@@ -114,6 +115,7 @@ type
     function CreateTable: Boolean;
     procedure FillRepParams;
     procedure SetColName(FieldName,FieldTitle: String);
+    function GetLeader(Overlap: Boolean = False):String;
     // Riders
     procedure OpenRiders(CurrentID: Integer);
     function AddRider(Birthdate:Integer; Lastname,Firstname,RegNum,Category,Trainer,Region:String):Integer;
@@ -290,6 +292,31 @@ begin
   end;
 end;
 
+function TDM.GetLeader(Overlap: Boolean = False):String;
+begin
+  Result := '';
+  try
+    Work2.Close;
+    Work2.Params.Clear;
+    Work2.SQL.Text:='SELECT cast(lastname as char(30))||" "||cast(firstname as char(25)) '+
+       ' as ridername, nickname FROM v_git WHERE tournament=:par1 and route=:par2 ';
+    if Overlap
+      then Work2.SQL.Text:=Work2.SQL.Text+'and overlap>0 order by totalfouls2,gittime2,queue;'
+      else Work2.SQL.Text:=Work2.SQL.Text+'and overlap=0 order by totalfouls1,gittime1,queue;';
+    Work2.ParamByName('par1').AsInteger:=CurrentTournament;
+    Work2.ParamByName('par2').AsInteger:=CurrentRoute;
+    Work2.Open;
+    if not Work2.IsEmpty then
+    begin
+      Work2.First;
+      Result:= Work2.FieldByName('ridername').AsString+'   на '+Work2.FieldByName('nickname').AsString;
+    end;
+  finally
+    Work2.Close;
+  end;
+end;
+
+//****-----------******---------
 procedure TDM.OpenRiders(CurrentID: Integer);
 begin
   Riders.Close;
