@@ -36,9 +36,9 @@ type
     FilePrintAction: TAction;
     Barriers1SpinEdit: TSpinEdit;
     Barriers2SpinEdit: TSpinEdit;
-    BitBtn1: TBitBtn;
-    BitBtn2: TBitBtn;
-    BitBtn3: TBitBtn;
+    AddBitBtn: TBitBtn;
+    ClearBitBtn: TBitBtn;
+    DelBitBtn: TBitBtn;
     CalcOverlapBitBtn: TBitBtn;
     CalcPlacesBitBtn: TBitBtn;
     DistanceEdit1: TEdit;
@@ -112,7 +112,7 @@ type
     VelocityCB2: TComboBox;
     procedure Barriers1SpinEditEditingDone(Sender: TObject);
     procedure Barriers2SpinEditEditingDone(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
+    procedure AddBitBtnClick(Sender: TObject);
     procedure DistanceEdit1EditingDone(Sender: TObject);
     procedure DistanceEdit2EditingDone(Sender: TObject);
     procedure FilePrintActionExecute(Sender: TObject);
@@ -124,9 +124,6 @@ type
     procedure GitResultsActionExecute(Sender: TObject);
     procedure GitShuffleActionExecute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
-    procedure MenuItem21Click(Sender: TObject);
-    procedure MenuItem22Click(Sender: TObject);
-    procedure MenuItemTotalClick(Sender: TObject);
     procedure OverlapCBChange(Sender: TObject);
     procedure RepSpeedButton1Click(Sender: TObject);
     procedure ShuffleBitBtnClick(Sender: TObject);
@@ -214,6 +211,7 @@ begin
     c.Tag:=ROUTE_OVERLAP;
     c.Title.Alignment:=taCenter;
     c.Title.MultiLine:=True;
+    //todo: заголовки брать из БД?
     c.Title.Caption := 'П'+#10#13+IntToStr(i);
     c.Width:=40;
     c.Visible := false;
@@ -223,7 +221,6 @@ begin
   GitDBGrid.EndUpdate(true);
   //----
 end;
-
 
 
 procedure TMainFrm.GitDBGridDragOver(Sender, Source: TObject; X, Y: Integer;
@@ -303,7 +300,7 @@ begin
 end;
 
 
-procedure TMainFrm.BitBtn1Click(Sender: TObject);
+procedure TMainFrm.AddBitBtnClick(Sender: TObject);
 begin
   if (DM.CurrentTournament<=0) or  (DM.CurrentRoute<=0) then Exit;
   DM.AppendGit;
@@ -329,22 +326,12 @@ end;
 
 procedure TMainFrm.FilePrintActionExecute(Sender: TObject);
 begin
-    {$IFDEF WINDOWS}
-    with TExpFrm.Create(self) do
-    begin
-      try
-        if ShowModal=mrOK then
-        begin
-        end;
-      finally
-        Free;
-      end;
+  with TExpFrm.Create(self) do
+    try
+      ShowModal;
+    finally
+      Free;
     end;
-    {$ENDIF}
-    //****
-    {$IFDEF UNIX}
-    ReportsPopup.PopUp;
-    {$ENDIF}
 end;
 
 procedure TMainFrm.FormDestroy(Sender: TObject);
@@ -392,7 +379,7 @@ procedure TMainFrm.GitFastOverActionExecute(Sender: TObject);
 var
   val: Integer;
 begin
-  // Переключение в "Быструю" перепрыжку
+  // Переключение участника в "Быструю" перепрыжку
   //
   if OverlapCB.Checked then
   begin
@@ -474,43 +461,6 @@ procedure TMainFrm.MenuItem14Click(Sender: TObject);
 begin
 
 end;
-
-
-procedure TMainFrm.MenuItem21Click(Sender: TObject);
-begin
-  // стартовый протокол
-  {RepInitialize;
-  RepWriteBody(1);
-  RepDeploy;
-  RepView;}
-end;
-
-procedure TMainFrm.MenuItem22Click(Sender: TObject);
-begin
-  // судейский протокол (колонки для ш.о.)
-{  RepInitialize;
-  RepWriteBody(2);
-  RepDeploy;
-  RepView;}
-end;
-
-procedure TMainFrm.MenuItemTotalClick(Sender: TObject);
-begin
-  // Итоговый отчет
-  // если в режиме перепрыжки - уходим (печатаем из основного реж)
-  {if OverlapCB.Checked then
-  begin
-    ShowMessage('Для печати иогового протокола выйдите из режима перепрыжки');
-    Exit;
-  end;
-  RepInitialize;
-  //RepWriteHeader;
-  RepWriteBody(0);
-  //RepWriteData;
-  RepDeploy;
-  RepView;}
-end;
-
 
 procedure TMainFrm.Barriers2SpinEditEditingDone(Sender: TObject);
 begin
@@ -729,6 +679,7 @@ end;
 
 procedure TMainFrm.GitDBGridEditingDone(Sender: TObject);
 begin
+  //todo: проверять, что введено положительное число (кроме возрастающей сложности)...
   CalcPenalties;
 end;
 

@@ -485,7 +485,7 @@ object MainFrm: TMainFrm
           Caption = 'К-во прыжков'
           ParentColor = False
         end
-        object BitBtn1: TBitBtn
+        object AddBitBtn: TBitBtn
           Left = 8
           Height = 42
           Top = 54
@@ -623,10 +623,10 @@ object MainFrm: TMainFrm
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000
           }
-          OnClick = BitBtn1Click
+          OnClick = AddBitBtnClick
           TabOrder = 5
         end
-        object BitBtn2: TBitBtn
+        object ClearBitBtn: TBitBtn
           Left = 160
           Height = 42
           Top = 54
@@ -766,7 +766,7 @@ object MainFrm: TMainFrm
           }
           TabOrder = 6
         end
-        object BitBtn3: TBitBtn
+        object DelBitBtn: TBitBtn
           Left = 352
           Height = 42
           Top = 54
