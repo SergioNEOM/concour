@@ -166,6 +166,7 @@ type
   public
     SumPenalty: Currency;
     RouteTypeSL: TStringList;
+    function GetRouteTypeNum(RType:Integer):Integer;
     procedure GitGridRefreshVisibility;
     function ShowBasesDialog(BaseName: string; CurrentID: Integer): Integer;
     procedure CalcMaxTime;
@@ -193,13 +194,14 @@ i: Integer;
 c: TColumn;
 begin
   RouteTypeSL := TStringList.Create;
-  RouteTypeSL.Add('КЛАССИКА');                 // 0
-  RouteTypeSL.Add('КЛАССИКА С ПЕРЕПРЫЖКОЙ');   // 1
-  RouteTypeSL.Add('2 ФАЗЫ');                   // 2
-  RouteTypeSL.Add('ПО ВОЗРАСТАЮЩЕЙ СЛОЖНОСТИ');// 3
-  RouteTypeSL.Add('ПО ТАБЛИЦЕ С');             // 4
-  RouteTypeSL.Add('НА МАКСИМУМ БАЛЛОВ');       // 5
-  RouteTypeSL.Add('2 ГИТА');                   // 6
+  // 2019-01-16 константы типов маршрутов, а не их индексы
+  RouteTypeSL.AddObject('КЛАССИКА',TObject(ROUTE_CLASSIC));                // ItemIndex = 0
+  RouteTypeSL.AddObject('КЛАССИКА С ПЕРЕПРЫЖКОЙ',TObject(ROUTE_OVERLAP));  // 1
+  RouteTypeSL.AddObject('2 ФАЗЫ',TObject(ROUTE_2PHASES));                  // 2
+  RouteTypeSL.AddObject('ПО ВОЗРАСТАЮЩЕЙ СЛОЖНОСТИ',TObject(ROUTE_GROW));  // 3
+  RouteTypeSL.AddObject('ПО ТАБЛИЦЕ С',TObject(ROUTE_TABLE_C));            // 4
+  RouteTypeSL.AddObject('НА МАКСИМУМ БАЛЛОВ',TObject(ROUTE_MAXBALLS));     // 5
+  RouteTypeSL.AddObject('2 ГИТА',TObject(ROUTE_2GIT));                     // 6
   //
   // препятствия перепрыжки
   GitDBGrid.BeginUpdate;
@@ -222,6 +224,20 @@ begin
   //----
 end;
 
+function TMainFrm.GetRouteTypeNum(RType:Integer):Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  RouteTypeSL.BeginUpdate;
+  for i:=0 to RouteTypeSL.Count-1 do
+    if Integer(RouteTypeSL.Objects[i])=RType then
+    begin
+      Result := i;
+      Break;
+    end;
+  RouteTypeSL.EndUpdate;
+end;
 
 procedure TMainFrm.GitDBGridDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
@@ -527,8 +543,9 @@ begin
       TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(255,255,210);
     // выделение полей со штрафными очками розовым цветом
     if (LeftStr(LowerCase(Column.FieldName),4)='foul')  then
-      if TDBGrid(Sender).DataSource.DataSet.FieldByName(Column.FieldName).AsCurrency>0.0 then
-          TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(250,150,150)
+      if (DM.CurrRouteType<>ROUTE_GROW) and
+         (TDBGrid(Sender).DataSource.DataSet.FieldByName(Column.FieldName).AsCurrency>0.0)
+      then   TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(250,150,150)
       else   TDBGrid(Sender).Canvas.Brush.Color := Col;
      {if gdSelected in State then
          begin
@@ -838,12 +855,18 @@ begin
     }
     SetColNames;
     //
-    OverlapCB.Visible:=(DM.CurrRouteType=1);
+    OverlapCB.Visible:=(DM.CurrRouteType=ROUTE_OVERLAP);
     //
     // обновить содержимое контролов, связанных с маршрутом
     RouteNameLabel.Caption := DM.CurrRouteName; // заполнить строкой названия
-    if (DM.CurrRouteType>=0) and (DM.CurrRouteType<RouteTypeSL.Count-1) then
+    // название маршрута в статусной строке
+    //2019-01-16 работать с константами, а не с индексами
+    {было    if (DM.CurrRouteType>=0) and (DM.CurrRouteType<RouteTypeSL.Count-1) then
                        StatusBar1.Panels[1].Text:= RouteTypeSL[DM.CurrRouteType];
+    }
+    x := RouteTypeSL.IndexOfObject(TObject(DM.CurrRouteType));
+    if x>0 then StatusBar1.Panels[1].Text:= RouteTypeSL[x];
+    //-
     // в диалоге выбора уже открыли: DM.OpenRoutes(DM.CurrentRoute);
     VelocityCB1.ItemIndex := DM.Routes.FieldByName('velocity1').AsInteger;
     VelocityCB2.ItemIndex := DM.Routes.FieldByName('velocity2').AsInteger;
@@ -1049,7 +1072,8 @@ begin
   OverlapCB.Checked:=False;
   GitDBGrid.BeginUpdate;
   case DM.CurrRouteType of
-    0: // classic - по каждому зачёту: ранжируются по итоговым штрафным очкам(totalfouls1),
+    ROUTE_CLASSIC:
+       // classic - по каждому зачёту: ранжируются по итоговым штрафным очкам(totalfouls1),
        //  а при совпадении - по времени прохождения
        //!!! если совпало и то, и другое, то на № места повлияет порядковый номер выступления !!!
        //старая версия - ниже в комментах... пока других указаний не поступало...
@@ -1098,7 +1122,8 @@ begin
          finally
          end;
        end; //end case 0
-    1: // классика с перепрыжкой:
+    ROUTE_OVERLAP:
+       // классика с перепрыжкой:
        // для каждого зачета
        // на первом этапе ранжируются по сумме ш.о. и штрафов за превышение времени (totalfouls1)
        // результат пишется в place.

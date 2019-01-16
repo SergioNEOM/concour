@@ -52,8 +52,8 @@ var
 implementation
 
 {$R *.lfm}
-uses  LazUTF8, db, concour_DM, concour_params, concour_stage, concour_tournament, concour_rider,
-  concour_horses;
+uses  LazUTF8, db, concour_main, concour_DM, concour_params, concour_stage,
+  concour_tournament, concour_rider, concour_horses;
 
 constructor TBasesFrm.Create(AOwner: TComponent; Base: String; CurrentID: Integer);overload;
 begin
@@ -279,7 +279,10 @@ begin
            if RecId>0 then
              if DM.Routes.Locate('id',RecId,[]) then
              begin
-               RouteTypeCB.ItemIndex:=DM.Routes.FieldByName('route_type').AsInteger;
+               // 2019-01-16 типы маршрутов, а не их индексы
+               //было RouteTypeCB.ItemIndex:=DM.Routes.FieldByName('route_type').AsInteger;
+               RouteTypeCB.ItemIndex:= MainFrm.GetRouteTypeNum(DM.Routes.FieldByName('route_type').AsInteger);
+               //--
                RouteNameEdit.Text:=DM.Routes.FieldByName('routename').AsString;
                BarriersEdit1.Text:=DM.Routes.FieldByName('barriers1').AsString;
                DistEdit1.Text:=DM.Routes.FieldByName('distance1').AsString;
@@ -287,20 +290,27 @@ begin
                BarriersEdit2.Text:=DM.Routes.FieldByName('barriers2').AsString;
                DistEdit2.Text:=DM.Routes.FieldByName('distance2').AsString;
                VelocityCB2.ItemIndex:=DM.Routes.FieldByName('velocity2').AsInteger;
-               GroupBox1.Visible := RouteTypeCB.ItemIndex=1;
+               // 2019-01-16 типы маршрутов, а не их индексы
+               //было GroupBox1.Visible := RouteTypeCB.ItemIndex=1;
+               GroupBox1.Visible := (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP)
+               //--
              end;
            if ShowModal=mrOK then
            begin
              if RecId>0 then
              begin
                CurrID:=RecId;
-               DM.EditRoute(CurrID,RouteTypeCB.ItemIndex,StrToInt(DistEdit1.Text),
+               // 2019-01-16 типы маршрутов, а не их индексы
+               //было  RouteTypeCB.ItemIndex
+               DM.EditRoute(CurrID,Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+                   StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit2.Text),VelocityCB2.ItemIndex,
                    StrToInt(BarriersEdit2.Text),RouteNameEdit.Text)
              end
              else
-               CurrID:=DM.AddRoute(RouteTypeCB.ItemIndex,StrToInt(DistEdit1.Text),
+               CurrID:=DM.AddRoute(Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+                   StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit1.Text),VelocityCB2.ItemIndex,
                    StrToInt(BarriersEdit2.Text),RouteNameEdit.Text);

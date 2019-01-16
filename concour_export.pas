@@ -100,7 +100,8 @@ end;
 procedure TExpFrm.RefereeSpeedButtonClick(Sender: TObject);
 begin
   {$IFDEF WINDOWS}
-  if DM.CurrRouteType=1 // с перепрыжкой
+  // 2019-01-16 было 1 (индекс, а не значение)
+  if DM.CurrRouteType=concour_main.ROUTE_OVERLAP // с перепрыжкой
   then  MakeXLS(rty_RefReJump,True)
   else  MakeXLS(rty_Referee,True);
   {$ENDIF};
@@ -147,10 +148,9 @@ procedure TExpFrm.SelectRep(Route, RouteType: Integer);
 begin
   DM.RepParams.Add('REP_SUBTITLE='+DM.GetRouteName(Route));
   case RouteType of
-    0: // КЛАССИКА
-         MakeXLS_0(Route);
-    1: // КЛАССИКА С ПЕРЕПРЫЖКОЙ
-         MakeXLS_1(Route);
+    //2019-01-16 тип маршрута, а не его индекс
+    concour_main.ROUTE_CLASSIC: MakeXLS_0(Route);
+    concour_main.ROUTE_OVERLAP: MakeXLS_1(Route);
     // других пока нет :)
   end;
 end;
@@ -488,7 +488,7 @@ begin
   Section:='XLSRep_0';  // секция в ini-файле
   s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА');
   CurrSheet:=CopySheet(FindSheet(s),
-                 cfg.ParamByName(Section,'TargetSheet',Trim(IntToStr(Route))+'_'+s));
+                 cfg.ParamByName(Section,'TargetSheet',Trim(s+'_'+IntToStr(Route))));
   //с этого момента xlApp.Workbooks(2).Activate;
   GetStartPos;
   //
@@ -607,7 +607,7 @@ begin
   //
   s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА С ПЕРЕПРЫЖКОЙ');
   CurrSheet:=CopySheet(FindSheet(s),
-                 cfg.ParamByName(Section,'TargetSheet',Trim(IntToStr(Route))+'_'+s));
+                 cfg.ParamByName(Section,'TargetSheet',Trim(s+'_'+IntToStr(Route))));
   //с этого момента xlApp.Workbooks(2).Activate;
   GetStartPos;
   //

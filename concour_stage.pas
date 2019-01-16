@@ -62,8 +62,10 @@ end;
 
 procedure TStageFrm.FormCreate(Sender: TObject);
 begin
-  RouteTypeCB.Items.AddStrings(MainFrm.RouteTypeSL,True);
-  RouteTypeCB.ItemIndex:=0;
+  // 2019-01-16
+  //было  RouteTypeCB.Items.AddStrings(MainFrm.RouteTypeSL,True);
+  RouteTypeCB.Items.Assign(MainFrm.RouteTypeSL);
+  RouteTypeCB.ItemIndex:=0; //todo: текущий тип ????
 end;
 
 
@@ -92,7 +94,7 @@ end;
 
 procedure TStageFrm.RouteTypeCBChange(Sender: TObject);
 begin
-  GroupBox1.Visible:= RouteTypeCB.ItemIndex=1;
+  GroupBox1.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
 end;
 
 end.
