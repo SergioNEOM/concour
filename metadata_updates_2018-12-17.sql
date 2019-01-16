@@ -23,3 +23,5 @@ CREATE VIEW "v_routes" AS
  FROM "routes";
 
 /****/
+/*----*/
+UPDATE vers SET lastupdate='2018-12-17';

@@ -4,17 +4,24 @@ CREATE TABLE IF NOT EXISTS tournaments (
  tourname VARCHAR(100),
  tourplace VARCHAR(100),
  referee VARCHAR(30),
- assistant VARCHAR(30)
+ assistant VARCHAR(30),
+ tourdate2 CHAR(10))
 );
-/*---- hook DBGrid MEMO displaying ----*/
+
+/*-
+--- hook DBGrid MEMO displaying ---
+-*/
 CREATE VIEW IF NOT EXISTS "v_tournaments" AS
   SELECT "_rowid_" as id,
  strftime('%d-%m-%Y',tourdate) as "Дата соревнования",
+ strftime('%d-%m-%Y',tourdate2) as "Дата2",
  cast(tourname as CHAR(100)) as tourname,
  cast(tourplace as CHAR(100)) as tourplace,
  cast(referee as CHAR(30)) as referee,
  cast(assistant as CHAR(30)) as assistant 
- FROM tournaments;
+ FROM tournaments
+ ORDER BY tourdate,tourdate2
+;
 
 /*------------------*/
 /* route type:
@@ -26,6 +33,8 @@ CREATE VIEW IF NOT EXISTS "v_tournaments" AS
   5 = НА МАКСИМУМ БАЛЛОВ
   6 = 2 ГИТА
 */
+/*-
+-*/
 CREATE TABLE IF NOT EXISTS "routes" ( 
  routename VARCHAR(30), 
  tournament INTEGER,
@@ -38,8 +47,9 @@ CREATE TABLE IF NOT EXISTS "routes" (
  velocity2 INTEGER,
  "result_type" INTEGER,  /* 0 - штрафные очки, 1 - штраф за лишнее время */
  /*TODO: Убрать поле */
- colnames varchar(360)
-);
+ colnames varchar(360),
+ tournament INTEGER);
+
 
 CREATE VIEW IF NOT EXISTS "v_routes" AS  
   SELECT _rowid_ as id, 
@@ -55,8 +65,9 @@ CREATE VIEW IF NOT EXISTS "v_routes" AS
  result_type,
  cast(colnames as char(360)) as colnames
  FROM "routes";
-
-/*------------------*/
+/*-
+----------------
+-*/
 
 CREATE TABLE IF NOT EXISTS "groups" ( 
  groupname CHAR(30)
@@ -66,8 +77,10 @@ CREATE VIEW IF NOT EXISTS "v_groups" AS
   SELECT _rowid_ as id, groupname 
  FROM "groups";
 
-/*------------------*/
-/*------------------*/
+/*-
+----------------
+-*/
+
 CREATE TABLE IF NOT EXISTS "riders" ( 
  "lastname" VARCHAR(30) NOT NULL,
  "firstname" VARCHAR(25),
@@ -77,7 +90,9 @@ CREATE TABLE IF NOT EXISTS "riders" (
  "trainer" VARCHAR(25),
  "region" VARCHAR(50)
  );
-/*---- hook DBGrid MEMO displaying ----*/
+/*-
+--- ---
+-*/
 CREATE VIEW IF NOT EXISTS "v_riders" AS
   SELECT _rowid_ as id, 
  cast("lastname" as char(30)) as lastname,
@@ -90,8 +105,9 @@ CREATE VIEW IF NOT EXISTS "v_riders" AS
   FROM "riders"
  ORDER BY lastname,firstname,id;
 
-
-/*--------------------*/
+/*-
+------------------
+-*/
 CREATE TABLE IF NOT EXISTS "horses" ( 
  "nickname" VARCHAR(25) NOT NULL, 
  "birthdate" INT, 
@@ -103,6 +119,7 @@ CREATE TABLE IF NOT EXISTS "horses" (
  "register" VARCHAR(25), 
  "owner"  VARCHAR(25) 
 ); 
+
 /*---- hook DBGrid MEMO displaying ----*/
 CREATE VIEW IF NOT EXISTS "v_horses" AS 
   SELECT _rowid_ as id, 
@@ -118,8 +135,9 @@ CREATE VIEW IF NOT EXISTS "v_horses" AS
  FROM "horses"
  ORDER BY nickname,id;
 
-
-/*--------------------*/
+/*-
+------------------
+-*/
 
 
 CREATE TABLE IF NOT EXISTS "git" (
@@ -145,8 +163,8 @@ CREATE TABLE IF NOT EXISTS "git" (
  "foul1_b14" INTEGER DEFAULT 0, 
  "foul1_b15" INTEGER DEFAULT 0, 
  "sumfouls1" INTEGER DEFAULT 0, 
- "gittime1" REAL DEFAULT '0.0', 
- "foul1_time" REAL DEFAULT '0.0', 
+ "gittime1" REAL DEFAULT 0.0, 
+ "foul1_time" REAL DEFAULT 0.0, 
  "totalfouls1" REAL DEFAULT 0.0, 
  "foul2_b1" INTEGER DEFAULT 0, 
  "foul2_b2" INTEGER DEFAULT 0, 
@@ -164,16 +182,18 @@ CREATE TABLE IF NOT EXISTS "git" (
  "foul2_b14" INTEGER DEFAULT 0, 
  "foul2_b15" INTEGER DEFAULT 0, 
  "sumfouls2" INTEGER DEFAULT 0,
- "gittime2" REAL DEFAULT '0.0', 
- "foul2_time" REAL DEFAULT '0.0',
+ "gittime2" REAL DEFAULT 0.0, 
+ "foul2_time" REAL DEFAULT 0.0,
  "totalfouls2" REAL DEFAULT 0.0, 
  place  INTEGER DEFAULT 0,
  place2 INTEGER DEFAULT 0,
  overlap INTEGER DEFAULT 0,  /* если >0 то участник перепрыжки */
- "sumfouls" REAL DEFAULT '0.0'   /* временно: вычисляемое поле глючит */
+ "sumfouls" REAL DEFAULT 0.0   /* временно: вычисляемое поле глючит */
 );
 
-/*-----------------*/
+/*-
+---------------
+-*/
 CREATE VIEW IF NOT EXISTS "v_git" AS
   SELECT git._rowid_ as id, git.tournament, git.route, 
   git."queue" as queue,  git.place, git.place2,
@@ -214,14 +234,29 @@ CREATE VIEW IF NOT EXISTS "v_git" AS
 	     left join "groups" on git."group"=groups._rowid_;
 /* WHERE git.tournament=:partour and git.route=:parroute; - в коде  */
 
-
-/**/
+/*-
+-------
+-*/
 
 CREATE INDEX "horses_nick_idx" ON "horses"( "nickname" );
 
 
 
-/*------------------------------------
---------------------------------*/
+/*-
+-------------------------------
+-*/
 
+CREATE TABLE vers ( 
+ appdate CHAR(10),
+ lastupdate CHAR(10)
+);
+/*-
+---
+-*/
+
+CREATE VIEW "v_vers" AS
+  SELECT "_rowid_" as id,
+  strftime('%d-%m-%Y',appdate) as appdate,
+  strftime('%d-%m-%Y',lastupdate) as lastupdate
+ FROM vers;
 
