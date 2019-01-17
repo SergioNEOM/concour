@@ -19,6 +19,7 @@ type
     DistEdit1: TEdit;
     DistEdit2: TEdit;
     GroupBox1: TGroupBox;
+    JokerLabel: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
@@ -42,6 +43,7 @@ type
   public
     RouteID : Integer;
     constructor Create(AOwner: TComponent; CurrentID: Integer);overload;
+    procedure SetVisibility;
   end;
 
 var
@@ -50,7 +52,7 @@ var
 implementation
 
 {$R *.lfm}
-uses concour_main, concour_DM;
+uses LCLType,concour_main, concour_DM;
 { TStageFrm }
 
 
@@ -65,13 +67,31 @@ begin
   // 2019-01-16
   //было  RouteTypeCB.Items.AddStrings(MainFrm.RouteTypeSL,True);
   RouteTypeCB.Items.Assign(MainFrm.RouteTypeSL);
-  RouteTypeCB.ItemIndex:=0; //todo: текущий тип ????
+  //--
+  if (RouteID>0) and DM.Routes.Locate('id',RouteID,[]) then
+  begin
+    // 2019-01-16 типы маршрутов, а не их индексы
+    //было RouteTypeCB.ItemIndex:=DM.Routes.FieldByName('route_type').AsInteger;
+    RouteTypeCB.ItemIndex:= MainFrm.GetRouteTypeNum(DM.Routes.FieldByName('route_type').AsInteger);
+    //--
+    RouteNameEdit.Text:=DM.Routes.FieldByName('routename').AsString;
+    BarriersEdit1.Text:=DM.Routes.FieldByName('barriers1').AsString;
+    DistEdit1.Text:=DM.Routes.FieldByName('distance1').AsString;
+    VelocityCB1.ItemIndex:=DM.Routes.FieldByName('velocity1').AsInteger;
+    BarriersEdit2.Text:=DM.Routes.FieldByName('barriers2').AsString;
+    DistEdit2.Text:=DM.Routes.FieldByName('distance2').AsString;
+    VelocityCB2.ItemIndex:=DM.Routes.FieldByName('velocity2').AsInteger;
+    //--
+  end
+  else
+    RouteTypeCB.ItemIndex:=0;
+  //--
+  SetVisibility;
 end;
 
-
 procedure TStageFrm.FormActivate(Sender: TObject);
-var
-  i: Integer;
+{var
+  i: Integer;}
 begin
 {  TypeCB.ItemIndex:=0;
   if not DM.Routes.Active then DM.OpenRoutes(-1);
@@ -89,12 +109,33 @@ end;
 
 procedure TStageFrm.BitBtn2Click(Sender: TObject);
 begin
+  //
+  if (StrToInt(BarriersEdit1.Text)<1) or
+     (StrToInt(BarriersEdit1.Text)>15) or
+     (StrToInt(BarriersEdit2.Text)<1) or
+     (StrToInt(BarriersEdit2.Text)>15) or
+     ( (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW) and
+       (StrToInt(BarriersEdit1.Text)<2)
+     )
+  then
+  begin
+    Application.MessageBox('Ошибка в количестве прыжков!','Ошибка', MB_OK+MB_ICONERROR);
+    Exit;
+  end;
   ModalResult:=mrOK;
 end;
 
 procedure TStageFrm.RouteTypeCBChange(Sender: TObject);
 begin
+  SetVisibility;
+end;
+
+procedure TStageFrm.SetVisibility;
+begin
+  //для перепрыжки
   GroupBox1.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
+  //для маршрута по возр.сложности
+  JokerLabel.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
 end;
 
 end.

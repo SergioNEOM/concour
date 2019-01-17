@@ -185,6 +185,7 @@ end;
 function TBasesFrm.EditBase(RecId:Integer=-1): Boolean;
 var
   s: String;
+  sl: TStringList;
 begin
   Result := False;
   case LowerCase(Tablename) of
@@ -276,7 +277,7 @@ begin
          if not DM.Routes.Active then DM.OpenRoutes(RecId);
          with TStageFrm.Create(self,RecId) do
          try
-           if RecId>0 then
+{           if RecId>0 then
              if DM.Routes.Locate('id',RecId,[]) then
              begin
                // 2019-01-16 типы маршрутов, а не их индексы
@@ -295,6 +296,7 @@ begin
                GroupBox1.Visible := (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP)
                //--
              end;
+}
            if ShowModal=mrOK then
            begin
              if RecId>0 then
@@ -316,6 +318,21 @@ begin
                    StrToInt(BarriersEdit2.Text),RouteNameEdit.Text);
              //DM.OpenRoutes(CurrID); в AddRoute уже вызывается !
            end;
+           //--
+           //2019-01-17 маршрут по возр.сложности - заголовок для Joker
+           if Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]) = concour_main.ROUTE_GROW then
+             try
+               //*** Если всё верно, то стоим на нужной записи...
+               sl := TStringList.Create;
+               sl.DelimitedText := DM.Routes.FieldByName('colnames').AsString;
+               sl.Values['foul1_b'+Trim(BarriersEdit1.Text)] := 'J';
+               DM.RouteSetFieldStr(CurrID,'colnames',sl.DelimitedText);
+               //todo: !! сразу после добавления маршрута (при возврате в гл. таблицу) -
+               // заголовок показывает не изменённым, но потом - всё норм.
+             finally
+               sl.Free;
+             end;
+           //--
          finally
            Free;
          end;

@@ -45,7 +45,7 @@ object StageFrm: TStageFrm
     Top = 120
     Width = 200
     AutoSize = False
-    Caption = 'К-во препятствий'
+    Caption = 'К-во прыжков'
     ParentColor = False
   end
   object BarriersEdit1: TEdit
@@ -54,7 +54,7 @@ object StageFrm: TStageFrm
     Top = 116
     Width = 80
     TabOrder = 1
-    Text = '1'
+    Text = '2'
   end
   object Panel1: TPanel
     Left = 0
@@ -101,9 +101,9 @@ object StageFrm: TStageFrm
     ParentColor = False
   end
   object DistEdit1: TEdit
-    Left = 258
+    Left = 257
     Height = 21
-    Top = 152
+    Top = 160
     Width = 80
     TabOrder = 3
     Text = '300'
@@ -214,5 +214,23 @@ object StageFrm: TStageFrm
       TabOrder = 2
       Text = '300'
     end
+  end
+  object JokerLabel: TLabel
+    Left = 344
+    Height = 18
+    Top = 119
+    Width = 236
+    AutoSize = False
+    Caption = 'В т.ч. доп. колонка для Joker'
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Visible = False
   end
 end

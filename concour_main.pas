@@ -204,6 +204,7 @@ begin
   RouteTypeSL.AddObject('2 ГИТА',TObject(ROUTE_2GIT));                     // 6
   //
   // препятствия перепрыжки
+  //todo: учесть другие типы маршрутов!
   GitDBGrid.BeginUpdate;
   for i:=1 to Barriers2SpinEdit.MaxValue do
   try
@@ -307,7 +308,9 @@ begin
           // все остальные поля
           v:= True;
     // наложим маску по виду маршрута
-    GitDBGrid.Columns[i].Visible:= v and ((GitDBGrid.Columns[i].Tag and (1 shl DM.CurrRouteType) )>0);
+    //2019-01-17
+//    GitDBGrid.Columns[i].Visible:= v and ((GitDBGrid.Columns[i].Tag and (1 shl DM.CurrRouteType) )>0);
+    GitDBGrid.Columns[i].Visible:= v and ((GitDBGrid.Columns[i].Tag and DM.CurrRouteType)>0);
   end;
   //--
   CalcPenalties;
@@ -1121,7 +1124,7 @@ begin
            end;
          finally
          end;
-       end; //end case 0
+       end; //end case ROUTE_CLASSIC
     ROUTE_OVERLAP:
        // классика с перепрыжкой:
        // для каждого зачета
@@ -1233,7 +1236,60 @@ begin
          end;
          if WasOver then
            Application.MessageBox('Расчетная ПЕРЕПРЫЖКА!','Информация',MB_OK+MB_ICONINFORMATION);
-       end; //end case 1
+       end; //end case ROUTE_OVERLAP;
+    ROUTE_GROW:
+       // маршрут по возрастающей сложности - по каждому зачёту:
+       //  ранжируются по итоговым суммам баллов(totalfouls1), мах Сумма - 1 место
+       //  а при совпадении сумм, ранжируем по времени прохождения (меньшее время - лучше)
+       //!!! если совпало и то, и другое, то на № места повлияет порядковый номер выступления !!!
+       //--
+       //--- алгоритм отличается от classic только порядком сортировки, но пока вынесен отдельно... ---
+       begin
+         DM.Work2.Close;
+         DM.Work2.Params.Clear;
+         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place from v_git '+
+           ' where tournament=:par1 and route=:par2 '+
+           ' order by "group", totalfouls1 DESC, gittime1, queue;';
+         DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
+         DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
+         //----
+         DM.Work.Close;
+         DM.Work.Params.Clear;
+         DM.Work.SQL.Text := 'update git set place=:par1 where _rowid_=:par2;';
+         //--
+         try
+           try
+             DM.Work2.Open;
+             if not DM.Work2.IsEmpty then
+             begin
+               DM.Work2.First;
+               i := 0;
+               g := DM.Work2.FieldByName('group').AsInteger;
+               while not DM.Work2.EOF do
+               begin
+                 if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
+                 begin
+                   Inc(i);
+                   DM.Work.ParamByName('par1').AsInteger:=i;
+                   DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
+                   DM.Work.ExecSQL;
+                 end;
+                 //***
+                 DM.Work2.Next;
+                 if g <> DM.Work2.FieldByName('group').AsInteger then
+                 begin
+                   // начало нового зачёта
+                   g := DM.Work2.FieldByName('group').AsInteger;
+                   i := 0;
+                 end;
+               end;
+             end;
+           except
+             Application.MessageBox('Не удалось нормально завершить процедуру','Ошибка',MB_OK+MB_ICONERROR);
+           end;
+         finally
+         end;
+       end; //end case ROUTE_GROW;
   end;
   DM.CurrGitOrder:=concour_DM.GIT_ORDER_R;
   GitDBGrid.EndUpdate;

@@ -137,8 +137,10 @@ type
     function EditRoute(RouteID, RouteType, Distance1, Velocity1, Barriers1,
          Distance2, Velocity2, Barriers2: Integer; RouteName: string):Boolean;
     function RouteSetField(RouteID,FieldValue:Integer;FieldName: String):Boolean;
+    function RouteSetFieldStr(RouteID:Integer;FieldName,FieldValue: String):Boolean;
     function DelRoute(RouteId: Integer):Boolean;
     function GetRouteName(RouteId: Integer):String;
+    function GetRouteType(RouteId: Integer):Integer;
     procedure SetCurrRoute;
     function UpdateColNames:Boolean;
     // Tournaments
@@ -670,6 +672,35 @@ begin
   end;
 end;
 
+function TDM.RouteSetFieldStr(RouteID:Integer;FieldName,FieldValue: String):Boolean;
+begin
+  Result := False;
+  if Trim(FieldName)='' then Exit;
+  if RouteID<0 then RouteID:=CurrentRoute;
+  //todo: перейти с Work на SQLConn
+  Work.Close;
+  Work.Params.Clear;
+  Work.SQL.Text:='UPDATE "routes" SET '+FieldName+'=:par1 WHERE _rowid_=:par2;';
+  Work.ParamByName('par1').Value:=FieldValue;
+  Work.ParamByName('par2').Value:=RouteID;
+  try
+    try
+      if SQLTransaction1.Active
+        then SQLTransaction1.CommitRetaining
+        else SQLTransaction1.StartTransaction;
+      Work.ExecSQL;
+      SQLTransaction1.CommitRetaining;
+      Result := True;
+      //OpenRoutes(RouteID);
+    except
+      SQLTransaction1.Rollback;
+    end;
+  finally
+    Work.Close;
+  end;
+end;
+
+
 function TDM.DelRoute(RouteID: Integer):Boolean;
 begin
   Result := False;
@@ -707,6 +738,21 @@ begin
   // вернуть на исходную запись...
   if r<>RouteId then Routes.Locate('id',r,[]);
 end;
+
+function TDM.GetRouteType(RouteId: Integer):Integer;
+var
+  r : Integer;
+begin
+  Result := -1;
+  if RouteId<=0 then Exit;
+  r := CurrentRoute;
+  if not Routes.Active then OpenRoutes(RouteId);
+  if Routes.IsEmpty then Exit;
+  if Routes.Locate('id',RouteId,[]) then Result := Routes.FieldByName('route_type').AsInteger;
+  // вернуть на исходную запись...
+  if r<>RouteId then Routes.Locate('id',r,[]);
+end;
+
 
 procedure TDM.SetCurrRoute;
 begin
