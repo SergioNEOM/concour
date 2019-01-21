@@ -45,8 +45,7 @@ CREATE TABLE IF NOT EXISTS "routes" (
  barriers2 INTEGER,
  distance2 INTEGER,
  velocity2 INTEGER,
- "result_type" INTEGER,  /* 0 - штрафные очки, 1 - штраф за лишнее время */
- /*TODO: Убрать поле */
+ "result_type" INTEGER,
  colnames varchar(360),
  tournament INTEGER);
 

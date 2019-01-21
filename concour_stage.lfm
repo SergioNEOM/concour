@@ -217,14 +217,14 @@ object StageFrm: TStageFrm
   end
   object JokerLabel: TLabel
     Left = 344
-    Height = 18
-    Top = 119
+    Height = 40
+    Top = 112
     Width = 236
     AutoSize = False
-    Caption = 'В т.ч. доп. колонка для Joker'
+    Caption = 'Обычно 7 ( 6+J ), 9 ( 8+J ) или 11 ( 10+J )'#13#10'т.е. доп. колонка Joker в том числе'
     Font.CharSet = RUSSIAN_CHARSET
     Font.Color = clMaroon
-    Font.Height = -13
+    Font.Height = -12
     Font.Name = 'Arial'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -232,5 +232,6 @@ object StageFrm: TStageFrm
     ParentColor = False
     ParentFont = False
     Visible = False
+    WordWrap = True
   end
 end

@@ -88,7 +88,6 @@ type
     Panel5: TPanel;
     PopupMenu1: TPopupMenu;
     StatusBar1: TStatusBar;
-    RouteDelAction: TAction;
     RouteAddAction: TAction;
     RouteSelectAction: TAction;
     FileBaseRidersAction: TAction;
@@ -155,8 +154,8 @@ type
     procedure Barriers1SpinEditChange(Sender: TObject);
     procedure Barriers2SpinEditChange(Sender: TObject);
     procedure RouteAddActionExecute(Sender: TObject);
-    procedure RouteDelActionExecute(Sender: TObject);
     procedure RouteSelectActionExecute(Sender: TObject);
+    procedure TimePenaltyCBEditingDone(Sender: TObject);
     procedure VelocityCB1EditingDone(Sender: TObject);
     procedure VelocityCB2Change(Sender: TObject);
     procedure VelocityCB1Change(Sender: TObject);
@@ -483,6 +482,11 @@ end;
 
 procedure TMainFrm.Barriers2SpinEditEditingDone(Sender: TObject);
 begin
+  //todo: обнулять значения невидимых ячеек или пересчитывать сумму штрафов?
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,TSpinEdit(Sender).Value,'barriers2') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
   GitGridRefreshVisibility;
 end;
 
@@ -823,11 +827,6 @@ end;
 
 procedure TMainFrm.Barriers2SpinEditChange(Sender: TObject);
 begin
-  //todo: обнулять значения невидимых ячеек или пересчитывать сумму штрафов?
-  //редактирование закончено? Запишем в БД
-  if not DM.RouteSetField(-1,TSpinEdit(Sender).Value,'barriers2') then
-    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
-  //
   GitGridRefreshVisibility;
 end;
 
@@ -836,10 +835,6 @@ procedure TMainFrm.RouteAddActionExecute(Sender: TObject);
 begin
 end;
 
-procedure TMainFrm.RouteDelActionExecute(Sender: TObject);
-begin
-  //todo: проверить, если есть дочерние записи об участниках, то предупредить
-end;
 
 procedure TMainFrm.RouteSelectActionExecute(Sender: TObject);
 var
@@ -889,6 +884,16 @@ begin
     DM.CurrGitOrder:=concour_DM.GIT_ORDER_Q;
     GitGridRefreshVisibility;
   end;
+end;
+
+procedure TMainFrm.TimePenaltyCBEditingDone(Sender: TObject);
+begin
+  // 2019-01-21 используем поле result_type
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,(TComboBox(Sender).ItemIndex),'result_type') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
+  GitGridRefreshVisibility;
 end;
 
 procedure TMainFrm.VelocityCB1EditingDone(Sender: TObject);
@@ -1041,8 +1046,17 @@ begin
   GitDBGrid.DataSource.DataSet.FieldByName('foul2_time').AsCurrency:= it2;
   GitDBGrid.DataSource.DataSet.FieldByName('sumfouls1').AsCurrency:= ii;
   GitDBGrid.DataSource.DataSet.FieldByName('sumfouls2').AsCurrency:= jj;
-  GitDBGrid.DataSource.DataSet.FieldByName('totalfouls1').AsCurrency:= ii+it1;
-  GitDBGrid.DataSource.DataSet.FieldByName('totalfouls2').AsCurrency:= jj+it2;
+  //2019-01-21 для маршр. по возраст. штраф за время - вычитается из суммы баллов
+  if DM.CurrRouteType = ROUTE_GROW then
+  begin
+    GitDBGrid.DataSource.DataSet.FieldByName('totalfouls1').AsCurrency:= ii-it1;
+    GitDBGrid.DataSource.DataSet.FieldByName('totalfouls2').AsCurrency:= jj-it2;
+  end
+  else
+  begin
+    GitDBGrid.DataSource.DataSet.FieldByName('totalfouls1').AsCurrency:= ii+it1;
+    GitDBGrid.DataSource.DataSet.FieldByName('totalfouls2').AsCurrency:= jj+it2;
+  end;
   GitDBGrid.DataSource.DataSet.FieldByName('sumfouls').AsCurrency:=ii+jj+it1+it2;
   GitDBGrid.DataSource.DataSet.Post;
     //--

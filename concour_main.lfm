@@ -383,6 +383,7 @@ object MainFrm: TMainFrm
             '1'
             '0,25'
           )
+          OnEditingDone = TimePenaltyCBEditingDone
           TabOrder = 4
           Text = '1'
         end
@@ -1771,11 +1772,6 @@ object MainFrm: TMainFrm
       Category = 'Route'
       Caption = '+ Маршрут/Зачёт'
       OnExecute = RouteAddActionExecute
-    end
-    object RouteDelAction: TAction
-      Category = 'Route'
-      Caption = '- Маршрут/Зачёт'
-      OnExecute = RouteDelActionExecute
     end
     object FileBaseHorsesAction: TAction
       Category = 'File'
