@@ -49,12 +49,12 @@ object StageFrm: TStageFrm
     ParentColor = False
   end
   object BarriersEdit1: TEdit
-    Left = 256
+    Left = 257
     Height = 21
     Top = 116
     Width = 80
     TabOrder = 1
-    Text = '2'
+    Text = '11'
   end
   object Panel1: TPanel
     Left = 0

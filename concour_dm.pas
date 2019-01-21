@@ -677,26 +677,15 @@ begin
   Result := False;
   if Trim(FieldName)='' then Exit;
   if RouteID<0 then RouteID:=CurrentRoute;
-  //todo: перейти с Work на SQLConn
-  Work.Close;
-  Work.Params.Clear;
-  Work.SQL.Text:='UPDATE "routes" SET '+FieldName+'=:par1 WHERE _rowid_=:par2;';
-  Work.ParamByName('par1').Value:=FieldValue;
-  Work.ParamByName('par2').Value:=RouteID;
   try
-    try
-      if SQLTransaction1.Active
-        then SQLTransaction1.CommitRetaining
-        else SQLTransaction1.StartTransaction;
-      Work.ExecSQL;
-      SQLTransaction1.CommitRetaining;
-      Result := True;
-      //OpenRoutes(RouteID);
-    except
-      SQLTransaction1.Rollback;
-    end;
-  finally
-    Work.Close;
+    if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
+    SQLConn.ExecuteDirect('UPDATE OR ROLLBACK "routes" SET '+FieldName+'='+
+          chr(27)+FieldValue+chr(27)+
+         ' WHERE "_rowid_"='+Trim(IntToStr(RouteId))+';');
+    if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
+    Result := True;
+  except
+    if SQLTransaction1.Active then SQLTransaction1.RollbackRetaining;
   end;
 end;
 
@@ -976,14 +965,15 @@ end;
 
 function TDM.GitSetField(GitId,FValue: Integer; FName:String):Boolean;
 begin
+  Result := False;
   try
     if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
     SQLConn.ExecuteDirect('UPDATE OR ROLLBACK git SET '+FName+'='+Trim(IntToStr(FValue))+
          ' WHERE "_rowid_"='+Trim(IntToStr(GitId))+';');
+    if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
     Result := True;
   except
     if SQLTransaction1.Active then SQLTransaction1.RollbackRetaining;
-    Result := False;
   end;
 end;
 

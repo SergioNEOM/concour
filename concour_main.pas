@@ -636,9 +636,7 @@ var
   fi : String;
   val : Integer;
 begin
-  // снятие с гита
-  //todo: !!!!! Меняется в НД, но не записывется в БД!!!
-  //Надо писать, иначе в перепрыжке пропадает после пересчета мест!!!
+  // снятие с гита (или возврат, если ошибочно)
   //
   if OverlapCB.Checked  then fi := 'place2'  else fi := 'place';
   GitDBGrid.DataSource.DataSet.Edit;
@@ -649,6 +647,7 @@ begin
        GitDBGrid.DataSource.DataSet.FieldByName('queue').AsInteger; //чтобы отличались
   GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger := val;
   GitDBGrid.DataSource.DataSet.Post;
+  // Надо записать в БД, иначе в перепрыжке пропадает после пересчета мест!!!
   DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,fi);
 end;
 
@@ -703,7 +702,33 @@ end;
 
 procedure TMainFrm.GitDBGridEditingDone(Sender: TObject);
 begin
-  //todo: проверять, что введено положительное число (кроме возрастающей сложности)...
+  // проверить, что введено положительное число (кроме маршр.по возр.сложности)...
+  // время всегда положительное
+  if (LowerCase(TDBGrid(Sender).SelectedColumn.FieldName)='gittime1') or
+     (LowerCase(TDBGrid(Sender).SelectedColumn.FieldName)='gittime2') then
+    if TDBGrid(Sender).SelectedColumn.Field.AsCurrency<=0 then
+    begin
+      Application.MessageBox('Ошибочное значение времени', 'Ошибка',MB_OK+MB_ICONERROR);
+      // Обнулить, иначе значение останется в поле
+      GitDBGrid.DataSource.DataSet.Edit;
+      TDBGrid(Sender).SelectedColumn.Field.Value:=0;
+      GitDBGrid.DataSource.DataSet.Post;
+      Exit;
+    end;
+  // прыжки - положительные ш.о. (кроме баллов в возраст. сложности)
+  if (LowerCase(LeftStr(TDBGrid(Sender).SelectedColumn.FieldName,7))='foul1_b') or
+     (LowerCase(LeftStr(TDBGrid(Sender).SelectedColumn.FieldName,7))='foul2_b') then
+    if DM.CurrRouteType <> ROUTE_GROW {когда можно минусы} then
+      if TDBGrid(Sender).SelectedColumn.Field.AsInteger<0 then
+      begin
+        Application.MessageBox('Ошибочное значение', 'Ошибка',MB_OK+MB_ICONERROR);
+        // Обнулить, иначе значение останется в поле
+        GitDBGrid.DataSource.DataSet.Edit;
+        TDBGrid(Sender).SelectedColumn.Field.Value:=0;
+        GitDBGrid.DataSource.DataSet.Post;
+        Exit;
+      end;
+  // если ОК - пересчёт
   CalcPenalties;
 end;
 
@@ -1317,8 +1342,6 @@ begin
   // при изменении к-ва перепрыжчиков места должны пересчитыватья (и place, и place2)
   //а в "быструю перепрыжку" могут попасть не 1-е места основного гита...
   //
-  //todo: отслеживать gittime2>0.0 !!!
-
   try
     // в списке только участники перепрыжки
     GitDBGrid.BeginUpdate;
@@ -1404,7 +1427,7 @@ begin
       else GitDBGrid.Columns[i].Title.Caption:=Trim(IntToStr(k1));
       Inc(k1);
     end;
-  //todo: пока продублировал для перепрыжки... но потом оптимизировать
+  //todo: пока продублировал для перепрыжки отдельно... но потом оптимизировать
   // чтобы перепрыжечные препятствия нумеровались с 1
     if (LowerCase(LeftStr(GitDBGrid.Columns[i].FieldName,7)) = 'foul2_b') then
     begin

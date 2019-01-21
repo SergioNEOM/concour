@@ -277,7 +277,8 @@ begin
          if not DM.Routes.Active then DM.OpenRoutes(RecId);
          with TStageFrm.Create(self,RecId) do
          try
-{           if RecId>0 then
+{перенёс в stagefrm
+            if RecId>0 then
              if DM.Routes.Locate('id',RecId,[]) then
              begin
                // 2019-01-16 типы маршрутов, а не их индексы
