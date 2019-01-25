@@ -305,14 +305,14 @@ begin
                CurrID:=RecId;
                // 2019-01-16 типы маршрутов, а не их индексы
                //было  RouteTypeCB.ItemIndex
-               DM.EditRoute(CurrID,Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+               DM.EditRoute(CurrID,Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
                    StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit2.Text),VelocityCB2.ItemIndex,
                    StrToInt(BarriersEdit2.Text),RouteNameEdit.Text)
              end
              else
-               CurrID:=DM.AddRoute(Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+               CurrID:=DM.AddRoute(Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
                    StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit1.Text),VelocityCB2.ItemIndex,
@@ -321,7 +321,7 @@ begin
            end;
            //--
            //2019-01-17 маршрут по возр.сложности - заголовок для Joker
-           if Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]) = concour_main.ROUTE_GROW then
+           if Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]) = concour_main.ROUTE_GROW then
              try
                //*** Если всё верно, то стоим на нужной записи...
                sl := TStringList.Create;

@@ -114,7 +114,7 @@ begin
      (StrToInt(BarriersEdit1.Text)>15) or
      (StrToInt(BarriersEdit2.Text)<1) or
      (StrToInt(BarriersEdit2.Text)>15) or
-     ( (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW) and
+     ( (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW) and
        (StrToInt(BarriersEdit1.Text)<2)
      )
   then
@@ -133,9 +133,9 @@ end;
 procedure TStageFrm.SetVisibility;
 begin
   //для перепрыжки
-  GroupBox1.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
+  GroupBox1.Visible:= (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
   //для маршрута по возр.сложности
-  JokerLabel.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
+  JokerLabel.Visible:= (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
 end;
 
 end.
