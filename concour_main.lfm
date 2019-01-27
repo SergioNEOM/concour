@@ -1,11 +1,11 @@
 object MainFrm: TMainFrm
   Left = 120
-  Height = 566
+  Height = 617
   Top = 132
-  Width = 1124
+  Width = 1166
   Caption = 'MainFrm'
-  ClientHeight = 546
-  ClientWidth = 1124
+  ClientHeight = 597
+  ClientWidth = 1166
   Menu = MainMenu1
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
@@ -15,8 +15,8 @@ object MainFrm: TMainFrm
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 523
-    Width = 1124
+    Top = 574
+    Width = 1166
     Panels = <    
       item
         Alignment = taRightJustify
@@ -33,18 +33,18 @@ object MainFrm: TMainFrm
   end
   object Panel3: TPanel
     Left = 0
-    Height = 469
+    Height = 520
     Top = 54
-    Width = 1124
+    Width = 1166
     Align = alClient
-    ClientHeight = 469
-    ClientWidth = 1124
+    ClientHeight = 520
+    ClientWidth = 1166
     TabOrder = 1
     object GitDBGrid: TDBGrid
       Left = 1
-      Height = 357
+      Height = 408
       Top = 111
-      Width = 1122
+      Width = 1164
       Align = alClient
       Color = clWindow
       Columns = <      
@@ -212,7 +212,8 @@ object MainFrm: TMainFrm
           Title.Alignment = taCenter
           Title.Font.Height = -13
           Title.Font.Name = 'Sans'
-          Title.Caption = 'Ш.О.'
+          Title.MultiLine = True
+          Title.Caption = 'Ш.О. / '#13#10'Баллы'
           Width = 60
           FieldName = 'sumfouls1'
           DisplayFormat = '###'
@@ -343,7 +344,7 @@ object MainFrm: TMainFrm
       Left = 1
       Height = 110
       Top = 1
-      Width = 1122
+      Width = 1164
       ActivePage = TabSheet1
       Align = alTop
       ShowTabs = False
@@ -354,7 +355,7 @@ object MainFrm: TMainFrm
       object TabSheet1: TTabSheet
         Caption = 'TabSheet1'
         ClientHeight = 102
-        ClientWidth = 1114
+        ClientWidth = 1156
         object Label12: TLabel
           Left = 8
           Height = 37
@@ -1488,10 +1489,10 @@ object MainFrm: TMainFrm
     Left = 0
     Height = 54
     Top = 0
-    Width = 1124
+    Width = 1166
     Align = alTop
     ClientHeight = 54
-    ClientWidth = 1124
+    ClientWidth = 1166
     TabOrder = 2
     object RouteNameLabel: TLabel
       Left = 8
@@ -1689,7 +1690,7 @@ object MainFrm: TMainFrm
       Left = 688
       Height = 17
       Top = 24
-      Width = 424
+      Width = 466
       Anchors = [akTop, akLeft, akRight]
       AutoSize = False
       Font.CharSet = RUSSIAN_CHARSET

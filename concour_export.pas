@@ -149,7 +149,8 @@ begin
   DM.RepParams.Add('REP_SUBTITLE='+DM.GetRouteName(Route));
   case RouteType of
     //2019-01-16 тип маршрута, а не его индекс
-    concour_main.ROUTE_CLASSIC: MakeXLS_0(Route);
+    concour_main.ROUTE_CLASSIC,
+    concour_main.ROUTE_GROW:    MakeXLS_0(Route);
     concour_main.ROUTE_OVERLAP: MakeXLS_1(Route);
     // других пока нет :)
   end;
@@ -277,8 +278,8 @@ begin
   // у Add - четыре параметра, но используем "ДО"
   xlApp.Workbooks(2).Activate; // переходим в новую книгу и работаем с ней
   try
-    // !!! имя не более 31 знака, но для верности ограничим 25-ю
-    xlApp.Sheets(1).Name := U2V(UTF8LeftStr(NewName,25));
+    // !!! имя не более 31 знака, но для верности ограничим 29-ю
+    xlApp.Sheets(1).Name := U2V(UTF8LeftStr(NewName,29));
   except
     raise Exception.Create('Ошибка в имени листа отчета! ('+NewName+') Проверьте параметр в конфигурационном файле.');
   end;
@@ -484,11 +485,23 @@ end;
 //*******************
 
 procedure TExpFrm.MakeXLS_0(Route: Integer);
+var
+  rt : Integer;
 begin
-  Section:='XLSRep_0';  // секция в ini-файле
-  s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА');
-  CurrSheet:=CopySheet(FindSheet(s),
-                 cfg.ParamByName(Section,'TargetSheet',Trim(s+'_'+IntToStr(Route))));
+  rt := DM.GetRouteType(Route);
+  case rt of
+    concour_main.ROUTE_CLASSIC :
+      begin
+        Section:='XLSRep_0';  // секция в ini-файле
+        s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА');
+      end;
+    concour_main.ROUTE_GROW:
+      begin
+        Section:='XLSRep_3';  // секция в ini-файле
+        s := cfg.ParamByName(Section,'TempSheet','ПО ВОЗРАСТАЮЩЕЙ СЛОЖНОСТИ');
+      end
+    else s:= '';
+  end;
   //с этого момента xlApp.Workbooks(2).Activate;
   GetStartPos;
   //
@@ -572,7 +585,7 @@ begin
       // else - MakeCell(srow,scol+10,U2V('СНЯТ'))
       MakeBorder(srow,scol+10);
       //
-      MakeBorder(srow,scol+11); //вып. норм.
+      if (rt = concour_main.ROUTE_CLASSIC) then MakeBorder(srow,scol+11); //вып. норм.
       //-- подогнать высоту строки:
       // Rows("15:15").EntireRow.AutoFit
       xlApp.Rows(U2V(Trim(IntToStr(srow))+':'+Trim(IntToStr(srow)))).EntireRow.AutoFit;
