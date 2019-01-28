@@ -231,7 +231,11 @@ begin
   Result := -1;
   RouteTypeSL.BeginUpdate;
   for i:=0 to RouteTypeSL.Count-1 do
+{$IFDEF WIN64}
     if Int64(RouteTypeSL.Objects[i])=RType then
+{$ELSE}
+    if Integer(RouteTypeSL.Objects[i])=RType then
+{$ENDIF}
     begin
       Result := i;
       Break;
@@ -887,7 +891,12 @@ begin
     {было    if (DM.CurrRouteType>=0) and (DM.CurrRouteType<RouteTypeSL.Count-1) then
                        StatusBar1.Panels[1].Text:= RouteTypeSL[DM.CurrRouteType];
     }
+//2019-01-28
+{$IFDEF WIN64}
     x := RouteTypeSL.IndexOfObject(TObject(Int64(DM.CurrRouteType)));
+{$ELSE}
+    x := RouteTypeSL.IndexOfObject(TObject(Integer(DM.CurrRouteType)));
+{$ENDIF}
     if x>0 then StatusBar1.Panels[1].Text:= RouteTypeSL[x];
     //-
     // в диалоге выбора уже открыли: DM.OpenRoutes(DM.CurrentRoute);

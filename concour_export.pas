@@ -60,8 +60,8 @@ type
     function MakeBold(crow,ccol,beginchar,len:Integer):Boolean;
     procedure MakeRepHeader;
     procedure MakeStartXLS(RepType: Integer);
-    procedure MakeXLS_0(Route: Integer);
-    procedure MakeXLS_1(Route: Integer);
+    procedure MakeXLS_Classic(Route: Integer);
+    procedure MakeXLS_Over(Route: Integer);
     {$ENDIF}
   end;
 
@@ -150,8 +150,8 @@ begin
   case RouteType of
     //2019-01-16 тип маршрута, а не его индекс
     concour_main.ROUTE_CLASSIC,
-    concour_main.ROUTE_GROW:    MakeXLS_0(Route);
-    concour_main.ROUTE_OVERLAP: MakeXLS_1(Route);
+    concour_main.ROUTE_GROW:    MakeXLS_Classic(Route);
+    concour_main.ROUTE_OVERLAP: MakeXLS_Over(Route);
     // других пока нет :)
   end;
 end;
@@ -484,7 +484,7 @@ end;
 
 //*******************
 
-procedure TExpFrm.MakeXLS_0(Route: Integer);
+procedure TExpFrm.MakeXLS_Classic(Route: Integer);
 var
   rt : Integer;
 begin
@@ -492,16 +492,18 @@ begin
   case rt of
     concour_main.ROUTE_CLASSIC :
       begin
-        Section:='XLSRep_0';  // секция в ini-файле
+        Section:='XLSRep_1';  // секция в ini-файле
         s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА');
       end;
     concour_main.ROUTE_GROW:
       begin
-        Section:='XLSRep_3';  // секция в ini-файле
+        Section:='XLSRep_8';  // секция в ini-файле
         s := cfg.ParamByName(Section,'TempSheet','ПО ВОЗРАСТАЮЩЕЙ СЛОЖНОСТИ');
       end
     else s:= '';
   end;
+  CurrSheet:=CopySheet(FindSheet(s),
+                 cfg.ParamByName(Section,'TargetSheet',Trim(s+'_'+IntToStr(Route))));
   //с этого момента xlApp.Workbooks(2).Activate;
   GetStartPos;
   //
@@ -613,10 +615,10 @@ begin
 end;
 //*******************
 
-procedure TExpFrm.MakeXLS_1(Route: Integer);
+procedure TExpFrm.MakeXLS_Over(Route: Integer);
 begin
   // КЛАССИКА С ПЕЕПРЫЖКОЙ
-  Section:='XLSRep_1';  // секция в ini-файле
+  Section:='XLSRep_2';  // секция в ini-файле
   //
   s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА С ПЕРЕПРЫЖКОЙ');
   CurrSheet:=CopySheet(FindSheet(s),

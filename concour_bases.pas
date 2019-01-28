@@ -305,14 +305,24 @@ begin
                CurrID:=RecId;
                // 2019-01-16 типы маршрутов, а не их индексы
                //было  RouteTypeCB.ItemIndex
-               DM.EditRoute(CurrID,Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+               DM.EditRoute(CurrID,
+{$IFDEF WIN64 }  //2019-01-28
+               Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+{$ELSE}
+               Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+{$ENDIF}
                    StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit2.Text),VelocityCB2.ItemIndex,
                    StrToInt(BarriersEdit2.Text),RouteNameEdit.Text)
              end
              else
-               CurrID:=DM.AddRoute(Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+               CurrID:=DM.AddRoute(
+{$IFDEF WIN64 }  //2019-01-28
+               Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+{$ELSE}
+               Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]),
+{$ENDIF}
                    StrToInt(DistEdit1.Text),
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit1.Text),VelocityCB2.ItemIndex,
@@ -321,7 +331,12 @@ begin
            end;
            //--
            //2019-01-17 маршрут по возр.сложности - заголовок для Joker
+//2019-01-28
+{$IFDEF WIN64}
            if Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]) = concour_main.ROUTE_GROW then
+{$ELSE}
+           if Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]) = concour_main.ROUTE_GROW then
+{$ENDIF}
              try
                //*** Если всё верно, то стоим на нужной записи...
                sl := TStringList.Create;
