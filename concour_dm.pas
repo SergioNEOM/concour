@@ -303,8 +303,8 @@ begin
     Work2.SQL.Text:='SELECT cast(lastname as char(30))||" "||cast(firstname as char(25)) '+
        ' as ridername, nickname FROM v_git WHERE tournament=:par1 and route=:par2 ';
     if Overlap
-      then Work2.SQL.Text:=Work2.SQL.Text+'and overlap>0 order by totalfouls2,gittime2,queue;'
-      else Work2.SQL.Text:=Work2.SQL.Text+'and overlap=0 order by totalfouls1,gittime1,queue;';
+      then Work2.SQL.Text:=Work2.SQL.Text+'and gittime2>0 and overlap>0 order by totalfouls2,gittime2,queue;'
+      else Work2.SQL.Text:=Work2.SQL.Text+'and gittime1>0 and overlap=0 order by totalfouls1,gittime1,queue;';
     Work2.ParamByName('par1').AsInteger:=CurrentTournament;
     Work2.ParamByName('par2').AsInteger:=CurrentRoute;
     Work2.Open;

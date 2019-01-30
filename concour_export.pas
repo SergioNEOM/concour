@@ -79,7 +79,7 @@ uses LazUTF8, LCLType, db, concour_main, concour_DM, lclintf,
 procedure TExpFrm.StartSpeedButtonClick(Sender: TObject);
 begin
   {$IFDEF WINDOWS}
-  MakeXLS(rty_Start,True);
+  MakeXLS(rty_Start,False);
   {$ENDIF};
 end;
 
@@ -102,15 +102,15 @@ begin
   {$IFDEF WINDOWS}
   // 2019-01-16 было 1 (индекс, а не значение)
   if DM.CurrRouteType=concour_main.ROUTE_OVERLAP // с перепрыжкой
-  then  MakeXLS(rty_RefReJump,True)
-  else  MakeXLS(rty_Referee,True);
+  then  MakeXLS(rty_RefReJump,False)
+  else  MakeXLS(rty_Referee,False);
   {$ENDIF};
 end;
 
 procedure TExpFrm.FinalSpeedButtonClick(Sender: TObject);
 begin
   {$IFDEF WINDOWS}
-  MakeXLS(rty_Single,True);
+  MakeXLS(rty_Single,False);
   {$ENDIF};
 end;
 
@@ -235,6 +235,7 @@ begin
         Exit;
       end;
     if DirectPrint then
+    begin
       try
         xlApp.Sheets(1).PrintOut;
         if Application.MessageBox('Отчет отправлен на печать. Сохранить его в файле?',
@@ -242,14 +243,24 @@ begin
       except
         // ?
       end;
-    //    else
-    xlApp.ActiveWorkbook.SaveAs(U2V(RepName)); //'c:\Develop\rep.xlsx');   // если без пути, то пишет в Мои документы
-    xlApp.ActiveWorkbook.Close;
-    Application.MessageBox(PAnsiChar('Отчет сохранен в '+RepName),
+      //    else
+      xlApp.ActiveWorkbook.SaveAs(U2V(RepName)); //'c:\Develop\rep.xlsx');   // если без пути, то пишет в Мои документы
+      xlApp.ActiveWorkbook.Close;
+      Application.MessageBox(PAnsiChar('Отчет сохранен в '+RepName),
          'Сохранение',MB_OK);
+    end
+    else
+    begin
+      if Application.MessageBox('Сохранить отчет в файл?',
+           'Сохранение',MB_YESNO)=IDYES then
+         xlApp.ActiveWorkbook.SaveAs(U2V(RepName));
+      //
+      xlApp.Visible := True;
+      xlApp.DisplayAlerts := True;
+    end;
   finally
     //todo: закрывать - по требованию?
-    xlApp.Quit;
+    if DirectPrint then xlApp.Quit;
   end;
 end;
 

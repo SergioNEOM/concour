@@ -139,14 +139,14 @@ procedure TStageFrm.SetVisibility;
 begin
   //для перепрыжки
   // 2019-01-28
- {$IFDEF WIN64 )
-  GroupBox1.Visible:= (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
-  //для маршрута по возр.сложности
-  JokerLabel.Visible:= (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
- ($ELSE}
-  GroupBox1.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
-  //для маршрута по возр.сложности
-  JokerLabel.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
+ {$IFDEF WIN64 }
+   GroupBox1.Visible:= (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
+   //для маршрута по возр.сложности
+   JokerLabel.Visible:= (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
+ {$ELSE}
+   GroupBox1.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP);
+   //для маршрута по возр.сложности
+   JokerLabel.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
  {$ENDIF}
 end;
 

@@ -32,7 +32,7 @@ object StageFrm: TStageFrm
   object RouteTypeCB: TComboBox
     Left = 257
     Height = 21
-    Top = 24
+    Top = 25
     Width = 208
     ItemHeight = 13
     OnChange = RouteTypeCBChange
