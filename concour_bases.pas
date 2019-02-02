@@ -360,8 +360,8 @@ begin
            if RecId>0 then
              if DM.Tournaments.Locate('id',RecId,[]) then
              begin
-               TourDate.Date := StrToDate(DM.Tournaments.FieldByName('Дата соревнования').AsString,'-');
-               TourDate2.Date := StrToDate(DM.Tournaments.FieldByName('Дата2').AsString,'-');
+               TourDate.Date := StrToDate(DM.Tournaments.FieldByName('tourdate').AsString,'-');
+               TourDate2.Date := StrToDate(DM.Tournaments.FieldByName('tourdate2').AsString,'-');
                TourNameEdit.Text:= DM.Tournaments.FieldByName('tourname').AsString;
                TourPlaceEdit.Text:= DM.Tournaments.FieldByName('tourplace').AsString;
                RefereeEdit.Text:= DM.Tournaments.FieldByName('referee').AsString;
@@ -413,7 +413,17 @@ begin
     'horses':       res := DM.DelHorse(CommonId);
     'groups':       res := DM.DelGroup(CommonId);
     'routes':       res := DM.DelRoute(CommonId);
-    'tournaments':  res := DM.DelTournament(CommonId);
+    'tournaments':  begin
+                      res := DM.DelTournament(CommonId);
+                      // 2019-02-02 если данных нет и удалилась, то норм, иначе - переспросить!!!
+                      if not res then
+                        if Application.MessageBox(PAnsiChar('ВНИМАНИЕ!  СТОП!'+#13#10+
+                            'Вы действительно хотите удалить информацию о соревновании'+#13#10+
+                            'СО ВСЕМИ РЕЗУЛЬТАТАМИ УЧАСТНИКОВ?'+#13#10+#13#10+
+                            'После этой операции данную информацию восстановить будет невозможно!'),
+                            'Подтверждение удаления',MB_YESNO+MB_ICONQUESTION)=IDYES then
+                          res := DM.DestroyTournament(CommonId);
+                    end;
   end;
   if not res then
     Application.MessageBox(PAnsiChar('Невозможно удалить выбранную запись('+IntToStr(CommonId)+').'+#13#10+

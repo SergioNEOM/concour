@@ -150,6 +150,7 @@ type
     function EditTournament(TournamentId: Integer; TournamentDate, TournamentDate2,
          TournamentName, TournamentPlace, TournamentReferee, TournamentAssistant: String):Boolean;
     function DelTournament(TournamentId: Integer):Boolean;
+    function DestroyTournament(TournamentId: Integer):Boolean;
     procedure SetCurrTournament;
     // Git
     procedure OpenGit(CurrID:Integer; Ordered:Integer=0; Overlap:Boolean=False);
@@ -229,8 +230,8 @@ begin
   begin
     RepParams.Add('REP_TITLE='+DM.Tournaments.FieldByName('tourname').AsString);
     RepParams.Add('REP_PLACE='+DM.Tournaments.FieldByName('tourplace').AsString);
-    RepParams.Add('REP_DATE='+DM.Tournaments.FieldByName('Дата соревнования').AsString);
-    RepParams.Add('REP_DATE2='+DM.Tournaments.FieldByName('Дата2').AsString);
+    RepParams.Add('REP_DATE='+DM.Tournaments.FieldByName('tourdate').AsString);
+    RepParams.Add('REP_DATE2='+DM.Tournaments.FieldByName('tourdate2').AsString);
     RepParams.Add('REP_REFEREE='+DM.Tournaments.FieldByName('referee').AsString);
     RepParams.Add('REP_ASSISTANT='+DM.Tournaments.FieldByName('assistant').AsString);
   end
@@ -1126,6 +1127,35 @@ begin
   finally
     Work.Close;
   end;
+  if Result then OpenTournaments(-1);
+end;
+
+function TDM.DestroyTournament(TournamentId: Integer):Boolean;
+var
+  s: String;
+begin
+  //todo: удаляет целиком и безвозвратно... Продумать вариант с архивацией...
+  Result := False;
+  s := 'DELETE FROM git WHERE tournament='+Trim(IntToStr(TournamentId))+
+       ' AND route IN (SELECT _rowid_ FROM routes WHERE tournament='+Trim(IntToStr(TournamentId))+');';
+  try
+    SQLConn.ExecuteDirect(s);
+  except
+    Exit;
+  end;
+  s := 'DELETE FROM routes WHERE tournament='+Trim(IntToStr(TournamentId))+';';
+  try
+    SQLConn.ExecuteDirect(s);
+  except
+    Exit;
+  end;
+  s := 'DELETE FROM tournaments WHERE _rowid_='+Trim(IntToStr(TournamentId))+';';
+  try
+    SQLConn.ExecuteDirect(s);
+  except
+    Exit;
+  end;
+  Result := True;
   if Result then OpenTournaments(-1);
 end;
 

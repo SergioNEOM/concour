@@ -159,6 +159,7 @@ end;
 procedure TExpFrm.MakeXLS(RepType: Integer; DirectPrint:Boolean=False);
 var
   RepName : String;
+  EmptyParam: OLEVariant;
 begin
   if Assigned(InitProc) then TProcedure(InitProc); // рекомендация wiki FPC
   if Trim(DirectoryEdit1.Directory)='' then DirectoryEdit1.Directory:= cfg.RepPath;
@@ -181,7 +182,9 @@ begin
       Exit;
     end;
     try
-      xlApp.Workbooks.Open(U2V(cfg.XLSTempFileName));  //открыть шаблон   //'c:\Develop\concour\templates\temp.xls');
+      //открыть шаблон только для чтения;
+      // 2019-02-02 в полной версии у Open - 15 параметров, а нужны только 1 и 3
+      xlApp.Workbooks.Open(U2V(cfg.XLSTempFileName),False{UpdateLinks}, True{ReadOnly});
     except
       ShowMessage('Не удалось открыть файл шаблона отчетов: '+cfg.XLSTempFileName);
       Exit;
@@ -260,6 +263,7 @@ begin
     end;
   finally
     //todo: закрывать - по требованию?
+    xlApp.Workbooks(1).Close;  // 2019-02-02  шаблон закрыть в любом случае...
     if DirectPrint then xlApp.Quit;
   end;
 end;

@@ -13,16 +13,14 @@ CREATE TABLE IF NOT EXISTS tournaments (
 -*/
 CREATE VIEW IF NOT EXISTS "v_tournaments" AS
   SELECT "_rowid_" as id,
- strftime('%d-%m-%Y',tourdate) as "Дата соревнования",
- strftime('%d-%m-%Y',tourdate2) as "Дата2",
+ strftime('%d-%m-%Y',tourdate) as tourdate,
+ strftime('%d-%m-%Y',tourdate2) as tourdate2,
  cast(tourname as CHAR(100)) as tourname,
  cast(tourplace as CHAR(100)) as tourplace,
  cast(referee as CHAR(30)) as referee,
  cast(assistant as CHAR(30)) as assistant 
  FROM tournaments
- ORDER BY tourdate,tourdate2
-;
-
+ ORDER BY tournaments.tourdate,tournaments.tourdate2;
 /*------------------*/
 /* route type:
   0 = КЛАССИКА
