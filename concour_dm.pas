@@ -305,7 +305,13 @@ begin
        ' as ridername, nickname FROM v_git WHERE tournament=:par1 and route=:par2 ';
     if Overlap
       then Work2.SQL.Text:=Work2.SQL.Text+'and gittime2>0 and overlap>0 order by totalfouls2,gittime2,queue;'
-      else Work2.SQL.Text:=Work2.SQL.Text+'and gittime1>0 and overlap=0 order by totalfouls1,gittime1,queue;';
+      else
+      begin
+        // 2019-02-08 маршрут во возр.сложн. - другой порядок (totalfouls1 DESC)
+        if CurrRouteType = concour_main.ROUTE_GROW
+        then Work2.SQL.Text:=Work2.SQL.Text+'and gittime1>0 and overlap=0 order by totalfouls1 DESC,gittime1,queue;'
+        else Work2.SQL.Text:=Work2.SQL.Text+'and gittime1>0 and overlap=0 order by totalfouls1,gittime1,queue;';
+      end;
     Work2.ParamByName('par1').AsInteger:=CurrentTournament;
     Work2.ParamByName('par2').AsInteger:=CurrentRoute;
     Work2.Open;
@@ -1138,21 +1144,35 @@ begin
   Result := False;
   s := 'DELETE FROM git WHERE tournament='+Trim(IntToStr(TournamentId))+
        ' AND route IN (SELECT _rowid_ FROM routes WHERE tournament='+Trim(IntToStr(TournamentId))+');';
+  //---
+  if SQLConn.Transaction.Active then SQLConn.Transaction.CommitRetaining;
+  if not SQLConn.Transaction.Active then SQLConn.Transaction.StartTransaction;
+  //---
   try
     SQLConn.ExecuteDirect(s);
   except
+    if SQLConn.Transaction.Active then SQLConn.Transaction.RollbackRetaining;
     Exit;
   end;
   s := 'DELETE FROM routes WHERE tournament='+Trim(IntToStr(TournamentId))+';';
   try
     SQLConn.ExecuteDirect(s);
   except
+    if SQLConn.Transaction.Active then SQLConn.Transaction.RollbackRetaining;
     Exit;
   end;
   s := 'DELETE FROM tournaments WHERE _rowid_='+Trim(IntToStr(TournamentId))+';';
   try
     SQLConn.ExecuteDirect(s);
   except
+    if SQLConn.Transaction.Active then SQLConn.Transaction.RollbackRetaining;
+    Exit;
+  end;
+  //---
+  try
+    if SQLConn.Transaction.Active then SQLConn.Transaction.CommitRetaining;
+  except
+    if SQLConn.Transaction.Active then SQLConn.Transaction.RollbackRetaining;
     Exit;
   end;
   Result := True;

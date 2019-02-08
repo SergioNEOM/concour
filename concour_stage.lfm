@@ -54,7 +54,7 @@ object StageFrm: TStageFrm
     Top = 116
     Width = 80
     TabOrder = 1
-    Text = '11'
+    Text = '10'
   end
   object Panel1: TPanel
     Left = 0
@@ -221,7 +221,7 @@ object StageFrm: TStageFrm
     Top = 112
     Width = 236
     AutoSize = False
-    Caption = 'Обычно 7 ( 6+J ), 9 ( 8+J ) или 11 ( 10+J )'#13#10'т.е. доп. колонка Joker в том числе'
+    Caption = 'Обычно 8 или 10'#13#10'доп. колонка Joker выбирается позже'
     Font.CharSet = RUSSIAN_CHARSET
     Font.Color = clMaroon
     Font.Height = -12

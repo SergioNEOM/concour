@@ -65,6 +65,7 @@ type
     MenuItem22: TMenuItem;
     MenuItem9: TMenuItem;
     OverlapCB: TCheckBox;
+    JokerCB: TCheckBox;
     PageControl1: TPageControl;
     Panel1: TPanel;
     GitClearResAction: TAction;
@@ -289,6 +290,14 @@ var
   v: Boolean;
   i: Integer;
 begin
+  // 2019-02-08 Joker ComboBox (not Grid ;) )
+  if Assigned(concour_DM.DM) then
+  begin
+    JokerCB.Visible:= (DM.CurrRouteType=ROUTE_GROW);
+    JokerCB.Enabled:= JokerCB.Visible;
+  end;
+  //--
+  //
   //обновить к-во видимых колонок таблицы (в т.ч. пересчитать штрафы)
   GitDBGrid.BeginUpdate;
   for i:=0 to GitDBGrid.Columns.Count-1 do
@@ -916,9 +925,11 @@ begin
     GitDBGrid.Enabled:=not DM.Git.IsEmpty;
     OverlapCB.Checked:=False; //если были на перепрыжке, то вернуть основной вид
     DM.CurrGitOrder:=concour_DM.GIT_ORDER_Q;
+    //
     GitGridRefreshVisibility;
   end;
 end;
+
 
 procedure TMainFrm.TimePenaltyCBEditingDone(Sender: TObject);
 begin
