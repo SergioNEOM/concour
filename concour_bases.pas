@@ -341,7 +341,11 @@ begin
                //*** Если всё верно, то стоим на нужной записи...
                sl := TStringList.Create;
                sl.DelimitedText := DM.Routes.FieldByName('colnames').AsString;
-               sl.Values['foul1_b'+Trim(BarriersEdit1.Text)] := 'J';
+               // 2019-02-14 убрал: sl.Values['foul1_b'+Trim(BarriersEdit1.Text)] := 'J';
+               // заменил на:
+               sl.Values['foul1_b15'] := 'J';
+               // теперь джокер всегда в 15-м столбце
+               //
                DM.RouteSetFieldStr(CurrID,'colnames',sl.DelimitedText);
                //todo: !! сразу после добавления маршрута (при возврате в гл. таблицу) -
                // заголовок показывает не изменённым, но потом - всё норм.

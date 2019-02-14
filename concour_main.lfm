@@ -1198,14 +1198,16 @@ object MainFrm: TMainFrm
           Width = 80
           AutoSize = False
           Caption = 'Joker'
+          Checked = True
           Font.CharSet = RUSSIAN_CHARSET
           Font.Height = -12
           Font.Name = 'Arial'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           Font.Style = [fsBold]
-          OnChange = OverlapCBChange
+          OnChange = JokerCBChange
           ParentFont = False
+          State = cbChecked
           TabOrder = 10
           Visible = False
         end

@@ -123,6 +123,7 @@ type
     procedure GitFastOverActionExecute(Sender: TObject);
     procedure GitResultsActionExecute(Sender: TObject);
     procedure GitShuffleActionExecute(Sender: TObject);
+    procedure JokerCBChange(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
     procedure OverlapCBChange(Sender: TObject);
     procedure RepSpeedButton1Click(Sender: TObject);
@@ -175,6 +176,7 @@ type
     procedure CalcPlaces;
     procedure CalcPlacesOver;
     procedure SetColNames;
+    procedure SetJokerVisibility;
   end;
 
 var
@@ -324,6 +326,9 @@ begin
 //    GitDBGrid.Columns[i].Visible:= v and ((GitDBGrid.Columns[i].Tag and (1 shl DM.CurrRouteType) )>0);
     GitDBGrid.Columns[i].Visible:= v and ((GitDBGrid.Columns[i].Tag and DM.CurrRouteType)>0);
   end;
+  //--
+  // 2019-02-14 Joker ComboBox
+  SetJokerVisibility;
   //--
   CalcPenalties;
   //--
@@ -488,6 +493,11 @@ begin
   end;
 end;
 
+procedure TMainFrm.JokerCBChange(Sender: TObject);
+begin
+  GitGridRefreshVisibility;
+end;
+
 procedure TMainFrm.MenuItem14Click(Sender: TObject);
 begin
 
@@ -505,7 +515,13 @@ end;
 
 procedure TMainFrm.Barriers1SpinEditEditingDone(Sender: TObject);
 begin
-  //редактирование закончено? Запишем в БД
+  //редактирование закончено?
+  //2019-02-14 Сначала проверить, что не "заедем" на Джокера:
+  if (DM.CurrRouteType=ROUTE_GROW) and (TSpinEdit(Sender).Value>=15) then
+    TSpinEdit(Sender).Value := 14; //т.к. 15-й - Джокер
+  //todo: показать сообщение, что обычно д.б. 8 или 10 прыжков !!
+  //-
+  //Запишем в БД
   if not DM.RouteSetField(-1,TSpinEdit(Sender).Value,'barriers1') then
     Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
   //
@@ -1085,6 +1101,14 @@ begin
       end;
     end;
   end;
+//------
+  // 2019-02-14 учесть Joker
+  //todo: как-то проверить, что Barriers1SpinEdit.Value < 15 ?
+  if (DM.CurrRouteType = ROUTE_GROW) and (JokerCB.Checked) then
+  begin
+    ii := ii + GitDBGrid.DataSource.DataSet.FieldByName('foul1_b15').AsCurrency;
+  end;
+//------
   // пишем в таблицу
   GitDBGrid.DataSource.DataSet.Edit;
   GitDBGrid.DataSource.DataSet.FieldByName('foul1_time').AsCurrency:= it1;
@@ -1436,6 +1460,7 @@ var
   i,k1,k2: Integer;
   s : String;
 begin
+  // заполнить заголовки столбцов из DM.ColNames
   k1 := 1;
   k2 := 1;
   for i:=0 to GitDBGrid.Columns.Count-1 do
@@ -1458,6 +1483,34 @@ begin
     end;
   end;
 end;
+
+procedure TMainFrm.SetJokerVisibility;
+var
+  i: Integer;
+begin
+  // на всякий случай ;)
+  if DM.CurrRouteType <> ROUTE_GROW then Exit;
+  //
+  for i:=0 to GitDBGrid.Columns.Count-1 do
+    if (LowerCase(GitDBGrid.Columns[i].FieldName) = 'foul1_b15') then
+    begin
+      GitDBGrid.Columns[i].Visible:=JokerCB.Checked;
+      //todo: надо ли обнулять данные? пока не будем...
+      // может потребоваться, чтобы не хранить в БД состояние JokerCB
+      //--
+      // переспросить, а потом у всех очистить Джокеров
+{      if not JokerCB.Checked then
+        if Application.MessageBox(PAnsiChar('ВНИМАНИЕ!'+#13#10+
+            'У ВСЕХ участников очки в колонке Joker будут обнулены!'),
+            'Подтверждение',MB_YESNO+MB_ICONASTERISK)=IDYES  then
+        begin
+          DM.GitClearJoker;
+          DM.OpenGit(-1);
+        end;
+}
+    end;
+end;
+
 
 
 end.

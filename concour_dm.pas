@@ -159,6 +159,7 @@ type
     function ClearResults: Boolean;
     function GitSetField(GitId,FValue: Integer; FName:String):Boolean;
     function GitCheckTime(Overlap:Boolean=False):Boolean ;
+    function GitClearJoker : Boolean;
   end;
 
 var
@@ -680,15 +681,17 @@ begin
 end;
 
 function TDM.RouteSetFieldStr(RouteID:Integer;FieldName,FieldValue: String):Boolean;
+var
+  s: String;
 begin
   Result := False;
   if Trim(FieldName)='' then Exit;
   if RouteID<0 then RouteID:=CurrentRoute;
   try
     if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
-    SQLConn.ExecuteDirect('UPDATE OR ROLLBACK "routes" SET '+FieldName+'='+
-          chr(27)+FieldValue+chr(27)+
-         ' WHERE "_rowid_"='+Trim(IntToStr(RouteId))+';');
+    s := 'UPDATE OR ROLLBACK "routes" SET '+FieldName+'='''+FieldValue+
+         ''' WHERE "_rowid_"='+Trim(IntToStr(RouteId))+';';
+    SQLConn.ExecuteDirect(s);
     if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
     Result := True;
   except
@@ -1005,6 +1008,23 @@ begin
     Work2.Close;
   end;
 end;
+
+function TDM.GitClearJoker:Boolean;
+begin
+  Result := False;
+  try
+    if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
+    SQLConn.ExecuteDirect('UPDATE OR ROLLBACK git SET foul1_b15=0 '+
+         ' WHERE tournament='+Trim(IntToStr(CurrentTournament))+
+         ' and route='+Trim(IntToStr(CurrentRoute))+ ';');
+    if SQLTransaction1.Active then SQLTransaction1.CommitRetaining;
+    Result := True;
+  except
+    if SQLTransaction1.Active then SQLTransaction1.RollbackRetaining;
+  end;
+end;
+
+
 
 //****
 
