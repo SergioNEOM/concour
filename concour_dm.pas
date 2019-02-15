@@ -131,7 +131,7 @@ type
     function EditGroup(GroupName: string; GroupId:Integer=-1):Boolean;
     function DelGroup(GroupId: Integer): Boolean;
     // Routes
-    procedure OpenRoutes(CurrentID: Integer);
+    procedure OpenRoutes(CurrentID: Integer;SetCurrent: Boolean=False);
     function AddRoute(RouteType, Distance1, Velocity1, Barriers1, Distance2,
              Velocity2, Barriers2: Integer; RouteName: string):Integer;
     function EditRoute(RouteID, RouteType, Distance1, Velocity1, Barriers1,
@@ -556,9 +556,7 @@ end;
 
 //***************
 
-procedure TDM.OpenRoutes(CurrentID:Integer);
-var
-  b: boolean;
+procedure TDM.OpenRoutes(CurrentID:Integer;SetCurrent: Boolean=False);
 begin
   Routes.Close;
   Routes.SQL.Text:='SELECT * FROM v_routes where tournament=:p1;';
@@ -566,9 +564,10 @@ begin
   //'SELECT id, routename, route_type, barriers1, barriers2, result_type FROM v_routes;';
   try
     Routes.Open;
-    if (not Routes.IsEmpty) and (CurrentID>0)
-    then b:=Routes.Locate('id',CurrentID,[]);
-    //SetCurrRoute; устанавливать только когда требуется
+    if (not Routes.IsEmpty) and (CurrentID>0) then
+      Routes.Locate('id',CurrentID,[]);
+      //SetCurrRoute; устанавливать только когда требуется
+      if SetCurrent then SetCurrRoute;
   except
     raise Exception.Create('Ошибка открытия списка маршрутов');
   end;

@@ -327,7 +327,7 @@ begin
                    VelocityCB1.ItemIndex,StrToInt(BarriersEdit1.Text),
                    StrToInt(DistEdit1.Text),VelocityCB2.ItemIndex,
                    StrToInt(BarriersEdit2.Text),RouteNameEdit.Text);
-             //DM.OpenRoutes(CurrID); в AddRoute уже вызывается !
+             //DM.OpenRoutes(CurrID); в DM.AddRoute; уже вызывается !
            end;
            //--
            //2019-01-17 маршрут по возр.сложности - заголовок для Joker
@@ -337,24 +337,21 @@ begin
 {$ELSE}
            if Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex]) = concour_main.ROUTE_GROW then
 {$ENDIF}
-             try
-               //*** Если всё верно, то стоим на нужной записи...
-               sl := TStringList.Create;
-               sl.DelimitedText := DM.Routes.FieldByName('colnames').AsString;
-               // 2019-02-14 убрал: sl.Values['foul1_b'+Trim(BarriersEdit1.Text)] := 'J';
-               // заменил на:
-               sl.Values['foul1_b15'] := 'J';
-               // теперь джокер всегда в 15-м столбце
-               //
-               DM.RouteSetFieldStr(CurrID,'colnames',sl.DelimitedText);
-               //todo: !! сразу после добавления маршрута (при возврате в гл. таблицу) -
-               // заголовок показывает не изменённым, но потом - всё норм.
-             finally
-               sl.Free;
-             end;
+           //*** Если всё верно, то стоим на нужной записи...
+           // 2019-02-14 убрал: sl.Values['foul1_b'+Trim(BarriersEdit1.Text)] := 'J';
+           // 2019-02-15 изменил весь блок
+           if Assigned(DM.ColNames) then
+           begin
+             DM.SetColName('foul1_b15','J');
+             // DM.UpdateColNames; -- переоткрывает Routes, а это надо ли?
+           end
+           // теперь джокер всегда в 15-м столбце
+           //
+           //todo: !! сразу после добавления маршрута (при возврате в гл. таблицу) -
+           // заголовок показывает не изменённым, но потом - всё норм.
            //--
          finally
-           Free;
+           Free;   //  TStageFrm
          end;
        end;
     'tournaments':
