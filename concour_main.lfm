@@ -376,10 +376,10 @@ object MainFrm: TMainFrm
         end
         object TimePenaltyCB: TComboBox
           Left = 984
-          Height = 21
+          Height = 23
           Top = 24
           Width = 72
-          ItemHeight = 13
+          ItemHeight = 15
           ItemIndex = 0
           Items.Strings = (
             '1'
@@ -400,7 +400,7 @@ object MainFrm: TMainFrm
         end
         object MaxTimeEdit: TEdit
           Left = 752
-          Height = 21
+          Height = 23
           Top = 26
           Width = 80
           Alignment = taRightJustify
@@ -420,10 +420,10 @@ object MainFrm: TMainFrm
         end
         object VelocityCB1: TComboBox
           Left = 544
-          Height = 21
+          Height = 23
           Top = 24
           Width = 75
-          ItemHeight = 13
+          ItemHeight = 15
           ItemIndex = 0
           Items.Strings = (
             '300'
@@ -469,7 +469,7 @@ object MainFrm: TMainFrm
         end
         object Barriers1SpinEdit: TSpinEdit
           Left = 224
-          Height = 21
+          Height = 23
           Top = 26
           Width = 58
           MaxValue = 15
@@ -1298,10 +1298,10 @@ object MainFrm: TMainFrm
           end
           object VelocityCB2: TComboBox
             Left = 440
-            Height = 21
+            Height = 23
             Top = 26
             Width = 80
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               '300'
@@ -1346,10 +1346,10 @@ object MainFrm: TMainFrm
           end
           object Time2PenaltyCB: TComboBox
             Left = 760
-            Height = 21
+            Height = 23
             Top = 26
             Width = 80
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 1
             Items.Strings = (
               '1'
@@ -1755,8 +1755,12 @@ object MainFrm: TMainFrm
     end
     object MenuItem2: TMenuItem
       Caption = 'Соревнования'
+      object MenuItem23: TMenuItem
+        Action = TournamentSelectAct
+      end
       object MenuItem13: TMenuItem
         Action = RouteSelectAction
+        Caption = 'Выбор маршрута'
       end
       object MenuItem9: TMenuItem
         Caption = '-'
@@ -1836,6 +1840,11 @@ object MainFrm: TMainFrm
       Category = 'Git'
       Caption = '"Быстрая" перепрыжка (+/-)'
       OnExecute = GitFastOverActionExecute
+    end
+    object TournamentSelectAct: TAction
+      Category = 'Route'
+      Caption = 'Выбор соревнования'
+      OnExecute = TournamentSelectActExecute
     end
   end
   object PopupMenu1: TPopupMenu

@@ -30,6 +30,7 @@ type
   { TMainFrm }
 
   TMainFrm = class(TForm)
+    TournamentSelectAct: TAction;
     GitFastOverAction: TAction;
     GitResultsAction: TAction;
     GitShuffleAction: TAction;
@@ -63,6 +64,7 @@ type
     MenuItem12: TMenuItem;
     MenuItem21: TMenuItem;
     MenuItem22: TMenuItem;
+    MenuItem23: TMenuItem;
     MenuItem9: TMenuItem;
     OverlapCB: TCheckBox;
     JokerCB: TCheckBox;
@@ -158,6 +160,7 @@ type
     procedure RouteAddActionExecute(Sender: TObject);
     procedure RouteSelectActionExecute(Sender: TObject);
     procedure TimePenaltyCBEditingDone(Sender: TObject);
+    procedure TournamentSelectActExecute(Sender: TObject);
     procedure VelocityCB1EditingDone(Sender: TObject);
     procedure VelocityCB2Change(Sender: TObject);
     procedure VelocityCB1Change(Sender: TObject);
@@ -955,6 +958,22 @@ begin
     Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
   //
   GitGridRefreshVisibility;
+end;
+
+procedure TMainFrm.TournamentSelectActExecute(Sender: TObject);
+var
+  SaveTour, TempTour : Integer;
+begin
+  //2019-02-18 добавил метод
+  SaveTour:=DM.CurrentTournament;
+  TempTour:=ShowBasesDialog('Tournaments',DM.CurrentTournament);
+  if (TempTour>0) and (TempTour <> SaveTour) then
+  begin
+    DM.CurrentTournament:=TempTour;
+    GitDBGrid.DataSource.DataSet.Close;  // всё равно информация уже устарела
+    DM.CurrentRoute:=-1;                 // В случае отказа от выбора не будет ошибки
+    RouteSelectActionExecute(self);
+  end;
 end;
 
 procedure TMainFrm.VelocityCB1EditingDone(Sender: TObject);
