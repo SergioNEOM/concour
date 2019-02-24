@@ -44,6 +44,8 @@ type
     RouteID : Integer;
     constructor Create(AOwner: TComponent; CurrentID: Integer);overload;
     procedure SetVisibility;
+    function InsertRoute: Boolean;
+    function UpdateRoute: Boolean;
   end;
 
 var
@@ -127,6 +129,14 @@ begin
     Application.MessageBox('Ошибка в количестве прыжков!','Ошибка', MB_OK+MB_ICONERROR);
     Exit;
   end;
+  if
+  {$IFDEF WIN64 }
+    ( (Int64(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW) and
+  {$ELSE}
+    ( (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW) and
+  {$ENDIF}
+    Assigned(DM.ColNames) ) then  DM.ColNames.Values['foul1_b15']:='J';
+  //
   ModalResult:=mrOK;
 end;
 
@@ -149,6 +159,19 @@ begin
    JokerLabel.Visible:= (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_GROW);
  {$ENDIF}
 end;
+
+function TStageFrm.InsertRoute: Boolean;
+begin
+ Result:= False;
+
+end;
+
+function TStageFrm.UpdateRoute: Boolean;
+begin
+ Result:= False;
+
+end;
+
 
 end.
 

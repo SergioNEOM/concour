@@ -58,7 +58,7 @@ uses  LazUTF8, db, concour_main, concour_DM, concour_params, concour_stage,
 constructor TBasesFrm.Create(AOwner: TComponent; Base: String; CurrentID: Integer);overload;
 begin
   inherited Create(AOwner);
-  Tablename:=Base;
+  Tablename:=LowerCase(Base);
   CurrID:=CurrentID;
   SeekField:='';
 end;
@@ -66,7 +66,7 @@ end;
 
 procedure TBasesFrm.FormCreate(Sender: TObject);
 begin
-  case LowerCase(Tablename) of
+  case Tablename of
     'riders':
        begin
          Caption:='Выбор всадника';
@@ -98,6 +98,7 @@ begin
        begin
          Caption:='Выбор маршрута';
          SeekField:='routename';
+         //todo: так правильнее открывать DS или нет?
          BasesDBGrid.DataSource := nil;
          BasesDBGrid.DataSource := DM.DS_Routes;
          if not BasesDBGrid.DataSource.DataSet.Active then DM.OpenRoutes(CurrID)
@@ -188,7 +189,7 @@ var
   sl: TStringList;
 begin
   Result := False;
-  case LowerCase(Tablename) of
+  case Tablename of
     'riders':
        begin
          with TRiderFrm.Create(self,RecId) do
@@ -277,27 +278,6 @@ begin
          if not DM.Routes.Active then DM.OpenRoutes(RecId);
          with TStageFrm.Create(self,RecId) do
          try
-{перенёс в stagefrm
-            if RecId>0 then
-             if DM.Routes.Locate('id',RecId,[]) then
-             begin
-               // 2019-01-16 типы маршрутов, а не их индексы
-               //было RouteTypeCB.ItemIndex:=DM.Routes.FieldByName('route_type').AsInteger;
-               RouteTypeCB.ItemIndex:= MainFrm.GetRouteTypeNum(DM.Routes.FieldByName('route_type').AsInteger);
-               //--
-               RouteNameEdit.Text:=DM.Routes.FieldByName('routename').AsString;
-               BarriersEdit1.Text:=DM.Routes.FieldByName('barriers1').AsString;
-               DistEdit1.Text:=DM.Routes.FieldByName('distance1').AsString;
-               VelocityCB1.ItemIndex:=DM.Routes.FieldByName('velocity1').AsInteger;
-               BarriersEdit2.Text:=DM.Routes.FieldByName('barriers2').AsString;
-               DistEdit2.Text:=DM.Routes.FieldByName('distance2').AsString;
-               VelocityCB2.ItemIndex:=DM.Routes.FieldByName('velocity2').AsInteger;
-               // 2019-01-16 типы маршрутов, а не их индексы
-               //было GroupBox1.Visible := RouteTypeCB.ItemIndex=1;
-               GroupBox1.Visible := (Integer(RouteTypeCB.Items.Objects[RouteTypeCB.ItemIndex])=concour_main.ROUTE_OVERLAP)
-               //--
-             end;
-}
            if ShowModal=mrOK then
            begin
              if RecId>0 then
@@ -409,7 +389,7 @@ begin
   CommonId := BasesDBGrid.DataSource.DataSet.FieldByName('id').AsInteger;
   if Application.MessageBox('Вы действительно хотите удалить выбранную запись?',
      'Запрос подтверждения удаления',MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON2)<>IDYES then Exit;
-  case LowerCase(Tablename) of
+  case Tablename of
     'riders':       res := DM.DelRider(CommonId);
     'horses':       res := DM.DelHorse(CommonId);
     'groups':       res := DM.DelGroup(CommonId);
@@ -433,7 +413,7 @@ end;
 
 procedure TBasesFrm.DoIt;
 begin
-  case LowerCase(Tablename) of
+  case Tablename of
     'routes':
        begin
          if DM.Routes.Active then  DM.SetCurrRoute;

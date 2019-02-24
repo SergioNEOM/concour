@@ -401,6 +401,8 @@ procedure TMainFrm.GitDBGridTitleClick(Column: TColumn);
 var
   s : String;
 begin
+  //todo: Событие не срабатывает на пустой таблице!
+  //
   if (LowerCase(LeftStr(Column.FieldName,7)) = 'foul1_b') or
      (LowerCase(LeftStr(Column.FieldName,7)) = 'foul2_b') then
   begin
@@ -409,7 +411,8 @@ begin
     begin
       Column.Title.Caption:=s;
       DM.SetColName(Column.FieldName,s);
-      if not DM.UpdateColNames then ShowMessage('Изменение не записалось в БД!');
+      if not DM.UpdateColNames then
+            Application.MessageBox('Изменение не записалось в БД!','Ошибка',MB_OK+MB_ICONERROR);
     end;
   end;
 end;
@@ -895,19 +898,15 @@ end;
 
 procedure TMainFrm.RouteSelectActionExecute(Sender: TObject);
 var
-  TempRoute : integer;
+  SaveRoute, TempRoute : integer;
   x,y: Integer;
 begin
+  SaveRoute := DM.CurrentRoute;
   TempRoute:=ShowBasesDialog('Routes',DM.CurrentRoute);
-  if (TempRoute>0) {and (DM.CurrentRoute<>TempRoute)} then
+  if (TempRoute>0) and (SaveRoute<>TempRoute) then
   begin
     // маршрут выбран - заполним поля
-
-    { в OpenRoutes всё это делаем
-    DM.CurrentRoute:=TempRoute;
-    DM.CurrRouteType:=DM.Routes.FieldByName('route_type').AsInteger;
-    DM.CurrRouteName:=DM.Routes.FieldByName('routename').AsString;
-    }
+    { в OpenRoutes заполнятся DM.CurrentRoute, DM.CurrRouteType, DM.CurrRouteName   }
     SetColNames;
     //
     OverlapCB.Visible:=(DM.CurrRouteType=ROUTE_OVERLAP);
@@ -950,16 +949,6 @@ begin
 end;
 
 
-procedure TMainFrm.TimePenaltyCBEditingDone(Sender: TObject);
-begin
-  // 2019-01-21 используем поле result_type
-  //редактирование закончено? Запишем в БД
-  if not DM.RouteSetField(-1,(TComboBox(Sender).ItemIndex),'result_type') then
-    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
-  //
-  GitGridRefreshVisibility;
-end;
-
 procedure TMainFrm.TournamentSelectActExecute(Sender: TObject);
 var
   SaveTour, TempTour : Integer;
@@ -975,6 +964,18 @@ begin
     RouteSelectActionExecute(self);
   end;
 end;
+
+
+procedure TMainFrm.TimePenaltyCBEditingDone(Sender: TObject);
+begin
+  // 2019-01-21 используем поле result_type
+  //редактирование закончено? Запишем в БД
+  if not DM.RouteSetField(-1,(TComboBox(Sender).ItemIndex),'result_type') then
+    Application.MessageBox('Значение не удалось записать в БД!','Ошибка',MB_OK);
+  //
+  GitGridRefreshVisibility;
+end;
+
 
 procedure TMainFrm.VelocityCB1EditingDone(Sender: TObject);
 begin
