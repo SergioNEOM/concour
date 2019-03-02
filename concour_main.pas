@@ -522,7 +522,8 @@ end;
 procedure TMainFrm.Barriers1SpinEditEditingDone(Sender: TObject);
 begin
   //редактирование закончено?
-  //2019-02-14 Сначала проверить, что не "заедем" на Джокера:
+  // Проверку на выход за пределы диапазона делает сам компонент SpinEdit
+  //2019-02-14 проверить, что не "заедем" на Джокера:
   if (DM.CurrRouteType=ROUTE_GROW) and (TSpinEdit(Sender).Value>=15) then
     TSpinEdit(Sender).Value := 14; //т.к. 15-й - Джокер
   //todo: показать сообщение, что обычно д.б. 8 или 10 прыжков !!
@@ -1507,6 +1508,7 @@ end;
 procedure TMainFrm.SetJokerVisibility;
 var
   i: Integer;
+  s : String;
 begin
   // на всякий случай ;)
   if DM.CurrRouteType <> ROUTE_GROW then Exit;
@@ -1515,6 +1517,11 @@ begin
     if (LowerCase(GitDBGrid.Columns[i].FieldName) = 'foul1_b15') then
     begin
       GitDBGrid.Columns[i].Visible:=JokerCB.Checked;
+      // 2019-03-02  заголовок Joker либо из БД, либо по-умолчанию
+      s := DM.ColNames.Values['foul1_b15'];
+      if trim(s) = '' then GitDBGrid.Columns[i].Title.Caption:='J'
+      else GitDBGrid.Columns[i].Title.Caption:=s;
+      //
       //todo: надо ли обнулять данные? пока не будем...
       // может потребоваться, чтобы не хранить в БД состояние JokerCB
       //--

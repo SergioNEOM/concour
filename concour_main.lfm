@@ -1,11 +1,11 @@
 object MainFrm: TMainFrm
   Left = 120
-  Height = 617
+  Height = 672
   Top = 132
-  Width = 1166
+  Width = 1356
   Caption = 'MainFrm'
-  ClientHeight = 597
-  ClientWidth = 1166
+  ClientHeight = 652
+  ClientWidth = 1356
   Menu = MainMenu1
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
@@ -16,8 +16,8 @@ object MainFrm: TMainFrm
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 574
-    Width = 1166
+    Top = 629
+    Width = 1356
     Panels = <    
       item
         Alignment = taRightJustify
@@ -34,18 +34,18 @@ object MainFrm: TMainFrm
   end
   object Panel3: TPanel
     Left = 0
-    Height = 520
+    Height = 575
     Top = 54
-    Width = 1166
+    Width = 1356
     Align = alClient
-    ClientHeight = 520
-    ClientWidth = 1166
+    ClientHeight = 575
+    ClientWidth = 1356
     TabOrder = 1
     object GitDBGrid: TDBGrid
       Left = 1
-      Height = 408
+      Height = 463
       Top = 111
-      Width = 1164
+      Width = 1354
       Align = alClient
       Color = clWindow
       Columns = <      
@@ -345,7 +345,7 @@ object MainFrm: TMainFrm
       Left = 1
       Height = 110
       Top = 1
-      Width = 1164
+      Width = 1354
       ActivePage = TabSheet1
       Align = alTop
       ShowTabs = False
@@ -356,7 +356,7 @@ object MainFrm: TMainFrm
       object TabSheet1: TTabSheet
         Caption = 'TabSheet1'
         ClientHeight = 102
-        ClientWidth = 1156
+        ClientWidth = 1346
         object Label12: TLabel
           Left = 8
           Height = 37
@@ -1510,10 +1510,10 @@ object MainFrm: TMainFrm
     Left = 0
     Height = 54
     Top = 0
-    Width = 1166
+    Width = 1356
     Align = alTop
     ClientHeight = 54
-    ClientWidth = 1166
+    ClientWidth = 1356
     TabOrder = 2
     object RouteNameLabel: TLabel
       Left = 8
@@ -1712,7 +1712,7 @@ object MainFrm: TMainFrm
       Left = 688
       Height = 17
       Top = 24
-      Width = 466
+      Width = 656
       Anchors = [akTop, akLeft, akRight]
       AutoSize = False
       Font.CharSet = RUSSIAN_CHARSET
