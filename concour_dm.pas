@@ -993,7 +993,7 @@ begin
     Work2.Close;
     Work2.Params.Clear;
     Work2.SQL.Text:='SELECT COUNT(*) as res1 FROM git WHERE tournament=:par1 and route=:par2 ';
-    if Overlap then Work2.SQL.Text:=Work2.SQL.Text+' and gittime2<0.1'
+    if Overlap then Work2.SQL.Text:=Work2.SQL.Text+'and overlap>0 and gittime2<0.1'
     else Work2.SQL.Text:=Work2.SQL.Text+' and gittime1<0.1';
     Work2.ParamByName('par1').AsInteger:=CurrentTournament;
     Work2.ParamByName('par2').AsInteger:=CurrentRoute;
