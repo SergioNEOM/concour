@@ -902,9 +902,10 @@ var
   SaveRoute, TempRoute : integer;
   x,y: Integer;
 begin
-  SaveRoute := DM.CurrentRoute;
+  //2019-03-18 криво работает - SaveRoute := DM.CurrentRoute;
+  // если изменил параметры, но не №маршрута, то не переоткрывается
   TempRoute:=ShowBasesDialog('Routes',DM.CurrentRoute);
-  if (TempRoute>0) and (SaveRoute<>TempRoute) then
+  if (TempRoute>0) {2019-03-18 and (SaveRoute<>TempRoute) } then
   begin
     // маршрут выбран - заполним поля
     { в OpenRoutes заполнятся DM.CurrentRoute, DM.CurrRouteType, DM.CurrRouteName   }

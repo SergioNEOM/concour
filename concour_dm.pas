@@ -994,7 +994,7 @@ begin
     Work2.Params.Clear;
     Work2.SQL.Text:='SELECT COUNT(*) as res1 FROM git WHERE tournament=:par1 and route=:par2 ';
     if Overlap then Work2.SQL.Text:=Work2.SQL.Text+'and overlap>0 and gittime2<0.1'
-    else Work2.SQL.Text:=Work2.SQL.Text+' and gittime1<0.1';
+    else Work2.SQL.Text:=Work2.SQL.Text+'and overlap=0 and gittime1<0.1';
     Work2.ParamByName('par1').AsInteger:=CurrentTournament;
     Work2.ParamByName('par2').AsInteger:=CurrentRoute;
     Work2.Open;
@@ -1002,7 +1002,8 @@ begin
     begin
       Work2.First;
       Result:= (Work2.FieldByName('res1').AsInteger=0); // true только когда 0
-    end;
+    end
+    else Result := True; //2019-03-18 раз вернулся пустой НД, значит норм. ???
   finally
     Work2.Close;
   end;
