@@ -23,9 +23,8 @@
         <ComponentName Value="MainFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="900"/>
-        <CursorPos X="60" Y="908"/>
+        <TopLine Value="1500"/>
+        <CursorPos X="21" Y="903"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -37,8 +36,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="307"/>
-        <CursorPos Y="346"/>
+        <CursorPos X="107" Y="22"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -50,9 +48,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="concour_DM"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="986"/>
-        <CursorPos X="79" Y="1006"/>
+        <TopLine Value="277"/>
+        <CursorPos X="21" Y="1004"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -61,7 +60,7 @@
         <Filename Value="concour_params.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="59"/>
+        <TopLine Value="43"/>
         <CursorPos X="77" Y="74"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -73,7 +72,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="106"/>
+        <TopLine Value="87"/>
         <CursorPos X="36" Y="134"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -86,7 +85,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="27"/>
+        <TopLine Value="12"/>
         <CursorPos X="90" Y="38"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
@@ -99,6 +98,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="2"/>
+        <TopLine Value="3"/>
         <CursorPos X="52" Y="11"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>

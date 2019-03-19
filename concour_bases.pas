@@ -29,7 +29,6 @@ type
     procedure AddBitBtnClick(Sender: TObject);
     procedure BasesDBGridUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
     procedure BitBtn2Click(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure EditBitBtnClick(Sender: TObject);
     procedure DelBitBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -176,11 +175,6 @@ end;
 procedure TBasesFrm.BitBtn2Click(Sender: TObject);
 begin
   DoIt;
-end;
-
-procedure TBasesFrm.Button1Click(Sender: TObject);
-begin
-  DM.Routes.Locate('id',3,[]);
 end;
 
 function TBasesFrm.EditBase(RecId:Integer=-1): Boolean;
