@@ -23,13 +23,21 @@ const
   //----------------
   OVER_CALC      = 1;            // расчетная перепрыжка  (в поле overlap)
   OVER_FAST      = 2;            // "Быстрая" перепрыжка
-  //----------------
-  FIRED_RIDER    = 9000;         // снятым участникам добавляется константа к полю place
+  //---
+  // у участников, снятых с гита, в поле fired(firedover) одна из констант:
+  // (по полю тоже упорядочиваем):
+  FIRED_RIDER1     = 9100;        // - Исключен решением судьи
+  FIRED_RIDER2     = 9200;        // - Сошел с гита
+  FIRED_RIDER3     = 9300;        // - Не стартовал
+
 type
 
   { TMainFrm }
 
   TMainFrm = class(TForm)
+    MenuItem24: TMenuItem;
+    MenuItem25: TMenuItem;
+    MenuItem26: TMenuItem;
     TournamentSelectAct: TAction;
     GitFastOverAction: TAction;
     GitResultsAction: TAction;
@@ -72,7 +80,6 @@ type
     Panel1: TPanel;
     GitClearResAction: TAction;
     GitDelAction: TAction;
-    GitFireAction: TAction;
     RepSpeedButton1: TSpeedButton;
     RouteNameLabel: TLabel;
     RouteSelectSBut: TSpeedButton;
@@ -127,6 +134,9 @@ type
     procedure GitShuffleActionExecute(Sender: TObject);
     procedure JokerCBChange(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
+    procedure MenuItem24Click(Sender: TObject);
+    procedure MenuItem25Click(Sender: TObject);
+    procedure MenuItem26Click(Sender: TObject);
     procedure OverlapCBChange(Sender: TObject);
     procedure RepSpeedButton1Click(Sender: TObject);
     procedure ShuffleBitBtnClick(Sender: TObject);
@@ -509,6 +519,21 @@ begin
 
 end;
 
+procedure TMainFrm.MenuItem24Click(Sender: TObject);
+begin
+  DM.GitSetFiredRider(FIRED_RIDER1,OverlapCB.Checked);
+end;
+
+procedure TMainFrm.MenuItem25Click(Sender: TObject);
+begin
+    DM.GitSetFiredRider(FIRED_RIDER2,OverlapCB.Checked);
+end;
+
+procedure TMainFrm.MenuItem26Click(Sender: TObject);
+begin
+    DM.GitSetFiredRider(FIRED_RIDER3,OverlapCB.Checked);
+end;
+
 procedure TMainFrm.Barriers2SpinEditEditingDone(Sender: TObject);
 begin
   //todo: обнулять значения невидимых ячеек или пересчитывать сумму штрафов?
@@ -603,9 +628,9 @@ begin
       TDBGrid(Sender).Canvas.Font.Style :=  [];
     //
     // выделение снятых участников
-    if OverlapCB.Checked then fname:='place2'
-    else fname:='place';
-    if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>FIRED_RIDER then
+    if OverlapCB.Checked then fname:='firedover'
+    else fname:='fired';
+    if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>0 then
            TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(50,150,150);
 
     //почему-то без ручной закраски не хочет менять цвет фона...
@@ -668,25 +693,9 @@ begin
 end;
 
 procedure TMainFrm.GitFireActionExecute(Sender: TObject);
-var
-  fi : String;
-  val : Integer;
 begin
-  // снятие с гита (или возврат, если ошибочно)
-  //
-  if OverlapCB.Checked  then fi := 'place2'  else fi := 'place';
-  GitDBGrid.DataSource.DataSet.Edit;
-  if GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger > FIRED_RIDER then
-    val := GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger - FIRED_RIDER
-  else
-    val :=  FIRED_RIDER +
-       GitDBGrid.DataSource.DataSet.FieldByName('queue').AsInteger; //чтобы отличались
-  GitDBGrid.DataSource.DataSet.FieldByName(fi).AsInteger := val;
-  GitDBGrid.DataSource.DataSet.Post;
-  // Надо записать в БД, иначе в перепрыжке пропадает после пересчета мест!!!
-  DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,fi);
-end;
 
+end;
 
 procedure TMainFrm.GitDBGridContextPopup(Sender: TObject; MousePos: TPoint;
   var Handled: Boolean);
@@ -1188,7 +1197,7 @@ begin
        begin
          DM.Work2.Close;
          DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place from v_git '+
+         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place,fired from v_git '+
            'where tournament=:par1 and route=:par2 order by "group",totalfouls1,gittime1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
@@ -1207,8 +1216,8 @@ begin
                g := DM.Work2.FieldByName('group').AsInteger;
                while not DM.Work2.EOF do
                begin
-                 if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
-                 begin
+                 if DM.Work2.FieldByName('fired').AsInteger <= 0 then
+                 begin  // не снят
                    Inc(i);
                    DM.Work.ParamByName('par1').AsInteger:=i;
                    DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
@@ -1243,7 +1252,7 @@ begin
          WasOver:=False;
          DM.Work2.Close;
          DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place,overlap from v_git where '+
+         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place,overlap,fired from v_git where '+
                        'tournament=:par1 and route=:par2 and gittime1>0 order by "group",totalfouls1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
@@ -1295,8 +1304,8 @@ begin
                //--- проигнорировать снятых с гита,
                // и "быстрых" перепрыжчиков (2019-01-08)
                // остальных обработать
-               if (DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER) then
-               begin
+               if (DM.Work2.FieldByName('fired').AsInteger <= 0) then
+               begin  // не снят
                  // -- перепрыжка для первых мест при совпадении общих ш.о. (totalfouls1)
                  if (i = 1) and
                     (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
@@ -1352,9 +1361,9 @@ begin
        begin
          DM.Work2.Close;
          DM.Work2.Params.Clear;
-         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place from v_git '+
+         DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place,fired from v_git '+
            ' where tournament=:par1 and route=:par2 '+
-           ' order by "group", totalfouls1 DESC, gittime1, queue;';
+           ' order by "group", fired, totalfouls1 DESC, gittime1, queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
@@ -1372,8 +1381,8 @@ begin
                g := DM.Work2.FieldByName('group').AsInteger;
                while not DM.Work2.EOF do
                begin
-                 if DM.Work2.FieldByName('place').AsInteger < FIRED_RIDER then
-                 begin
+                 if DM.Work2.FieldByName('fired').AsInteger <= 0 then
+                 begin // не снят
                    Inc(i);
                    DM.Work.ParamByName('par1').AsInteger:=i;
                    DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
@@ -1419,18 +1428,17 @@ begin
     DM.Work.Params.Clear;
     // 2018-12-26 условие отбора в перепрыжку: overlap>0
     DM.Work.SQL.Text := 'update or rollback git set place2=0 where tournament=:par1 and route=:par2 '+
-                        ' and place2<:par3 and overlap>0;';
+                        ' and firedover<=0 and overlap>0;';
     DM.Work.ParamByName('par1').AsInteger := DM.CurrentTournament;
     DM.Work.ParamByName('par2').AsInteger := DM.CurrentRoute;
-    DM.Work.ParamByName('par3').AsInteger := FIRED_RIDER;
     DM.Work.ExecSQL;
     //
     DM.Work2.Close;
     DM.Work2.Params.Clear;
     // 2018-12-26 условие отбора в перепрыжку: overlap>0
     // упорядочен по place2, чтобы после пересчета мест был сразу ранжирован...
-    DM.Work2.SQL.Text := 'select id,"group",place,place2,totalfouls2,gittime2 from v_git '+
-      ' where tournament=:par1 and route=:par2 and overlap>0 order by "group",place2,totalfouls2,gittime2,queue;';
+    DM.Work2.SQL.Text := 'select id,"group",place,place2,totalfouls2,gittime2,fired,firedover from v_git '+
+      ' where tournament=:par1 and route=:par2 and overlap>0 order by "group",firedover,place2,totalfouls2,gittime2,queue;';
     DM.Work2.ParamByName('par1').AsInteger := DM.CurrentTournament;
     DM.Work2.ParamByName('par2').AsInteger := DM.CurrentRoute;
     //----
@@ -1451,7 +1459,7 @@ begin
           // и в place2 - место, если не был снят с гита
           DM.Work.ParamByName('par1').AsInteger:=i;
           //не забываем снятых с гита - пишем в place их значения
-          if  DM.Work2.FieldByName('place2').AsInteger<FIRED_RIDER then
+          if  DM.Work2.FieldByName('firedover').AsInteger<=0 then
             DM.Work.ParamByName('par2').AsInteger:=i
           else
             DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('place2').AsInteger;

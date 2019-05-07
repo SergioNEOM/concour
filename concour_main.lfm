@@ -324,6 +324,16 @@ object MainFrm: TMainFrm
           Title.Caption = 'Место в'#13#10'перепр.'
           Width = 60
           FieldName = 'place2'
+        end      
+        item
+          Title.Caption = 'fired'
+          Visible = False
+          FieldName = 'fired'
+        end      
+        item
+          Title.Caption = 'firedover'
+          Visible = False
+          FieldName = 'firedover'
         end>
       DataSource = DM.DS_Git
       DefaultRowHeight = 34
@@ -1806,11 +1816,6 @@ object MainFrm: TMainFrm
       Caption = 'Лошади'
       OnExecute = FileBaseHorsesActionExecute
     end
-    object GitFireAction: TAction
-      Category = 'Git'
-      Caption = 'Снять с гита'
-      OnExecute = GitFireActionExecute
-    end
     object GitDelAction: TAction
       Category = 'Git'
       Caption = 'Удалить запись'
@@ -1851,8 +1856,19 @@ object MainFrm: TMainFrm
     left = 88
     top = 272
     object MenuItem15: TMenuItem
-      Action = GitFireAction
-      Caption = 'Снять с гита (+/-)'
+      Caption = 'Снять с гита...'
+      object MenuItem24: TMenuItem
+        Caption = 'Исключен по решению судьи'
+        OnClick = MenuItem24Click
+      end
+      object MenuItem25: TMenuItem
+        Caption = 'Сошёл с гита'
+        OnClick = MenuItem25Click
+      end
+      object MenuItem26: TMenuItem
+        Caption = 'Не стартовал'
+        OnClick = MenuItem26Click
+      end
     end
     object MenuItem16: TMenuItem
       Caption = '-'

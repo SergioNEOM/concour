@@ -384,7 +384,7 @@ begin
   if MainFrm.OverlapCB.Checked then
     //перепрыжка: c 2018-12-26 другое условие отбора (overlap>0)
     DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 '+
-    ' and overlap>0 order by "group",place,queue;'
+    ' and overlap>0 order by "group",fired,place,queue;'
   else
     DM.Work.SQL.Text:='select * from v_git where tournament=:par1 '+
        ' and route=:par2 and overlap=0 order by queue;';
@@ -399,7 +399,7 @@ begin
     while not DM.Work.EOF do
     begin
       {1}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <=0 then
         MakeCell(srow,scol,DM.Work.FieldByName('queue').AsInteger)
       else
         MakeCell(srow,scol,'СНЯТ');
@@ -548,7 +548,7 @@ begin
         Inc(srow);
       end;
       {1}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <=0 then
         MakeCell(srow,scol,DM.Work.FieldByName('place').AsInteger);
       MakeBorder(srow,scol);
       {2}
@@ -591,13 +591,13 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       {10}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <= 0 then
         MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('totalfouls1').AsString))
       else
         MakeCell(srow,scol+9,U2V('СНЯТ'));
       MakeBorder(srow,scol+9);
       {11}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <= 0 then
         MakeCell(srow,scol+10,U2V(DM.Work.FieldByName('gittime1').AsString));
       // else - MakeCell(srow,scol+10,U2V('СНЯТ'))
       MakeBorder(srow,scol+10);
@@ -667,7 +667,7 @@ begin
         Inc(srow);
       end;
       {1}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <= 0 then
         MakeCell(srow,scol,DM.Work.FieldByName('place').AsInteger);
       MakeBorder(srow,scol);
       {2}
@@ -710,13 +710,13 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       {10}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <= 0 then
         MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('totalfouls1').AsString))
       else
         MakeCell(srow,scol+9,U2V('СНЯТ'));
       MakeBorder(srow,scol+9);
       {11}
-      if DM.Work.FieldByName('place').AsInteger < FIRED_RIDER then
+      if DM.Work.FieldByName('fired').AsInteger <= 0 then
         MakeCell(srow,scol+10,U2V(DM.Work.FieldByName('gittime1').AsString));
       //else -  MakeCell(srow,scol+10,U2V('СНЯТ'));
       MakeBorder(srow,scol+10);
@@ -724,7 +724,7 @@ begin
       {13}
       // поля итогов перепрыжки. Если оба значения нулевые, то выводятся пробелы
       //(не участвовал в перепрыжке)
-      if DM.Work.FieldByName('place2').AsInteger >= FIRED_RIDER then
+      if DM.Work.FieldByName('firedover').AsInteger > 0 then
         MakeCell(srow,scol+11,U2V('СНЯТ'))
       else
         if (DM.Work.FieldByName('totalfouls2').AsCurrency>0.0) or

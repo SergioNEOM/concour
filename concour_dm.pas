@@ -30,7 +30,7 @@ const
  //поле с названием зачёта и left join ?
     'SELECT git._rowid_ as id, git.tournament, git.route, '+
          'git."queue" as queue, git."rider" as rider, git.place, '+
-         'git.place2, git."group", groups.groupname, git.overlap, '+
+         'git.place2, git."group", groups.groupname, git.overlap, git.fired, git.firedover, '+
          'cast(riders."lastname" as char(30))||" "||cast(riders."firstname" as char(25)) as lastname, '+
          'cast(riders."regnum" as char(10)) as regnum, '+
          'cast(riders."category" as char(10)) as category, git.horse as horse, '+
@@ -56,10 +56,10 @@ const
          ' WHERE git.tournament=:partour and git.route=:parroute';
 GIT_OVERLAP = ' and git.overlap>0 ';
 GIT_ORD_QUE = ' ORDER BY git.queue, git._rowid_;';
-GIT_ORD_RANK = ' ORDER BY git."group", git.place, git.place2, git.queue;';
+GIT_ORD_RANK = ' ORDER BY git."group", git.fired, git.place, git.firedover, git.place2, git.queue;';
  //
  UPD_GIT = 'UPDATE "git" SET "tournament"=:tournament, "route"=:route, "group"=:group, '+
-         '"queue"=:queue, "rider"=:rider, "horse"=:horse, place=:place, '+
+         '"queue"=:queue, "rider"=:rider, "horse"=:horse, place=:place, fired=:fired, firedover=:firedover, '+
          '"foul1_b1"=:foul1_b1, "foul1_b2"=:foul1_b2, "foul1_b3"=:foul1_b3, "foul1_b4"=:foul1_b4, '+
          '"foul1_b5"=:foul1_b5, "foul1_b6"=:foul1_b6, "foul1_b7"=:foul1_b7, "foul1_b8"=:foul1_b8, '+
          '"foul1_b9"=:foul1_b9, "foul1_b10"=:foul1_b10, "foul1_b11"=:foul1_b11, "foul1_b12"=:foul1_b12, '+
@@ -160,6 +160,7 @@ type
     function GitSetField(GitId,FValue: Integer; FName:String):Boolean;
     function GitCheckTime(Overlap:Boolean=False):Boolean ;
     function GitClearJoker : Boolean;
+    procedure GitSetFiredRider(Value: Integer;Overlap:Boolean=False);
   end;
 
 var
@@ -1023,8 +1024,26 @@ begin
     if SQLTransaction1.Active then SQLTransaction1.RollbackRetaining;
   end;
 end;
+//*****
+procedure TDM.GitSetFiredRider(Value: Integer;Overlap:Boolean=False);
+var
+  fi : String;
+  val : Integer;
+begin
+  // снятие с гита (или возврат, если ошибочно)
+  //
+  if Overlap  then fi := 'firedover'  else fi := 'fired';
+  Git.Edit;
+  if Git.FieldByName(fi).AsInteger > 0 then
+    val := 0     // вернуть
+  else
+    val :=  Value;  // снять
+  Git.FieldByName(fi).AsInteger := val;
+  Git.Post;
+  // Надо записать в БД, иначе в перепрыжке пропадает после пересчета мест!!!
+  DM.GitSetField(Git.FieldByName('id').AsInteger,val,fi);
 
-
+end;
 
 //****
 

@@ -185,6 +185,8 @@ CREATE TABLE IF NOT EXISTS "git" (
  place  INTEGER DEFAULT 0,
  place2 INTEGER DEFAULT 0,
  overlap INTEGER DEFAULT 0,  /* если >0 то участник перепрыжки */
+ fired  INTEGER DEFAULT 0,	/* снят с гита ?*/
+ firedover INTEGER DEFAULT 0,
  "sumfouls" REAL DEFAULT 0.0   /* временно: вычисляемое поле глючит */
 );
 
@@ -196,6 +198,7 @@ CREATE VIEW IF NOT EXISTS "v_git" AS
   git."queue" as queue,  git.place, git.place2,
   git."group", groups."groupname", 
   git.overlap, git."rider" as rider,  
+  git.fired, git.firedover,
   cast(riders."lastname" as char(30))||' '||cast(riders."firstname" as char(25)) as lastname,
   cast(riders."firstname" as char(25)) as firstname,
   riders."birthdate" as r_year,
