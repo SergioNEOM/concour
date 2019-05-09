@@ -25,7 +25,7 @@ const
   OVER_FAST      = 2;            // "Быстрая" перепрыжка
   //---
   // у участников, снятых с гита, в поле fired(firedover) одна из констант:
-  // (по полю тоже упорядочиваем):
+  // (по этим полям полю тоже упорядочиваем):
   FIRED_RIDER1     = 9100;        // - Исключен решением судьи
   FIRED_RIDER2     = 9200;        // - Сошел с гита
   FIRED_RIDER3     = 9300;        // - Не стартовал
@@ -149,7 +149,6 @@ type
     procedure GitDBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure GitDBGridEndDrag(Sender, Target: TObject; X, Y: Integer);
-    procedure GitFireActionExecute(Sender: TObject);
     procedure GitDBGridContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
     procedure GitDBGridEditButtonClick(Sender: TObject);
@@ -476,37 +475,10 @@ begin
 end;
 
 procedure TMainFrm.GitShuffleActionExecute(Sender: TObject);
-var
-  n, i: Integer;
-  sl : TStringList;
 begin
-  // жеребьёвка
-  if (not DM.Git.Active) or DM.Git.IsEmpty then Exit;
-  n := DM.Git.RecordCount;
-  Randomize;
-  try
-    sl := TStringList.Create;
-    GitDBGrid.BeginUpdate;
-    DM.Git.First;
-    While not DM.Git.EOF do
-    begin
-      repeat
-        i := Random(n)+1;
-        if sl.IndexOfName(trim(IntToStr(i)))<0 then Break;
-      until false;
-      sl.Add(trim(IntToStr(i))+'='+DM.Git.FieldByName('rider').AsString);             //+'='+DM.Git.FieldByName('id').AsString);
-      DM.Git.Edit;
-      DM.Git.FieldByName('queue').AsInteger:=i;
-      DM.Git.Post;
-      DM.Git.Next;
-    end;
-    sl.Sort;
-    DM.OpenGit(-1);
-    //GitDBGrid.Enabled:=not DM.Git.IsEmpty;
-  finally
-    GitDBGrid.EndUpdate;
-    sl.Free;
-  end;
+  GitDBGrid.BeginUpdate;
+  DM.GitShuffle;
+  GitDBGrid.EndUpdate;
 end;
 
 procedure TMainFrm.JokerCBChange(Sender: TObject);
@@ -692,10 +664,6 @@ begin
   end;
 end;
 
-procedure TMainFrm.GitFireActionExecute(Sender: TObject);
-begin
-
-end;
 
 procedure TMainFrm.GitDBGridContextPopup(Sender: TObject; MousePos: TPoint;
   var Handled: Boolean);

@@ -386,10 +386,10 @@ object MainFrm: TMainFrm
         end
         object TimePenaltyCB: TComboBox
           Left = 984
-          Height = 21
+          Height = 23
           Top = 24
           Width = 72
-          ItemHeight = 13
+          ItemHeight = 15
           ItemIndex = 0
           Items.Strings = (
             '1'
@@ -410,7 +410,7 @@ object MainFrm: TMainFrm
         end
         object MaxTimeEdit: TEdit
           Left = 752
-          Height = 21
+          Height = 23
           Top = 26
           Width = 80
           Alignment = taRightJustify
@@ -430,10 +430,10 @@ object MainFrm: TMainFrm
         end
         object VelocityCB1: TComboBox
           Left = 544
-          Height = 21
+          Height = 23
           Top = 24
           Width = 75
-          ItemHeight = 13
+          ItemHeight = 15
           ItemIndex = 0
           Items.Strings = (
             '300'
@@ -479,7 +479,7 @@ object MainFrm: TMainFrm
         end
         object Barriers1SpinEdit: TSpinEdit
           Left = 224
-          Height = 21
+          Height = 23
           Top = 26
           Width = 58
           MaxValue = 15
@@ -1225,15 +1225,15 @@ object MainFrm: TMainFrm
       object TabSheet2: TTabSheet
         Caption = 'TabSheet2'
         ClientHeight = 102
-        ClientWidth = 1114
+        ClientWidth = 1274
         object Panel1: TPanel
           Left = 0
           Height = 102
           Top = 0
-          Width = 1114
+          Width = 1274
           Align = alClient
           ClientHeight = 102
-          ClientWidth = 1114
+          ClientWidth = 1274
           Color = 12369084
           ParentColor = False
           TabOrder = 0
@@ -1265,7 +1265,7 @@ object MainFrm: TMainFrm
           end
           object Barriers2SpinEdit: TSpinEdit
             Left = 152
-            Height = 21
+            Height = 23
             Top = 26
             Width = 64
             MaxValue = 15
@@ -1308,10 +1308,10 @@ object MainFrm: TMainFrm
           end
           object VelocityCB2: TComboBox
             Left = 440
-            Height = 21
+            Height = 23
             Top = 26
             Width = 80
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               '300'
@@ -1337,7 +1337,7 @@ object MainFrm: TMainFrm
           end
           object MaxTime2Edit: TEdit
             Left = 600
-            Height = 21
+            Height = 23
             Top = 24
             Width = 80
             Alignment = taRightJustify
@@ -1356,10 +1356,10 @@ object MainFrm: TMainFrm
           end
           object Time2PenaltyCB: TComboBox
             Left = 760
-            Height = 21
+            Height = 23
             Top = 26
             Width = 80
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 1
             Items.Strings = (
               '1'
@@ -1376,7 +1376,7 @@ object MainFrm: TMainFrm
             Height = 42
             Top = 54
             Width = 180
-            Caption = 'Итоги перепрыжки'
+            Caption = 'Итоги с перепрыжкой'
             Glyph.Data = {
               36100000424D3610000000000000360000002800000020000000200000000100
               2000000000000010000064000000640000000000000000000000000000000000

@@ -161,6 +161,7 @@ type
     function GitCheckTime(Overlap:Boolean=False):Boolean ;
     function GitClearJoker : Boolean;
     procedure GitSetFiredRider(Value: Integer;Overlap:Boolean=False);
+    procedure GitShuffle;
   end;
 
 var
@@ -994,8 +995,11 @@ begin
     Work2.Close;
     Work2.Params.Clear;
     Work2.SQL.Text:='SELECT COUNT(*) as res1 FROM git WHERE tournament=:par1 and route=:par2 ';
-    if Overlap then Work2.SQL.Text:=Work2.SQL.Text+'and overlap>0 and gittime2<0.1'
-    else Work2.SQL.Text:=Work2.SQL.Text+'and overlap=0 and gittime1<0.1';
+    //
+    // 2019-05-09 добавил условие, что не снят с гита (fired,firedover<=0) - у таких время не имеет значения
+    //
+    if Overlap then Work2.SQL.Text:=Work2.SQL.Text+'and firedover<=0 and overlap>0 and gittime2<0.1'
+    else Work2.SQL.Text:=Work2.SQL.Text+'and fired<=0 and gittime1<0.1';
     Work2.ParamByName('par1').AsInteger:=CurrentTournament;
     Work2.ParamByName('par2').AsInteger:=CurrentRoute;
     Work2.Open;
@@ -1042,9 +1046,39 @@ begin
   Git.Post;
   // Надо записать в БД, иначе в перепрыжке пропадает после пересчета мест!!!
   DM.GitSetField(Git.FieldByName('id').AsInteger,val,fi);
-
 end;
 
+//*****
+procedure TDM.GitShuffle;
+var
+  n, i: Integer;
+  sl : TStringList;
+begin
+  // жеребьёвка
+  if (not Git.Active) or Git.IsEmpty then Exit;
+  n := Git.RecordCount;
+  Randomize;
+  try
+    sl := TStringList.Create;
+    Git.First;
+    While not Git.EOF do
+    begin
+      repeat
+        i := Random(n)+1;
+        if sl.IndexOfName(trim(IntToStr(i)))<0 then Break;
+      until false;
+      sl.Add(trim(IntToStr(i))+'='+Git.FieldByName('rider').AsString);             //+'='+DM.Git.FieldByName('id').AsString);
+      Git.Edit;
+      Git.FieldByName('queue').AsInteger:=i;
+      Git.Post;
+      Git.Next;
+    end;
+    sl.Sort;
+    OpenGit(-1);
+  finally
+    sl.Free;
+  end;
+end;
 //****
 
 function TDM.ClearResults: Boolean;
