@@ -1221,7 +1221,7 @@ begin
          DM.Work2.Close;
          DM.Work2.Params.Clear;
          DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place,overlap,fired from v_git where '+
-                       'tournament=:par1 and route=:par2 and gittime1>0 order by "group",totalfouls1,queue;';
+                       'tournament=:par1 and route=:par2 and gittime1>0 order by "group",fired,totalfouls1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
@@ -1272,13 +1272,18 @@ begin
                //--- проигнорировать снятых с гита,
                // и "быстрых" перепрыжчиков (2019-01-08)
                // остальных обработать
-               if (DM.Work2.FieldByName('fired').AsInteger <= 0) then
-               begin  // не снят
-                 // -- перепрыжка для первых мест при совпадении общих ш.о. (totalfouls1)
+               if (DM.Work2.FieldByName('fired').AsInteger <= 0) then   // не снят
+               begin
+                 // -- расч.перепрыжка для первых мест при совпадении общих ш.о. (totalfouls1)
                  if (i = 1) and
                     (s = DM.Work2.FieldByName('totalfouls1').AsCurrency) then
                  begin // будут участвовать в перепрыжке
                    //2019-01-08 быстрых перепрыжчиков не берём, но считаем!
+                   //2019-05-11 !!!
+                   //  Обнаружил особенность (косячную-???): При "быстрой" перепрыжке, если выбрать
+                   //участника не с первым местом, предварительно рассчитанные номера мест
+                   //не пересчитываются. Поэтому порядок сбивается.
+                   //!!!!
                    if DM.Work2.FieldByName('overlap').AsInteger < OVER_FAST then
                    begin
                      // 2018-12-26

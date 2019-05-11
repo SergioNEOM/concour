@@ -526,7 +526,7 @@ begin
   //
   DM.Work.Close;
   DM.Work.Params.Clear;
-  DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 order by "group",place,queue;';
+  DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 order by "group",fired,place,queue;';
   DM.Work.ParamByName('par1').AsInteger:=DM.CurrentTournament;
   DM.Work.ParamByName('par2').AsInteger:=Route;
   try
@@ -645,7 +645,7 @@ begin
   //
   DM.Work.Close;
   DM.Work.Params.Clear;
-  DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 order by "group",place,place2,queue;';
+  DM.Work.SQL.Text:='select * from v_git where tournament=:par1 and route=:par2 order by "group",fired,place,firedover,place2,queue;';
   DM.Work.ParamByName('par1').AsInteger:=DM.CurrentTournament;
   DM.Work.ParamByName('par2').AsInteger:=Route;
   try
