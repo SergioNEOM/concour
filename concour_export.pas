@@ -23,6 +23,7 @@ const
   rty_Single   = 0;   // одиночный итоговый протокол
   rty_Total    =99;  // все маршруты в одном файле (итоговые протоколы)
 
+
 type
   { TExpFrm }
 
@@ -399,10 +400,18 @@ begin
     while not DM.Work.EOF do
     begin
       {1}
-      if DM.Work.FieldByName('fired').AsInteger <=0 then
-        MakeCell(srow,scol,DM.Work.FieldByName('queue').AsInteger)
-      else
-        MakeCell(srow,scol,'СНЯТ');
+      // 20109-05-21 уточнение снятия с гита
+      case DM.Work.FieldByName('fired').AsInteger of
+        concour_main.FIRED_RIDER1:
+          w := U2V(concour_main.FIRED_ARR[1]);
+        concour_main.FIRED_RIDER2:
+          w := U2V(concour_main.FIRED_ARR[2]);
+        concour_main.FIRED_RIDER3:
+          w := U2V(concour_main.FIRED_ARR[3]);
+        else
+          w := U2V(DM.Work.FieldByName('queue').AsString);
+      end;
+      MakeCell(srow,scol,w);
       MakeBorder(srow,scol);
       {2}
       MakeCell(srow,scol+1,U2V(DM.Work.FieldByName('groupname').AsString));
@@ -591,10 +600,18 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       {10}
-      if DM.Work.FieldByName('fired').AsInteger <= 0 then
-        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('totalfouls1').AsString))
-      else
-        MakeCell(srow,scol+9,U2V('СНЯТ'));
+      // 20109-05-21 уточнение снятия с гита
+      case DM.Work.FieldByName('fired').AsInteger of
+        concour_main.FIRED_RIDER1:
+          w := U2V(concour_main.FIRED_ARR[1]);
+        concour_main.FIRED_RIDER2:
+          w := U2V(concour_main.FIRED_ARR[2]);
+        concour_main.FIRED_RIDER3:
+          w := U2V(concour_main.FIRED_ARR[3]);
+        else
+          w := U2V(DM.Work.FieldByName('totalfouls1').AsString);
+      end;
+      MakeCell(srow,scol+9,w);
       MakeBorder(srow,scol+9);
       {11}
       if DM.Work.FieldByName('fired').AsInteger <= 0 then
@@ -710,10 +727,18 @@ begin
       MakeCell(srow,scol+8,U2V(DM.Work.FieldByName('region').AsString));
       MakeBorder(srow,scol+8);
       {10}
-      if DM.Work.FieldByName('fired').AsInteger <= 0 then
-        MakeCell(srow,scol+9,U2V(DM.Work.FieldByName('totalfouls1').AsString))
-      else
-        MakeCell(srow,scol+9,U2V('СНЯТ'));
+      // 20109-05-21 уточнение снятия с гита
+      case DM.Work.FieldByName('fired').AsInteger of
+        concour_main.FIRED_RIDER1:
+          w := U2V(concour_main.FIRED_ARR[1]);
+        concour_main.FIRED_RIDER2:
+          w := U2V(concour_main.FIRED_ARR[2]);
+        concour_main.FIRED_RIDER3:
+          w := U2V(concour_main.FIRED_ARR[3]);
+        else
+          w := U2V(DM.Work.FieldByName('totalfouls1').AsString);
+      end;
+      MakeCell(srow,scol+9,w);
       MakeBorder(srow,scol+9);
       {11}
       if DM.Work.FieldByName('fired').AsInteger <= 0 then
@@ -724,15 +749,25 @@ begin
       {13}
       // поля итогов перепрыжки. Если оба значения нулевые, то выводятся пробелы
       //(не участвовал в перепрыжке)
-      if DM.Work.FieldByName('firedover').AsInteger > 0 then
-        MakeCell(srow,scol+11,U2V('СНЯТ'))
-      else
-        if (DM.Work.FieldByName('totalfouls2').AsCurrency>0.0) or
-           (DM.Work.FieldByName('gittime2').AsCurrency>0.0)    then
-        begin
-          MakeCell(srow,scol+11,U2V(DM.Work.FieldByName('totalfouls2').AsString));
-          MakeCell(srow,scol+12,U2V(DM.Work.FieldByName('gittime2').AsString));
-        end;
+      // 20109-05-21 уточнение снятия с гита
+      // Если снятие в основним гите поставлено после рез-тов перепрыжки, то
+      //ш.о. и время перепр. будут напечатаны
+      // буду считать это фишкой: указатель на неправильное заполнение
+      case DM.Work.FieldByName('firedover').AsInteger of
+        concour_main.FIRED_RIDER1:
+          MakeCell(srow,scol+11,U2V(concour_main.FIRED_ARR[1]));
+        concour_main.FIRED_RIDER2:
+          MakeCell(srow,scol+11,U2V(concour_main.FIRED_ARR[2]));
+        concour_main.FIRED_RIDER3:
+          MakeCell(srow,scol+11,U2V(concour_main.FIRED_ARR[3]));
+        else
+          if (DM.Work.FieldByName('totalfouls2').AsCurrency>0.0) or
+             (DM.Work.FieldByName('gittime2').AsCurrency>0.0)    then
+          begin
+            MakeCell(srow,scol+11,U2V(DM.Work.FieldByName('totalfouls2').AsString));
+            MakeCell(srow,scol+12,U2V(DM.Work.FieldByName('gittime2').AsString));
+          end;
+      end;
       //
       MakeBorder(srow,scol+11);
       MakeBorder(srow,scol+12);
