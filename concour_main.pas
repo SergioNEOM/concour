@@ -1169,6 +1169,8 @@ begin
          DM.Work2.Params.Clear;
          DM.Work2.SQL.Text := 'select id,"group",totalfouls1,gittime1,place,fired from v_git '+
            'where tournament=:par1 and route=:par2 order by "group",totalfouls1,gittime1,queue;';
+         // 2019-07-17 fired не участвует в сортировке, т.к. снятым не присваиваются места...
+         // а может, надо обнулять?
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
@@ -1193,6 +1195,7 @@ begin
                    DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
                    DM.Work.ExecSQL;
                  end;
+                 // 2019-07-17 нужно ли обнулять номер места в случае снятия?
                  //***
                  DM.Work2.Next;
                  if g <> DM.Work2.FieldByName('group').AsInteger then
@@ -1218,12 +1221,13 @@ begin
        // на втором этапе места присваивать как в классике (case 0), + доп.результат в place2
        //
        // 2018-12-19 добавил условие отбора в перепрыжку: (время 1 гита >0)
+       // 2019-07-17 в порядок сортировки добавил поле gittime1, чтобы при одинаковых ш.о. правильно ранжировались
        begin
          WasOver:=False;
          DM.Work2.Close;
          DM.Work2.Params.Clear;
          DM.Work2.SQL.Text := 'select id,"group",totalfouls1,place,overlap,fired from v_git where '+
-                       'tournament=:par1 and route=:par2 and gittime1>0 order by "group",fired,totalfouls1,queue;';
+                       'tournament=:par1 and route=:par2 and gittime1>0 order by "group",fired,totalfouls1,gittime1,queue;';
          DM.Work2.ParamByName('par1').AsInteger:=DM.CurrentTournament;
          DM.Work2.ParamByName('par2').AsInteger:=DM.CurrentRoute;
          //----
