@@ -375,8 +375,9 @@ begin
   GetStartPos;
   //
   if RepType=rty_Start
-  then DM.RepParams.Values['REP_SUBTITLE']:='Стартовый протокол'
-  else DM.RepParams.Values['REP_SUBTITLE']:='Судейский протокол';
+  //2019-07-18 добавил печать названия маршрута
+  then DM.RepParams.Values['REP_SUBTITLE']:='Стартовый протокол. '+DM.GetRouteName(DM.CurrentRoute)
+  else DM.RepParams.Values['REP_SUBTITLE']:='Судейский протокол. '+DM.GetRouteName(DM.CurrentRoute);
   MakeRepHeader;
   //
   DM.Work.Close;
