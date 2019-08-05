@@ -29,17 +29,22 @@ const
   FIRED_RIDER1     = 9100;        // - Исключен решением судьи
   FIRED_RIDER2     = 9200;        // - Сошел с гита
   FIRED_RIDER3     = 9300;        // - Не стартовал
+  // 2019-08-05
+  FIRED_RIDER4     = 9900;        // - Участник "вне конкурса"
   // строки,выводимые в отчетах
-  FIRED_ARR: Array [1..3] of String = ('СНЯТ','СОШЁЛ','НЕ СТАРТ');
+  FIRED_ARR: Array [1..4] of String = ('СНЯТ','СОШЁЛ','НЕ СТАРТ','ВК');
 
 type
 
   { TMainFrm }
 
   TMainFrm = class(TForm)
+    GitOutsiderAction: TAction;
     MenuItem24: TMenuItem;
     MenuItem25: TMenuItem;
     MenuItem26: TMenuItem;
+    MenuItem27: TMenuItem;
+    MenuItem28: TMenuItem;
     TournamentSelectAct: TAction;
     GitFastOverAction: TAction;
     GitResultsAction: TAction;
@@ -132,6 +137,7 @@ type
     procedure CalcPlacesBitBtnClick(Sender: TObject);
     procedure GitDBGridTitleClick(Column: TColumn);
     procedure GitFastOverActionExecute(Sender: TObject);
+    procedure GitOutsiderActionExecute(Sender: TObject);
     procedure GitResultsActionExecute(Sender: TObject);
     procedure GitShuffleActionExecute(Sender: TObject);
     procedure JokerCBChange(Sender: TObject);
@@ -139,6 +145,7 @@ type
     procedure MenuItem24Click(Sender: TObject);
     procedure MenuItem25Click(Sender: TObject);
     procedure MenuItem26Click(Sender: TObject);
+    procedure MenuItem27Click(Sender: TObject);
     procedure OverlapCBChange(Sender: TObject);
     procedure RepSpeedButton1Click(Sender: TObject);
     procedure ShuffleBitBtnClick(Sender: TObject);
@@ -463,6 +470,31 @@ begin
   DM.OpenGit(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,0 {порядок не менять},OverlapCB.Checked);
 end;
 
+procedure TMainFrm.GitOutsiderActionExecute(Sender: TObject);
+var
+  val: Integer;
+begin
+  // 2019-08-05
+  // Переключение участника "Вне конкурса".
+  // Для перепрыжки не работает... Пока (или всегда :)
+  if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>0 then Exit;
+  if GitDBGrid.DataSource.DataSet.FieldByName('fired').AsInteger<>0 then
+    val := 0                  // уже установлен? снять значение
+  else
+    val := FIRED_RIDER4;      // установить вне конкурса
+  // записать
+  if DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,'fired') then
+    if val>0 then
+      // обнулить номер призового места (если был посчитан)
+      DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,0,'place')  // не перепрыжка!!!
+    else
+      // нужно ли здесь напоминание?
+      Application.MessageBox(PAnsiChar('ВНИМАНИЕ! Список изменился, выполните пересчет итогов.'),
+                 'Информация',MB_OK+MB_ICONINFORMATION);
+  // обновить датасет на тех же условиях
+  DM.OpenGit(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,0 {порядок не менять},OverlapCB.Checked);
+end;
+
 procedure TMainFrm.GitResultsActionExecute(Sender: TObject);
 begin
   // 2019-01-11 проверка на пустые значения gittime1
@@ -506,6 +538,11 @@ end;
 procedure TMainFrm.MenuItem26Click(Sender: TObject);
 begin
     DM.GitSetFiredRider(FIRED_RIDER3,OverlapCB.Checked);
+end;
+
+procedure TMainFrm.MenuItem27Click(Sender: TObject);
+begin
+
 end;
 
 procedure TMainFrm.Barriers2SpinEditEditingDone(Sender: TObject);
@@ -604,8 +641,12 @@ begin
     // выделение снятых участников
     if OverlapCB.Checked then fname:='firedover'
     else fname:='fired';
-    if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>0 then
-           TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(50,150,150);
+    // 2019-08-05
+    if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger=FIRED_RIDER4 then
+      TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(200,200,150)
+    else
+      if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>0 then
+             TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(50,150,150);
 
     //почему-то без ручной закраски не хочет менять цвет фона...
     TDBGrid(Sender).Canvas.FillRect(Rect);

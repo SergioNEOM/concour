@@ -1947,6 +1947,11 @@ object MainFrm: TMainFrm
       Caption = 'Выбор соревнования'
       OnExecute = TournamentSelectActExecute
     end
+    object GitOutsiderAction: TAction
+      Category = 'Git'
+      Caption = 'Вне конкурса (+/-)'
+      OnExecute = GitOutsiderActionExecute
+    end
   end
   object PopupMenu1: TPopupMenu
     left = 110
@@ -1967,6 +1972,13 @@ object MainFrm: TMainFrm
       end
     end
     object MenuItem16: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem27: TMenuItem
+      Action = GitOutsiderAction
+      OnClick = MenuItem27Click
+    end
+    object MenuItem28: TMenuItem
       Caption = '-'
     end
     object MenuItem17: TMenuItem

@@ -160,7 +160,7 @@ end;
 procedure TExpFrm.MakeXLS(RepType: Integer; DirectPrint:Boolean=False);
 var
   RepName : String;
-  EmptyParam: OLEVariant;
+//  EmptyParam: OLEVariant;
 begin
   if Assigned(InitProc) then TProcedure(InitProc); // рекомендация wiki FPC
   if Trim(DirectoryEdit1.Directory)='' then DirectoryEdit1.Directory:= cfg.RepPath;
@@ -559,7 +559,11 @@ begin
       end;
       {1}
       if DM.Work.FieldByName('fired').AsInteger <=0 then
-        MakeCell(srow,scol,DM.Work.FieldByName('place').AsInteger);
+        MakeCell(srow,scol,DM.Work.FieldByName('place').AsInteger)
+      else
+        // 2019-08-05  вне конкурса
+        if DM.Work.FieldByName('fired').AsInteger=FIRED_RIDER4 then
+          MakeCell(srow,scol,U2V(concour_main.FIRED_ARR[4]));
       MakeBorder(srow,scol);
       {2}
       //MakeCell(srow,scol,DM.Work.FieldByName('queue').AsInteger);  ?
@@ -615,7 +619,9 @@ begin
       MakeCell(srow,scol+9,w);
       MakeBorder(srow,scol+9);
       {11}
-      if DM.Work.FieldByName('fired').AsInteger <= 0 then
+      //2019-08-05 or
+      if (DM.Work.FieldByName('fired').AsInteger <= 0) or
+         (DM.Work.FieldByName('fired').AsInteger >=FIRED_RIDER4) then  // вне конкурса - есть время
         MakeCell(srow,scol+10,U2V(DM.Work.FieldByName('gittime1').AsString));
       // else - MakeCell(srow,scol+10,U2V('СНЯТ'))
       MakeBorder(srow,scol+10);
@@ -650,7 +656,7 @@ end;
 
 procedure TExpFrm.MakeXLS_Over(Route: Integer);
 begin
-  // КЛАССИКА С ПЕЕПРЫЖКОЙ
+  // КЛАССИКА С ПЕРЕПРЫЖКОЙ
   Section:='XLSRep_2';  // секция в ini-файле
   //
   s := cfg.ParamByName(Section,'TempSheet','КЛАССИКА С ПЕРЕПРЫЖКОЙ');
@@ -686,7 +692,11 @@ begin
       end;
       {1}
       if DM.Work.FieldByName('fired').AsInteger <= 0 then
-        MakeCell(srow,scol,DM.Work.FieldByName('place').AsInteger);
+        MakeCell(srow,scol,DM.Work.FieldByName('place').AsInteger)
+      else
+        // 2019-08-05
+        if DM.Work.FieldByName('fired').AsInteger=FIRED_RIDER4 then
+          MakeCell(srow,scol,U2V(concour_main.FIRED_ARR[4])) ;
       MakeBorder(srow,scol);
       {2}
       //MakeCell(srow,scol,DM.Work.FieldByName('queue').AsInteger);  ?
@@ -742,7 +752,9 @@ begin
       MakeCell(srow,scol+9,w);
       MakeBorder(srow,scol+9);
       {11}
-      if DM.Work.FieldByName('fired').AsInteger <= 0 then
+      //2019-08-05 or
+      if (DM.Work.FieldByName('fired').AsInteger <= 0) or
+         (DM.Work.FieldByName('fired').AsInteger >=FIRED_RIDER4) then  // вне конкурса - есть время
         MakeCell(srow,scol+10,U2V(DM.Work.FieldByName('gittime1').AsString));
       //else -  MakeCell(srow,scol+10,U2V('СНЯТ'));
       MakeBorder(srow,scol+10);
