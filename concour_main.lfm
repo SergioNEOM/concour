@@ -64,8 +64,6 @@ object MainFrm: TMainFrm
         end      
         item
           ButtonStyle = cbsButton
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Зачёт'
@@ -74,7 +72,6 @@ object MainFrm: TMainFrm
         end      
         item
           ButtonStyle = cbsButton
-          MinSize = 10
           MaxSize = 56
           Tag = 255
           Title.Alignment = taCenter
@@ -93,8 +90,6 @@ object MainFrm: TMainFrm
           FieldName = 'nickname'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '1'
@@ -103,8 +98,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '2'
@@ -113,8 +106,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '3'
@@ -123,8 +114,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '4'
@@ -133,8 +122,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '5'
@@ -143,8 +130,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '6'
@@ -153,8 +138,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '7'
@@ -163,8 +146,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '8'
@@ -173,8 +154,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '9'
@@ -183,8 +162,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '10'
@@ -193,8 +170,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '11'
@@ -203,8 +178,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '12'
@@ -213,8 +186,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '13'
@@ -223,8 +194,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '14'
@@ -233,8 +202,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '15'
@@ -243,8 +210,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -257,8 +222,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '###'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -269,8 +232,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Время'
@@ -279,8 +240,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '##0.00'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -291,8 +250,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 2
           Title.Font.Height = -13
@@ -304,8 +261,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '###'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 6
           Title.Alignment = taCenter
@@ -316,8 +271,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Tag = 6
           Title.Alignment = taCenter
           Title.Caption = 'Время 2'
@@ -326,8 +279,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 6
           Title.Alignment = taCenter
@@ -344,7 +295,6 @@ object MainFrm: TMainFrm
           Font.Quality = fqDraft
           Font.Style = [fsBold]
           MinSize = 1
-          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -361,8 +311,6 @@ object MainFrm: TMainFrm
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -371,8 +319,6 @@ object MainFrm: TMainFrm
           FieldName = 'place'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           ReadOnly = True
           Tag = 6
           Title.Alignment = taCenter
@@ -382,15 +328,11 @@ object MainFrm: TMainFrm
           FieldName = 'place2'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Title.Caption = 'fired'
           Visible = False
           FieldName = 'fired'
         end      
         item
-          MinSize = 10
-          MaxSize = 200
           Title.Caption = 'firedover'
           Visible = False
           FieldName = 'firedover'

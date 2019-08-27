@@ -313,6 +313,8 @@ var
   v: Boolean;
   i: Integer;
 begin
+  //2019-08-27 "Вне конкурса" не активно в режиме перепрыжки
+  GitOutsiderAction.Enabled:=not OverlapCB.Checked;
   // 2019-02-08 Joker ComboBox (not Grid ;) )
   if Assigned(concour_DM.DM) then
   begin
@@ -476,12 +478,24 @@ var
 begin
   // 2019-08-05
   // Переключение участника "Вне конкурса".
-  // Для перепрыжки не работает... Пока (или всегда :)
-  if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>0 then Exit;
-  if GitDBGrid.DataSource.DataSet.FieldByName('fired').AsInteger<>0 then
-    val := 0                  // уже установлен? снять значение
-  else
-    val := FIRED_RIDER4;      // установить вне конкурса
+  // Для перепрыжки не работает, к тому моменту ВК уже известны и не меняются
+  //2019-08-27 было:
+  //  if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>0 then Exit;
+  //это неправильно,т.к. в основном гите не брались перепрыжчики.  Стало:
+  if OverlapCB.Checked then  Exit; //и это - перетраховка, т.к. пункт меню не должен быть доступен
+  //2019-08-27
+  if GitDBGrid.DataSource.DataSet.FieldByName('fired').AsInteger=0 then
+    val := FIRED_RIDER4      // установить вне конкурса
+  else  // поле уже заполнено... анализируем...
+    if GitDBGrid.DataSource.DataSet.FieldByName('fired').AsInteger=FIRED_RIDER4 then
+      val := 0      // было "вне конкурса"? Зачит,снимем...
+    else
+    begin    // снятый с гита... уточнить...
+       if Application.MessageBox(PAnsiChar('ВНИМАНИЕ! Участник уже снят с гита!'+#13#10+
+          'Всё равно установить "Вне конкурса"?'),'Запрос',MB_YESNO+MB_ICONQUESTION)=IDYES
+       then  val := FIRED_RIDER4      // установить вне конкурса
+       else Exit;                 //ничего не делать
+    end;
   // записать
   if DM.GitSetField(GitDBGrid.DataSource.DataSet.FieldByName('id').AsInteger,val,'fired') then
     if val>0 then
@@ -1448,7 +1462,7 @@ begin
     DM.Work.Params.Clear;
     // 2018-12-26 условие отбора в перепрыжку: overlap>0
     DM.Work.SQL.Text := 'update or rollback git set place2=0 where tournament=:par1 and route=:par2 '+
-                        ' and firedover<=0 and overlap>0;';
+                       ' and firedover<=0 and overlap>0;';
     DM.Work.ParamByName('par1').AsInteger := DM.CurrentTournament;
     DM.Work.ParamByName('par2').AsInteger := DM.CurrentRoute;
     DM.Work.ExecSQL;
