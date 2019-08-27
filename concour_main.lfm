@@ -1,251 +1,250 @@
 object MainFrm: TMainFrm
   Left = 120
-  Height = 840
+  Height = 672
   Top = 132
-  Width = 1605
+  Width = 1027
   Caption = 'MainFrm'
-  ClientHeight = 815
-  ClientWidth = 1605
-  DesignTimePPI = 120
+  ClientHeight = 652
+  ClientWidth = 1027
   Menu = MainMenu1
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ShowHint = True
-  LCLVersion = '2.0.2.0'
+  LCLVersion = '1.8.4.0'
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 29
-    Top = 786
-    Width = 1605
+    Height = 23
+    Top = 629
+    Width = 1027
     Panels = <    
       item
         Alignment = taRightJustify
         Text = 'Тип маршрута: '
-        Width = 150
+        Width = 120
       end    
       item
-        Width = 375
+        Width = 300
       end    
       item
-        Width = 62
+        Width = 50
       end>
     ParentFont = False
     SimplePanel = False
   end
   object Panel3: TPanel
     Left = 0
-    Height = 718
-    Top = 68
-    Width = 1605
+    Height = 575
+    Top = 54
+    Width = 1027
     Align = alClient
-    ClientHeight = 718
-    ClientWidth = 1605
+    ClientHeight = 575
+    ClientWidth = 1027
     ParentFont = False
     TabOrder = 1
     object GitDBGrid: TDBGrid
       Left = 1
-      Height = 578
-      Top = 139
-      Width = 1603
+      Height = 463
+      Top = 111
+      Width = 1025
       Align = alClient
       Color = clWindow
       Columns = <      
         item
           MinSize = 1
-          MaxSize = 6
+          MaxSize = 5
           Tag = 255
           Title.Alignment = taCenter
           Title.MultiLine = True
           Title.Caption = '№'#13#10'п/п'
-          Width = 50
+          Width = 40
           FieldName = 'queue'
           DisplayFormat = '#0'
         end      
         item
           ButtonStyle = cbsButton
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Зачёт'
-          Width = 125
+          Width = 100
           FieldName = 'groupname'
         end      
         item
           ButtonStyle = cbsButton
-          MinSize = 12
-          MaxSize = 70
+          MinSize = 10
+          MaxSize = 56
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Всадник'
-          Width = 250
+          Width = 200
           FieldName = 'lastname'
         end      
         item
           ButtonStyle = cbsButton
-          MinSize = 6
-          MaxSize = 38
+          MinSize = 5
+          MaxSize = 30
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Лошадь'
-          Width = 125
+          Width = 100
           FieldName = 'nickname'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '1'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b1'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '2'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b2'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '3'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b3'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '4'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b4'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '5'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b5'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '6'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b6'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '7'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b7'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '8'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b8'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '9'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b9'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '10'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b10'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '11'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b11'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '12'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b12'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '13'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b13'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '14'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b14'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = '15'
-          Width = 50
+          Width = 40
           FieldName = 'foul1_b15'
           DisplayFormat = '#'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -253,82 +252,82 @@ object MainFrm: TMainFrm
           Title.Font.Name = 'Sans'
           Title.MultiLine = True
           Title.Caption = 'Ш.О. / '#13#10'Баллы'
-          Width = 75
+          Width = 60
           FieldName = 'sumfouls1'
           DisplayFormat = '###'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
           Title.MultiLine = True
           Title.Caption = 'Штраф '#10' за время'
-          Width = 88
+          Width = 70
           FieldName = 'foul1_time'
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Время'
-          Width = 75
+          Width = 60
           FieldName = 'gittime1'
           DisplayFormat = '##0.00'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
           Title.Font.Style = [fsBold]
           Title.Caption = 'Итог 1'
-          Width = 62
+          Width = 50
           FieldName = 'totalfouls1'
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 2
           Title.Font.Height = -13
           Title.Font.Name = 'Sans'
           Title.MultiLine = True
           Title.Caption = 'Ш.О. '#10'перепрыжки'
-          Width = 81
+          Width = 65
           FieldName = 'sumfouls2'
           DisplayFormat = '###'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 6
           Title.Alignment = taCenter
           Title.MultiLine = True
           Title.Caption = 'Штраф 2'#10'за время'
-          Width = 75
+          Width = 60
           FieldName = 'foul2_time'
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Tag = 6
           Title.Alignment = taCenter
           Title.Caption = 'Время 2'
-          Width = 75
+          Width = 60
           FieldName = 'gittime2'
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 6
           Title.Alignment = taCenter
@@ -345,7 +344,7 @@ object MainFrm: TMainFrm
           Font.Quality = fqDraft
           Font.Style = [fsBold]
           MinSize = 1
-          MaxSize = 250
+          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
@@ -362,42 +361,42 @@ object MainFrm: TMainFrm
           DisplayFormat = '#0.00'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 255
           Title.Alignment = taCenter
           Title.Caption = 'Место'
-          Width = 75
+          Width = 60
           FieldName = 'place'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           ReadOnly = True
           Tag = 6
           Title.Alignment = taCenter
           Title.MultiLine = True
           Title.Caption = 'Место в'#13#10'перепр.'
-          Width = 75
+          Width = 60
           FieldName = 'place2'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Title.Caption = 'fired'
           Visible = False
           FieldName = 'fired'
         end      
         item
-          MinSize = 12
-          MaxSize = 250
+          MinSize = 10
+          MaxSize = 200
           Title.Caption = 'firedover'
           Visible = False
           FieldName = 'firedover'
         end>
       DataSource = DM.DS_Git
-      DefaultRowHeight = 42
+      DefaultRowHeight = 34
       DragMode = dmAutomatic
       Enabled = False
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgHeaderHotTracking, dgHeaderPushedLook, dgDisableDelete, dgDisableInsert, dgRowHighlight]
@@ -415,9 +414,9 @@ object MainFrm: TMainFrm
     end
     object PageControl1: TPageControl
       Left = 1
-      Height = 138
+      Height = 110
       Top = 1
-      Width = 1603
+      Width = 1025
       ActivePage = TabSheet1
       Align = alTop
       ParentFont = False
@@ -428,19 +427,19 @@ object MainFrm: TMainFrm
       Options = [nboDoChangeOnSetIndex]
       object TabSheet1: TTabSheet
         Caption = 'TabSheet1'
-        ClientHeight = 130
-        ClientWidth = 1595
+        ClientHeight = 102
+        ClientWidth = 1017
         ParentFont = False
         object Label12: TLabel
-          Left = 10
-          Height = 46
-          Top = 10
-          Width = 210
+          Left = 8
+          Height = 37
+          Top = 8
+          Width = 168
           AutoSize = False
           Caption = 'Параметры'#13#10' основного маршрута'
           Font.CharSet = RUSSIAN_CHARSET
           Font.Color = clMaroon
-          Font.Height = -16
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -449,11 +448,11 @@ object MainFrm: TMainFrm
           ParentFont = False
         end
         object TimePenaltyCB: TComboBox
-          Left = 1230
-          Height = 28
-          Top = 30
-          Width = 90
-          ItemHeight = 20
+          Left = 984
+          Height = 21
+          Top = 24
+          Width = 72
+          ItemHeight = 13
           ItemIndex = 0
           Items.Strings = (
             '1'
@@ -465,20 +464,20 @@ object MainFrm: TMainFrm
           Text = '1'
         end
         object Label5: TLabel
-          Left = 1110
-          Height = 28
-          Top = 5
-          Width = 270
+          Left = 888
+          Height = 22
+          Top = 4
+          Width = 216
           AutoSize = False
           Caption = 'Штраф за превышение времени'
           ParentColor = False
           ParentFont = False
         end
         object MaxTimeEdit: TEdit
-          Left = 940
-          Height = 28
-          Top = 32
-          Width = 100
+          Left = 752
+          Height = 21
+          Top = 26
+          Width = 80
           Alignment = taRightJustify
           HideSelection = False
           OnExit = MaxTimeEditExit
@@ -487,21 +486,21 @@ object MainFrm: TMainFrm
           TabOrder = 3
         end
         object Label4: TLabel
-          Left = 890
-          Height = 28
-          Top = 5
-          Width = 210
+          Left = 712
+          Height = 22
+          Top = 4
+          Width = 168
           AutoSize = False
           Caption = 'Контрольное время (сек)'
           ParentColor = False
           ParentFont = False
         end
         object VelocityCB1: TComboBox
-          Left = 680
-          Height = 28
-          Top = 30
-          Width = 94
-          ItemHeight = 20
+          Left = 544
+          Height = 21
+          Top = 24
+          Width = 75
+          ItemHeight = 13
           ItemIndex = 0
           Items.Strings = (
             '300'
@@ -517,20 +516,20 @@ object MainFrm: TMainFrm
           Text = '300'
         end
         object Label3: TLabel
-          Left = 610
-          Height = 29
-          Top = 5
-          Width = 260
+          Left = 488
+          Height = 23
+          Top = 4
+          Width = 208
           AutoSize = False
           Caption = 'Скорость движения (м/мин)'
           ParentColor = False
           ParentFont = False
         end
         object DistanceEdit1: TEdit
-          Left = 470
-          Height = 29
-          Top = 32
-          Width = 100
+          Left = 376
+          Height = 23
+          Top = 26
+          Width = 80
           Alignment = taRightJustify
           AutoSize = False
           OnChange = DistanceEdit1Change
@@ -540,20 +539,20 @@ object MainFrm: TMainFrm
           TabOrder = 1
         end
         object Label2: TLabel
-          Left = 460
-          Height = 25
-          Top = 8
-          Width = 124
+          Left = 368
+          Height = 20
+          Top = 6
+          Width = 99
           AutoSize = False
           Caption = 'Дистанция (м)'
           ParentColor = False
           ParentFont = False
         end
         object Barriers1SpinEdit: TSpinEdit
-          Left = 280
-          Height = 28
-          Top = 32
-          Width = 72
+          Left = 224
+          Height = 21
+          Top = 26
+          Width = 58
           MaxValue = 15
           MinValue = 1
           OnChange = Barriers1SpinEditChange
@@ -563,20 +562,20 @@ object MainFrm: TMainFrm
           Value = 1
         end
         object Label1: TLabel
-          Left = 251
-          Height = 25
-          Top = 8
-          Width = 161
+          Left = 201
+          Height = 20
+          Top = 6
+          Width = 129
           AutoSize = False
           Caption = 'К-во прыжков'
           ParentColor = False
           ParentFont = False
         end
         object AddBitBtn: TBitBtn
-          Left = 10
-          Height = 52
-          Top = 68
-          Width = 175
+          Left = 8
+          Height = 42
+          Top = 54
+          Width = 140
           Caption = 'Добавить'
           Glyph.Data = {
             36100000424D3610000000000000360000002800000020000000200000000100
@@ -715,10 +714,10 @@ object MainFrm: TMainFrm
           TabOrder = 5
         end
         object ClearBitBtn: TBitBtn
-          Left = 200
-          Height = 52
-          Top = 68
-          Width = 225
+          Left = 160
+          Height = 42
+          Top = 54
+          Width = 180
           Action = GitClearResAction
           Glyph.Data = {
             36100000424D3610000000000000360000002800000020000000200000000100
@@ -856,10 +855,10 @@ object MainFrm: TMainFrm
           TabOrder = 6
         end
         object DelBitBtn: TBitBtn
-          Left = 440
-          Height = 52
-          Top = 68
-          Width = 200
+          Left = 352
+          Height = 42
+          Top = 54
+          Width = 160
           Action = GitDelAction
           Glyph.Data = {
             36100000424D3610000000000000360000002800000020000000200000000100
@@ -997,10 +996,10 @@ object MainFrm: TMainFrm
           TabOrder = 7
         end
         object ShuffleBitBtn: TBitBtn
-          Left = 730
-          Height = 52
-          Top = 68
-          Width = 175
+          Left = 584
+          Height = 42
+          Top = 54
+          Width = 140
           Caption = 'Жеребьёвка'
           Glyph.Data = {
             36100000424D3610000000000000360000002800000020000000200000000100
@@ -1139,10 +1138,10 @@ object MainFrm: TMainFrm
           TabOrder = 8
         end
         object CalcPlacesBitBtn: TBitBtn
-          Left = 930
-          Height = 52
-          Top = 68
-          Width = 200
+          Left = 744
+          Height = 42
+          Top = 54
+          Width = 160
           Caption = 'Подвести итоги'
           Glyph.Data = {
             36100000424D3610000000000000360000002800000020000000200000000100
@@ -1281,15 +1280,15 @@ object MainFrm: TMainFrm
           TabOrder = 9
         end
         object JokerCB: TCheckBox
-          Left = 360
-          Height = 24
-          Top = 35
-          Width = 100
+          Left = 288
+          Height = 19
+          Top = 28
+          Width = 80
           AutoSize = False
           Caption = 'Joker'
           Checked = True
           Font.CharSet = RUSSIAN_CHARSET
-          Font.Height = -15
+          Font.Height = -12
           Font.Name = 'Arial'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -1319,15 +1318,15 @@ object MainFrm: TMainFrm
           ParentFont = False
           TabOrder = 0
           object Label11: TLabel
-            Left = 10
-            Height = 46
-            Top = 10
-            Width = 140
+            Left = 8
+            Height = 37
+            Top = 8
+            Width = 112
             AutoSize = False
             Caption = 'Параметры'#13#10'перепрыжки'
             Font.CharSet = RUSSIAN_CHARSET
             Font.Color = clBlue
-            Font.Height = -16
+            Font.Height = -13
             Font.Name = 'Arial'
             Font.Pitch = fpVariable
             Font.Quality = fqDraft
@@ -1336,20 +1335,20 @@ object MainFrm: TMainFrm
             ParentFont = False
           end
           object Label6: TLabel
-            Left = 170
-            Height = 19
-            Top = 10
-            Width = 180
+            Left = 136
+            Height = 15
+            Top = 8
+            Width = 144
             AutoSize = False
             Caption = 'К-во прыжков'
             ParentColor = False
             ParentFont = False
           end
           object Barriers2SpinEdit: TSpinEdit
-            Left = 190
+            Left = 152
             Height = 23
-            Top = 32
-            Width = 80
+            Top = 26
+            Width = 64
             MaxValue = 15
             MinValue = 1
             OnChange = Barriers2SpinEditChange
@@ -1360,20 +1359,20 @@ object MainFrm: TMainFrm
             Value = 1
           end
           object Label7: TLabel
-            Left = 390
-            Height = 19
-            Top = 10
-            Width = 124
+            Left = 312
+            Height = 15
+            Top = 8
+            Width = 99
             AutoSize = False
             Caption = 'Дистанция'
             ParentColor = False
             ParentFont = False
           end
           object DistanceEdit2: TEdit
-            Left = 380
-            Height = 29
-            Top = 32
-            Width = 100
+            Left = 304
+            Height = 23
+            Top = 26
+            Width = 80
             Alignment = taRightJustify
             AutoSize = False
             OnChange = DistanceEdit2Change
@@ -1383,21 +1382,21 @@ object MainFrm: TMainFrm
             TabOrder = 2
           end
           object Label8: TLabel
-            Left = 530
-            Height = 19
-            Top = 10
-            Width = 180
+            Left = 424
+            Height = 15
+            Top = 8
+            Width = 144
             AutoSize = False
             Caption = 'Скорость движения'
             ParentColor = False
             ParentFont = False
           end
           object VelocityCB2: TComboBox
-            Left = 550
-            Height = 28
-            Top = 32
-            Width = 100
-            ItemHeight = 20
+            Left = 440
+            Height = 21
+            Top = 26
+            Width = 80
+            ItemHeight = 13
             ItemIndex = 0
             Items.Strings = (
               '300'
@@ -1414,20 +1413,20 @@ object MainFrm: TMainFrm
             Text = '300'
           end
           object Label9: TLabel
-            Left = 730
-            Height = 19
-            Top = 10
-            Width = 180
+            Left = 584
+            Height = 15
+            Top = 8
+            Width = 144
             AutoSize = False
             Caption = 'Контрольное время'
             ParentColor = False
             ParentFont = False
           end
           object MaxTime2Edit: TEdit
-            Left = 750
+            Left = 600
             Height = 23
-            Top = 30
-            Width = 100
+            Top = 24
+            Width = 80
             Alignment = taRightJustify
             OnExit = MaxTime2EditExit
             ParentFont = False
@@ -1435,21 +1434,21 @@ object MainFrm: TMainFrm
             TabOrder = 4
           end
           object Label10: TLabel
-            Left = 930
-            Height = 19
-            Top = 10
-            Width = 180
+            Left = 744
+            Height = 15
+            Top = 8
+            Width = 144
             AutoSize = False
             Caption = 'Штраф за секунду  (1=1)'
             ParentColor = False
             ParentFont = False
           end
           object Time2PenaltyCB: TComboBox
-            Left = 950
-            Height = 28
-            Top = 32
-            Width = 100
-            ItemHeight = 20
+            Left = 760
+            Height = 21
+            Top = 26
+            Width = 80
+            ItemHeight = 13
             ItemIndex = 1
             Items.Strings = (
               '1'
@@ -1463,10 +1462,10 @@ object MainFrm: TMainFrm
             Visible = False
           end
           object CalcOverlapBitBtn: TBitBtn
-            Left = 80
-            Height = 52
-            Top = 68
-            Width = 225
+            Left = 64
+            Height = 42
+            Top = 54
+            Width = 180
             Caption = 'Итоги с перепрыжкой'
             Glyph.Data = {
               36100000424D3610000000000000360000002800000020000000200000000100
@@ -1610,24 +1609,24 @@ object MainFrm: TMainFrm
   end
   object Panel5: TPanel
     Left = 0
-    Height = 68
+    Height = 54
     Top = 0
-    Width = 1605
+    Width = 1027
     Align = alTop
-    ClientHeight = 68
-    ClientWidth = 1605
+    ClientHeight = 54
+    ClientWidth = 1027
     ParentFont = False
     TabOrder = 2
     object RouteNameLabel: TLabel
-      Left = 10
-      Height = 25
-      Top = 20
-      Width = 456
+      Left = 8
+      Height = 20
+      Top = 16
+      Width = 365
       Alignment = taCenter
       AutoSize = False
       Caption = ' --  не выбран маршрут --'
       Color = clMoneyGreen
-      Font.Height = -20
+      Font.Height = -16
       Font.Name = 'Sans'
       Font.Style = [fsBold]
       ParentColor = False
@@ -1635,24 +1634,24 @@ object MainFrm: TMainFrm
       Transparent = False
     end
     object RouteSelectSBut: TSpeedButton
-      Left = 470
-      Height = 30
-      Top = 15
-      Width = 31
+      Left = 376
+      Height = 24
+      Top = 12
+      Width = 25
       Action = RouteSelectAction
       ShowHint = True
       ParentFont = False
       ParentShowHint = False
     end
     object OverlapCB: TCheckBox
-      Left = 530
-      Height = 24
-      Top = 21
-      Width = 240
+      Left = 424
+      Height = 19
+      Top = 17
+      Width = 192
       AutoSize = False
       Caption = 'Показать перепрыжку'
       Font.CharSet = RUSSIAN_CHARSET
-      Font.Height = -15
+      Font.Height = -12
       Font.Name = 'Arial'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -1662,10 +1661,10 @@ object MainFrm: TMainFrm
       TabOrder = 0
     end
     object RepSpeedButton1: TSpeedButton
-      Left = 790
-      Height = 52
+      Left = 632
+      Height = 42
       Top = 2
-      Width = 52
+      Width = 42
       Glyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
         2000000000000010000064000000640000000000000000000000000000000000
@@ -1805,25 +1804,25 @@ object MainFrm: TMainFrm
       ParentShowHint = False
     end
     object Label13: TLabel
-      Left = 860
-      Height = 20
+      Left = 688
+      Height = 16
       Top = 2
-      Width = 330
+      Width = 264
       AutoSize = False
       Caption = 'Лидер на маршруте:'
       ParentColor = False
       ParentFont = False
     end
     object LeaderLabel: TLabel
-      Left = 860
-      Height = 21
-      Top = 30
-      Width = 730
+      Left = 688
+      Height = 17
+      Top = 24
+      Width = 327
       Anchors = [akTop, akLeft, akRight]
       AutoSize = False
       Font.CharSet = RUSSIAN_CHARSET
       Font.Color = clNavy
-      Font.Height = -16
+      Font.Height = -13
       Font.Name = 'Arial'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -1833,8 +1832,8 @@ object MainFrm: TMainFrm
     end
   end
   object MainMenu1: TMainMenu
-    left = 20
-    top = 10
+    left = 16
+    top = 8
     object MenuItem1: TMenuItem
       Caption = 'Файл'
       object MenuItem3: TMenuItem
@@ -1883,8 +1882,8 @@ object MainFrm: TMainFrm
     end
   end
   object ActionList1: TActionList
-    left = 30
-    top = 340
+    left = 24
+    top = 272
     object FileExitAction: TAction
       Category = 'File'
       Caption = 'Выход'
@@ -1954,8 +1953,8 @@ object MainFrm: TMainFrm
     end
   end
   object PopupMenu1: TPopupMenu
-    left = 110
-    top = 340
+    left = 88
+    top = 272
     object MenuItem15: TMenuItem
       Caption = 'Снять с гита...'
       object MenuItem24: TMenuItem

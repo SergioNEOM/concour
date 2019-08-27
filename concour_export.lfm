@@ -1,31 +1,30 @@
 object ExpFrm: TExpFrm
   Left = 284
-  Height = 419
+  Height = 335
   Top = 154
-  Width = 531
+  Width = 425
   Caption = 'Экспорт в Excel'
-  ClientHeight = 419
-  ClientWidth = 531
-  Constraints.MinHeight = 350
-  Constraints.MinWidth = 450
-  DesignTimePPI = 120
+  ClientHeight = 335
+  ClientWidth = 425
+  Constraints.MinHeight = 280
+  Constraints.MinWidth = 360
   OnActivate = FormActivate
   OnCreate = FormCreate
-  LCLVersion = '2.0.2.0'
+  LCLVersion = '1.8.4.0'
   object ProgressBar1: TProgressBar
-    Left = 10
-    Height = 25
-    Top = 270
-    Width = 509
+    Left = 8
+    Height = 20
+    Top = 216
+    Width = 407
     Anchors = [akTop, akLeft, akRight]
     ParentFont = False
     TabOrder = 0
   end
   object BitBtn1: TBitBtn
-    Left = 381
-    Height = 38
-    Top = 373
-    Width = 138
+    Left = 305
+    Height = 30
+    Top = 299
+    Width = 110
     Anchors = [akRight, akBottom]
     DefaultCaption = True
     Kind = bkClose
@@ -34,10 +33,10 @@ object ExpFrm: TExpFrm
     TabOrder = 1
   end
   object StartSpeedButton: TSpeedButton
-    Left = 10
-    Height = 45
-    Top = 80
-    Width = 509
+    Left = 8
+    Height = 36
+    Top = 64
+    Width = 407
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Печатать СТАРТОВЫЙ протокол'
     Glyph.Data = {
@@ -176,10 +175,10 @@ object ExpFrm: TExpFrm
     ParentFont = False
   end
   object RefereeSpeedButton: TSpeedButton
-    Left = 10
-    Height = 45
-    Top = 140
-    Width = 509
+    Left = 8
+    Height = 36
+    Top = 112
+    Width = 407
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Печатать СУДЕЙСКИЙ протокол'
     Glyph.Data = {
@@ -318,10 +317,10 @@ object ExpFrm: TExpFrm
     ParentFont = False
   end
   object FinalSpeedButton: TSpeedButton
-    Left = 10
-    Height = 45
-    Top = 200
-    Width = 509
+    Left = 8
+    Height = 36
+    Top = 160
+    Width = 407
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Печатать ИТОГОВЫЙ протокол'
     Glyph.Data = {
@@ -460,10 +459,10 @@ object ExpFrm: TExpFrm
     ParentFont = False
   end
   object TotalSpeedButton: TSpeedButton
-    Left = 10
-    Height = 48
-    Top = 320
-    Width = 320
+    Left = 8
+    Height = 38
+    Top = 256
+    Width = 256
     Caption = 'Файл итогов всех маршрутов'
     Glyph.Data = {
       36100000424D3610000000000000360000002800000020000000200000000100
@@ -601,23 +600,23 @@ object ExpFrm: TExpFrm
     ParentFont = False
   end
   object Label1: TLabel
-    Left = 10
-    Height = 19
-    Top = 10
-    Width = 290
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 232
     AutoSize = False
     Caption = 'Сохранять в папке:'
     ParentColor = False
     ParentFont = False
   end
   object DirectoryEdit1: TDirectoryEdit
-    Left = 10
-    Height = 29
-    Top = 30
-    Width = 509
+    Left = 8
+    Height = 23
+    Top = 24
+    Width = 407
     DialogOptions = [ofCreatePrompt, ofEnableSizing, ofViewDetail]
     ShowHidden = False
-    ButtonWidth = 29
+    ButtonWidth = 23
     DirectInput = False
     NumGlyphs = 1
     Anchors = [akTop, akLeft, akRight]

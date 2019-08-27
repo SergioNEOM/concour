@@ -421,7 +421,8 @@ begin
       // не забыть преобразовать строки
       w := Utf8Decode(UpperCase(DM.Work.FieldByName('lastname').AsString));
       l := Length(w);
-      w := w +' '+ Utf8Decode(DM.Work.FieldByName('firstname').AsString)+
+      w := w +
+      // 2019-08-27 имя уже включено ' '+ Utf8Decode(DM.Work.FieldByName('firstname').AsString)+
               ', '+ Utf8Decode(DM.Work.FieldByName('r_year').AsString);
       MakeCell(srow,scol+2,Variant(w));
       MakeBold(srow,scol+2,1,l);
@@ -572,7 +573,8 @@ begin
       // не забыть преобразовать строки
       w := Utf8Decode(UpperCase(DM.Work.FieldByName('lastname').AsString));
       l := Length(w);
-      w := w +' '+ Utf8Decode(DM.Work.FieldByName('firstname').AsString)+
+      w := w +
+      // 2019-08-27 имя уже включено ' '+ Utf8Decode(DM.Work.FieldByName('firstname').AsString)+
               ', '+ Utf8Decode(DM.Work.FieldByName('r_year').AsString);
       MakeCell(srow,scol+2,w);
       MakeBold(srow,scol+2,1,l);
@@ -705,7 +707,8 @@ begin
       // не забыть преобразовать строки
       w := Utf8Decode(UpperCase(DM.Work.FieldByName('lastname').AsString));
       l := Length(w);
-      w := w +' '+ Utf8Decode(DM.Work.FieldByName('firstname').AsString)+
+      w := w +
+      // 2019-08-27 имя уже включено  ' '+ Utf8Decode(DM.Work.FieldByName('firstname').AsString)+
               ', '+ Utf8Decode(DM.Work.FieldByName('r_year').AsString);
       MakeCell(srow,scol+2,w);
       MakeBold(srow,scol+2,1,l);
