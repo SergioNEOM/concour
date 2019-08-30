@@ -443,7 +443,7 @@ var
 begin
   // Переключение участника в "Быструю" перепрыжку
   //
-  if OverlapCB.Checked then
+  if OverlapCB.Checked then  // на экране - перепрыжка?
   begin
     if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>OVER_FAST then
     begin
@@ -454,13 +454,20 @@ begin
     end;
     val := 0          //перепрыжка? значит, убрать из списка (overlap=0)
   end
-  else
+  else // основной гит
   begin
     if GitDBGrid.DataSource.DataSet.FieldByName('overlap').AsInteger<>0 then
     begin
       //todo: участник уже в перепрыжке: перезаписывать или нет ???????
       // 2019-01-08   пока - нет
       Application.MessageBox('Уже в перепрыжке!','Информация',MB_OK+MB_ICONINFORMATION);
+      Exit;
+    end;
+    // 2019-08-30 участник снят с гита - никакой перепрыжки (но ВК - можно)
+    if (GitDBGrid.DataSource.DataSet.FieldByName('fired').AsInteger>0) and
+       (GitDBGrid.DataSource.DataSet.FieldByName('fired').AsInteger<>FIRED_RIDER4) then
+    begin
+      Application.MessageBox('НЕВОЗМОЖНО! Участник снят с гита!','Информация',MB_OK+MB_ICONINFORMATION);
       Exit;
     end;
     val := OVER_FAST; //нет? значит, добавить в перепрыжку
@@ -633,7 +640,10 @@ begin
   begin
     // быстрые перепрыжчики - жёлтые
     if TDBGrid(Sender).DataSource.DataSet.FieldByName('overlap').AsInteger=OVER_FAST then
-      TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(255,255,210);
+      // 2019-08-30 добавил условие, чтобы закрашивались не все колонки
+      if (LowerCase(Column.FieldName)='lastname') or (LowerCase(Column.FieldName)='nickname') or
+         (LowerCase(Column.FieldName)='place') or (LowerCase(Column.FieldName)='place2') then
+        TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(255,255,210);
     // выделение полей со штрафными очками розовым цветом
     if (LeftStr(LowerCase(Column.FieldName),4)='foul')  then
       if (DM.CurrRouteType<>ROUTE_GROW) and
@@ -653,14 +663,17 @@ begin
       TDBGrid(Sender).Canvas.Font.Style :=  [];
     //
     // выделение снятых участников
-    if OverlapCB.Checked then fname:='firedover'
-    else fname:='fired';
-    // 2019-08-05
-    if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger=FIRED_RIDER4 then
-      TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(200,200,150)
-    else
-      if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>0 then
-             TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(50,150,150);
+    if OverlapCB.Checked then fname:='firedover' else fname:='fired';
+    //2019-08-30 добавил условие, чтобы закрашивались не все колонки
+    if (LowerCase(Column.FieldName)='groupname') or (LowerCase(Column.FieldName)='queue') or
+       (LeftStr(LowerCase(Column.FieldName),7)='gittime') or
+       (LeftStr(LowerCase(Column.FieldName),5)='place') then
+      // 2019-08-05
+      if TDBGrid(Sender).DataSource.DataSet.FieldByName('fired').AsInteger=FIRED_RIDER4 then    // 2019-08-30 поле "fired" всегда
+        TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(200,200,150)
+      else
+        if TDBGrid(Sender).DataSource.DataSet.FieldByName(fname).AsInteger>0 then
+          TDBGrid(Sender).Canvas.Brush.Color :=  RGBToColor(50,150,150);
 
     //почему-то без ручной закраски не хочет менять цвет фона...
     TDBGrid(Sender).Canvas.FillRect(Rect);
@@ -933,7 +946,7 @@ end;
 
 procedure TMainFrm.RouteSelectActionExecute(Sender: TObject);
 var
-  SaveRoute, TempRoute : integer;
+  TempRoute : integer;
   x,y: Integer;
 begin
   //2019-03-18 криво работает - SaveRoute := DM.CurrentRoute;
@@ -1462,7 +1475,7 @@ begin
     DM.Work.Params.Clear;
     // 2018-12-26 условие отбора в перепрыжку: overlap>0
     DM.Work.SQL.Text := 'update or rollback git set place2=0 where tournament=:par1 and route=:par2 '+
-                       ' and firedover<=0 and overlap>0;';
+             ' and overlap>0;';// 2019-08-30 убрал условие отбора firedover<=0, чтобы у всех обнулялось место
     DM.Work.ParamByName('par1').AsInteger := DM.CurrentTournament;
     DM.Work.ParamByName('par2').AsInteger := DM.CurrentRoute;
     DM.Work.ExecSQL;
@@ -1492,15 +1505,19 @@ begin
           //в place кладём № места перепрыжки
           // и в place2 - место, если не был снят с гита
           DM.Work.ParamByName('par1').AsInteger:=i;
-          //не забываем снятых с гита - пишем в place их значения
-          if  DM.Work2.FieldByName('firedover').AsInteger<=0 then
-            DM.Work.ParamByName('par2').AsInteger:=i
-          else
-            DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('place2').AsInteger;
-          DM.Work.ParamByName('par3').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
-          DM.Work.ExecSQL;
-          //***
-          Inc(i);
+          // 2019-08-30
+          if (DM.Work2.FieldByName('fired').AsInteger<>FIRED_RIDER4) then
+          begin
+            // у вне конкурсников и снятых с гита - пишем в place их значения (д.б. 0)
+            if DM.Work2.FieldByName('firedover').AsInteger>0 then
+              DM.Work.ParamByName('par2').AsInteger:=DM.Work2.FieldByName('place2').AsInteger
+            else
+             DM.Work.ParamByName('par2').AsInteger:=i; // № места
+            DM.Work.ParamByName('par3').AsInteger:=DM.Work2.FieldByName('id').AsInteger;
+            DM.Work.ExecSQL;
+            //***
+            Inc(i);
+          end; // FIRED_RIDER4;
           DM.Work2.Next;
           if g<> DM.Work2.FieldByName('group').AsInteger then
           begin
